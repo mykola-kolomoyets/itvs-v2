@@ -1,12 +1,12 @@
-import Header from "@/components/dashboard/Header";
+import Header from '@/components/dashboard/Header';
 
 const DashboardLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
-  return (
-    <>
-      <Header />
-      <main>{children}</main>
-    </>
-  );
+    return (
+        <div className="min-h-screen">
+            <Header />
+            <main>{children}</main>
+        </div>
+    );
 };
 
 export default DashboardLayout;

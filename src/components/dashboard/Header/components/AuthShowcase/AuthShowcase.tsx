@@ -1,37 +1,26 @@
-import { useSession, signIn, signOut } from "next-auth/react";
-import { useCallback } from "react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { Button } from "@/components/Button";
 import { LogOutIcon } from "lucide-react";
+import { useSignIn } from "@/hooks/useSignIn";
+import { getFirstLetters } from "@/utils/common";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
+import UserRole from "@/components/UserRole";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/HoverCard";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/Tooltip";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
-import { getFirstLetters } from "@/utils/common";
-import Link from "next/link";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/HoverCard";
-import UserRole from "@/components/UserRole";
 
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
-
-  const googleSignInHandler = useCallback(() => {
-    void signIn("google", { callbackUrl: "/dashboard/articles" });
-  }, []);
-
-  const sighOutHandler = useCallback(() => {
-    void signOut({
-      callbackUrl: "/",
-    });
-  }, []);
-
-  console.log(sessionData);
+  const { googleSignIn, signOut } = useSignIn();
 
   return (
     <div className="flex items-center justify-center gap-4">
@@ -72,7 +61,7 @@ const AuthShowcase: React.FC = () => {
             <Button
               variant="outline"
               size="icon"
-              onClick={sessionData ? sighOutHandler : googleSignInHandler}
+              onClick={sessionData ? signOut : googleSignIn}
               aria-label={sessionData ? "Вийти" : "Увійти"}
             >
               <LogOutIcon size={20} />

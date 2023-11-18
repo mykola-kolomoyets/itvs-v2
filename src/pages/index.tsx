@@ -1,11 +1,7 @@
 import Head from "next/head";
-import { Button } from "@/components/Button/Button";
-import { useTheme } from "next-themes";
-import { AuthShowcase } from "@/components/dashboard/Header/components/AuthShowcase";
+import HomeModule from "@/modules/landing/Home";
 
 export default function Home() {
-  const { setTheme } = useTheme();
-
   return (
     <>
       <Head>
@@ -14,20 +10,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="">
-        <section>
-          <Button variant="ghost" onClick={() => setTheme("light")}>
-            Light
-          </Button>
-          <Button variant="ghost" onClick={() => setTheme("dark")}>
-            Dark
-          </Button>
-          <Button variant="ghost" onClick={() => setTheme("system")}>
-            System
-          </Button>
-        </section>
-        <section>
-          <AuthShowcase />
-        </section>
+        <HomeModule />
       </main>
     </>
   );

@@ -28,7 +28,7 @@ export const usersRouter = createTRPCRouter({
 
       if (!user || user.role !== "ADMIN") {
         throw new TRPCError({
-          code: "BAD_REQUEST",
+          code: "FORBIDDEN",
           message: "You must be logged in to view this page",
         });
       }
@@ -95,7 +95,7 @@ export const usersRouter = createTRPCRouter({
 
       if (!user || user.role !== "ADMIN") {
         throw new TRPCError({
-          code: "BAD_REQUEST",
+          code: "FORBIDDEN",
           message: "You must be logged in to view this page",
         });
       }
