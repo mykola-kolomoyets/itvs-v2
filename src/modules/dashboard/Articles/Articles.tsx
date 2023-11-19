@@ -22,7 +22,7 @@ const ArticlesModule: React.FC = () => {
                     <h1 className="mb-[1.125rem] text-3xl font-semibold">Статті</h1>
                     {permissions.canCreateArticle ? (
                         <Button variant="default" asChild>
-                            <Link href="/create-article">Написати статтю</Link>
+                            <Link href="/dashboard/articles/create">Написати статтю</Link>
                         </Button>
                     ) : null}
                 </div>

@@ -1,0 +1,25 @@
+.wrap {
+  @apply text-slate-900;
+}
+
+.wrap > *:first-child {
+  @apply mt-0 pt-0;
+}
+
+.wrap > *:last-child {
+  @apply mb-0 pb-0;
+}
+
+.revert-margins {
+  margin-top: revert;
+  margin-left: revert;
+  margin-right: revert;
+  margin-bottom: revert;
+}
+
+.revert-paddings {
+  padding-top: revert;
+  padding-left: revert;
+  padding-right: revert;
+  padding-bottom: revert;
+}

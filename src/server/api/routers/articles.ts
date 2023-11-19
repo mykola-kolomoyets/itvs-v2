@@ -1,7 +1,9 @@
 import { z } from 'zod';
-import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 import { paginatedQuerySchema } from '@/schemas';
+import { slugify } from 'transliteration';
+import { db } from '@/server/db';
 
 const getAllArticlesQuerySchema = z
     .object({
@@ -14,8 +16,17 @@ const getAllArticlesQuerySchema = z
 const removeArticleQuerySchema = z.object({
     id: z.string(),
 });
+const getArticleItemQuerySchema = z.object({
+    slug: z.string(),
+});
 const getArticleNameQuerySchema = z.object({
     id: z.string(),
+});
+const createArticleQuerySchema = z.object({
+    title: z.string(),
+    content: z.string(),
+    tags: z.array(z.string()),
+    posterUrl: z.string().optional(),
 });
 
 export const articlesRouter = createTRPCRouter({
@@ -70,6 +81,29 @@ export const articlesRouter = createTRPCRouter({
 
         return article.title;
     }),
+    getArticleItem: publicProcedure.input(getArticleItemQuerySchema).query(async ({ input }) => {
+        const article = await db.article.findFirst({
+            where: {
+                slug: input.slug,
+            },
+            select: {
+                id: true,
+                title: true,
+                content: true,
+                tags: true,
+                slug: true,
+                posterUrl: true,
+                author: {
+                    select: {
+                        name: true,
+                        image: true,
+                    },
+                },
+            },
+        });
+
+        return article;
+    }),
     getAllArticles: protectedProcedure.input(getAllArticlesQuerySchema).query(async ({ ctx, input }) => {
         const limit = input.limit ?? 10;
         const cursor = input.cursor;
@@ -117,6 +151,7 @@ export const articlesRouter = createTRPCRouter({
             select: {
                 id: true,
                 title: true,
+                slug: true,
                 author: {
                     select: {
                         id: true,
@@ -140,6 +175,40 @@ export const articlesRouter = createTRPCRouter({
             articles: allArticles,
             nextCursor,
         };
+    }),
+    createArticle: protectedProcedure.input(createArticleQuerySchema).mutation(async ({ ctx, input }) => {
+        const user = ctx.session?.user;
+
+        if (!user) {
+            throw new TRPCError({
+                code: 'FORBIDDEN',
+                message: 'You must be logged in to view this page',
+            });
+        }
+
+        const tags = await ctx.db.tag.findMany({
+            where: {
+                id: {
+                    in: input.tags,
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        return await ctx.db.article.create({
+            data: {
+                title: input.title,
+                content: input.content,
+                authorId: user.id,
+                tags: {
+                    connect: tags,
+                },
+                slug: slugify(input.title),
+                posterUrl: input?.posterUrl ?? '',
+            },
+        });
     }),
     removeArticle: protectedProcedure.input(removeArticleQuerySchema).mutation(async ({ ctx, input }) => {
         const user = ctx.session?.user;

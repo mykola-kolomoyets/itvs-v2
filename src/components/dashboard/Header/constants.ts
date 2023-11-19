@@ -3,9 +3,8 @@ import type { HeaderNavigationOption } from './types';
 export const HEADER_CREATE_OPTIONS: HeaderNavigationOption[] = [
     {
         title: 'Статтю',
-        href: '/create-article',
+        href: '/dashboard/articles/create',
         description: 'Звичайний пост, який відображає активності кафедри, інституту, політехніки',
-        disabled: true,
     },
     // {
     //   title: "Публікацію",

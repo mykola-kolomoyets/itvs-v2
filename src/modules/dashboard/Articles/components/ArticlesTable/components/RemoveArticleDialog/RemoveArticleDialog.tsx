@@ -17,9 +17,15 @@ import { memo } from 'react';
 const RemoveArticleDialog: React.FC<RemoveArticleDialogProps> = ({ id, open, onOpenChange, onSuccess, ...rest }) => {
     const utils = api.useUtils();
 
-    const { data: articleName } = api.articles.getArticleName.useQuery({
-        id,
-    });
+    const { data: articleName } = api.articles.getArticleName.useQuery(
+        {
+            id,
+        },
+        {
+            enabled: !!id,
+            retry: false,
+        }
+    );
     const { mutateAsync: removeArticle, isLoading: isArticleRemoving } = api.articles.removeArticle.useMutation({
         async onSuccess() {
             await utils.articles.getAllArticles.invalidate();

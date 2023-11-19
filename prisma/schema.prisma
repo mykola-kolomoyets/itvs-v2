@@ -20,7 +20,7 @@ enum Role {
 model Article {
     id        String   @id @default(cuid())
     title     String
-    slug      String
+    slug      String   @unique
     content   String   @db.LongText
     createdAt DateTime @default(now())
     authorId  String

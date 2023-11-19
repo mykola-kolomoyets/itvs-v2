@@ -95,11 +95,13 @@ const ArticlesTable: React.FC = () => {
                 accessorKey: 'title',
                 header: 'Назва',
                 id: 'Назва',
+                minSize: 450,
+                maxSize: 550,
                 enableHiding: false,
                 cell({ getValue }) {
                     const articleTitle = getValue<string>();
 
-                    return <p className="text-base ">{articleTitle}</p>;
+                    return <p className="min-w-[450px] max-w-[550px] text-base">{articleTitle}</p>;
                 },
             },
             {
@@ -112,7 +114,7 @@ const ArticlesTable: React.FC = () => {
 
                     return (
                         <div>
-                            <p className="text-base ">
+                            <p className="whitespace-nowrap text-base">
                                 {author.name} {author.id === user?.id ? '(Ви)' : ''}
                             </p>
                             <UserRole role={author.role} />
@@ -128,10 +130,10 @@ const ArticlesTable: React.FC = () => {
                     const tags = getValue<ArticleForTableItem['tags']>();
 
                     return (
-                        <div>
+                        <div className="flex min-w-[500px] max-w-[600px] flex-wrap">
                             {tags.map((tag) => {
                                 return (
-                                    <Badge key={tag.id} className="mr-2" variant="secondary">
+                                    <Badge key={tag.id} className="mb-2 mr-2 flex-shrink-0" variant="secondary">
                                         {tag.name}
                                     </Badge>
                                 );
@@ -148,7 +150,7 @@ const ArticlesTable: React.FC = () => {
                 cell({ getValue }) {
                     const createdAt = getValue<ArticleForTableItem['createdAt']>();
 
-                    return <p className="text-base ">{formatDate(createdAt)}</p>;
+                    return <p className="whitespace-nowrap text-base">{formatDate(createdAt)}</p>;
                 },
             },
             {
@@ -158,8 +160,9 @@ const ArticlesTable: React.FC = () => {
                 minSize: 64,
                 maxSize: 64,
                 size: 64,
-                cell: ({ getValue }) => {
+                cell: ({ row, getValue }) => {
                     const articleId = getValue<string>();
+                    const articleSlug = row.original.slug;
 
                     return (
                         <div className="flex w-full justify-end pr-4">
@@ -181,7 +184,9 @@ const ArticlesTable: React.FC = () => {
                                 </TooltipProvider>
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Дії</DropdownMenuLabel>
-                                    <DropdownMenuItem disabled>Відкрити</DropdownMenuItem>
+                                    <Link href={`/articles/${articleSlug}`}>
+                                        <DropdownMenuItem>Відкрити</DropdownMenuItem>
+                                    </Link>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem disabled>Редагувати</DropdownMenuItem>
                                     <DropdownMenuItem
@@ -294,7 +299,7 @@ const ArticlesTable: React.FC = () => {
                                     </PopoverTrigger>
                                     <PopoverContent className="w-80" align="start">
                                         <h6 className="mb-1 ml-4 text-sm">Теги</h6>
-                                        <ScrollArea className="max-h-[500px]">
+                                        <ScrollArea className="h-[400px] max-h-[400px]">
                                             <div className="flex flex-col">
                                                 {allTags.map((tag) => {
                                                     return (
@@ -395,6 +400,7 @@ const ArticlesTable: React.FC = () => {
                                             key={header.id}
                                             className={cn({
                                                 'pl-7': index === 0,
+                                                'sticky left-0 bg-background': index === 0,
                                             })}
                                         >
                                             {header.isPlaceholder
@@ -415,6 +421,7 @@ const ArticlesTable: React.FC = () => {
                                             key={cell.id}
                                             className={cn({
                                                 'pl-7': index === 0,
+                                                'sticky left-0 border-r border-border bg-background': index === 0,
                                             })}
                                         >
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
