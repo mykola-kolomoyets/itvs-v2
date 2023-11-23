@@ -1,76 +1,79 @@
 import { memo, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { MoreHorizontal } from 'lucide-react';
-import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import type { Tag } from '@prisma/client';
+import { useReactTable, type ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
+import { ChevronDown, MoreHorizontal } from 'lucide-react';
+import type { Discipline } from '@prisma/client';
 import { useDebouncedState } from '@/hooks/useDebouncedState';
+import { useToggle } from '@/hooks/useToggle';
 import { api } from '@/utils/api';
 import { cn } from '@/utils/common';
-import { Input } from '@/components/Input';
-import { Label } from '@/components/Label';
-import { Button } from '@/components/Button';
-import { useToggle } from '@/hooks/useToggle';
-import { Skeleton } from '@/components/Skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
-import { ScrollArea } from '@/components/ScrollArea';
 import { Checkbox } from '@/components/Checkbox';
+import { Button } from '@/components/Button';
+import { Label } from '@/components/Label';
+import { Input } from '@/components/Input';
+import { Badge } from '@/components/Badge';
+import CreateSubjectDialog from './components/CreateSubjectDialog';
 import {
     DropdownMenu,
+    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from '@/components/DropdownMenu';
-import dynamic from 'next/dynamic';
+import SubjectsTableSkeleton from './components/SubjectsTableSkeleton';
+import ToggledMarkdown from './components/ToggledMarkdown';
 
-const RemoveTagDialog = dynamic(() => {
-    return import('./components/RemoveTagDialog');
+const RemoveSubjectDialog = dynamic(() => {
+    return import('./components/RemoveSubjectDialog');
 });
-const UpdateTagDialog = dynamic(() => {
-    return import('./components/UpdateTagDialog');
+const UpdateSubjectDialog = dynamic(() => {
+    return import('./components/UpdateSubjectDialog');
 });
-const CreateTagDialog = dynamic(() => {
-    return import('./components/CreateTagDialog');
-});
-const ButchRemoveTagsDialog = dynamic(() => {
-    return import('./components/ButchRemoveTagsDialog');
+const ButchRemoveSubjectsDialog = dynamic(() => {
+    return import('./components/ButchRemoveSubjectsDialog');
 });
 
-const TagsTabContent: React.FC = () => {
+const SubjectsTabContent: React.FC = () => {
     const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
-    const [isCreateTagDialogOpen, , setCreateTagDialogOpen] = useToggle();
-    const [isRemoveTagDialogOpen, , setRemoveTagDialogOpen] = useToggle();
-    const [isButchRemoveTagsDialogOpen, , setButchRemoveTagsDialogOpen] = useToggle();
-    const [isUpdateTagDialogOpen, , setUpdateTagDialogOpen] = useToggle();
+    const [isCreateSubjectDialogOpen, , setCreateSubjectDialogOpen] = useToggle();
+    const [isRemoveSubjectDialogOpen, , setRemoveSubjectDialogOpen] = useToggle();
+    const [isButchRemoveSubjectsDialogOpen, , setButchRemoveSubjectsDialogOpen] = useToggle();
+    const [isUpdateSubjectDialogOpen, , setUpdateSubjectDialogOpen] = useToggle();
     const [rowSelection, setRowSelection] = useState({});
 
     const {
-        data: tagsResponse,
-        isLoading: isAllTagsLoading,
-        isRefetching: isAllTagsRefetching,
-    } = api.tags.getAllTags.useQuery({
+        data: subjectResponse,
+        isLoading: isSubjectsLoading,
+        isRefetching: isSubjectsRefetching,
+    } = api.subjects.getAllSubjects.useQuery({
         search: debouncedSearchValue.trim(),
     });
 
-    const isEmpty = !debouncedSearchValue.trim() && !tagsResponse?.length;
-    const isLoading = isAllTagsLoading && !isAllTagsRefetching;
+    const isEmpty = !debouncedSearchValue.trim() && !subjectResponse?.length;
+    const isLoading = isSubjectsLoading && !isSubjectsRefetching;
 
-    const selectedTagsIds = useMemo(() => {
+    const selectedSubjectsIds = useMemo(() => {
         return (
-            tagsResponse
+            subjectResponse
                 ?.filter((_, index) => {
                     return rowSelection[index as keyof typeof rowSelection];
                 })
-                .map((tag) => {
-                    return tag.id;
+                .map((subject) => {
+                    return subject.id;
                 }) ?? []
         );
-    }, [rowSelection, tagsResponse]);
+    }, [rowSelection, subjectResponse]);
 
-    const isButchRemoveEnabled = !!selectedTagsIds.length && !isRemoveTagDialogOpen && !isUpdateTagDialogOpen;
+    console.log(selectedSubjectsIds);
 
-    const columns = useMemo<ColumnDef<Tag>[]>(() => {
+    const isButchRemoveEnabled =
+        selectedSubjectsIds.length > 1 && !isRemoveSubjectDialogOpen && !isUpdateSubjectDialogOpen;
+
+    const columns = useMemo<ColumnDef<Discipline>[]>(() => {
         return [
             {
                 id: 'select',
@@ -88,6 +91,7 @@ const TagsTabContent: React.FC = () => {
                 cell({ row }) {
                     return (
                         <Checkbox
+                            className="mt-1"
                             checked={row.getIsSelected()}
                             onCheckedChange={(value) => {
                                 row.toggleSelected(!!value);
@@ -102,9 +106,51 @@ const TagsTabContent: React.FC = () => {
                 accessorKey: 'name',
                 header: 'Назва',
                 cell({ getValue }) {
-                    const tagName = getValue<Tag['name']>();
+                    const subjectName = getValue<Discipline['name']>();
 
-                    return <p className="text-base">{tagName}</p>;
+                    return <p className="text-base">{subjectName}</p>;
+                },
+                enableHiding: false,
+            },
+            {
+                accessorKey: 'description',
+                header: 'Опис',
+                id: 'Опис',
+                cell({ getValue }) {
+                    const subjectDescription = getValue<Discipline['description']>();
+
+                    return <ToggledMarkdown className="max-w-[500px]">{subjectDescription}</ToggledMarkdown>;
+                },
+            },
+            {
+                accessorKey: 'credits',
+                header: 'Кредити',
+                id: 'Кредити',
+                cell({ getValue }) {
+                    const subjectCredits = getValue<Discipline['credits']>();
+
+                    return <p className="text-base">{subjectCredits.toFixed(2)}</p>;
+                },
+            },
+            {
+                accessorKey: 'courses',
+                header: 'Курси',
+                id: 'Курси',
+                cell({ getValue }) {
+                    const subjectCourses = getValue<Discipline['courses']>();
+                    const splittedCourses = subjectCourses.split(',');
+
+                    return (
+                        <div className="flex min-w-[150px] flex-wrap">
+                            {splittedCourses.map((course) => {
+                                return (
+                                    <Badge className="mr-2 mt-2" key={course}>
+                                        {course}
+                                    </Badge>
+                                );
+                            })}
+                        </div>
+                    );
                 },
             },
             {
@@ -143,14 +189,14 @@ const TagsTabContent: React.FC = () => {
                                     <DropdownMenuLabel>Дії</DropdownMenuLabel>
                                     <DropdownMenuItem
                                         onClick={() => {
-                                            setUpdateTagDialogOpen(true);
+                                            setUpdateSubjectDialogOpen(true);
                                         }}
                                     >
                                         Редагувати
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         onClick={() => {
-                                            setRemoveTagDialogOpen(true);
+                                            setRemoveSubjectDialogOpen(true);
                                         }}
                                     >
                                         Видалити
@@ -162,10 +208,10 @@ const TagsTabContent: React.FC = () => {
                 },
             },
         ];
-    }, [setRemoveTagDialogOpen, setUpdateTagDialogOpen]);
+    }, [setRemoveSubjectDialogOpen, setUpdateSubjectDialogOpen]);
 
     const table = useReactTable({
-        data: tagsResponse ?? [],
+        data: subjectResponse ?? [],
         columns,
         getCoreRowModel: getCoreRowModel(),
         onRowSelectionChange: setRowSelection,
@@ -177,14 +223,14 @@ const TagsTabContent: React.FC = () => {
     return (
         <>
             <div>
-                <div className="container mb-6 flex items-end justify-between">
+                <div className=" container mb-6 flex items-end justify-between">
                     <div className="flex items-end">
                         <div className="w-[24.0625rem]">
                             <Label htmlFor="search">Пошук</Label>
                             <Input
                                 type="search"
                                 id="search"
-                                placeholder="Введіть назву тегу"
+                                placeholder="Введіть назву дисципліни"
                                 disabled={isEmpty}
                                 value={searchValue}
                                 onChange={(event) => {
@@ -198,12 +244,12 @@ const TagsTabContent: React.FC = () => {
                             <Button
                                 variant="destructive"
                                 onClick={() => {
-                                    if (selectedTagsIds.length === 1) {
-                                        setRemoveTagDialogOpen(true);
+                                    if (selectedSubjectsIds.length === 1) {
+                                        setRemoveSubjectDialogOpen(true);
                                         return;
                                     }
 
-                                    setButchRemoveTagsDialogOpen(true);
+                                    setButchRemoveSubjectsDialogOpen(true);
                                 }}
                             >
                                 Видалити вибрані
@@ -212,10 +258,10 @@ const TagsTabContent: React.FC = () => {
                         <Button
                             className="ml-2"
                             onClick={() => {
-                                setCreateTagDialogOpen(true);
+                                setCreateSubjectDialogOpen(true);
                             }}
                         >
-                            Додати тег
+                            Додати дисципліну
                         </Button>
                     </div>
                 </div>
@@ -230,17 +276,45 @@ const TagsTabContent: React.FC = () => {
                                 alt="Ще нічого не опубліковано"
                             />
                             <h3 className="mt-3 text-center text-base">
-                                Ще не було створено жодного тегу, почніть з додавання нового
+                                Ще не було створено жодної дисципліни, почніть з додавання нової
                             </h3>
                         </div>
                     ) : (
                         <>
                             {isLoading ? (
-                                <div className="grid">
-                                    <Skeleton />
+                                <div>
+                                    <SubjectsTableSkeleton />
                                 </div>
                             ) : (
-                                <ScrollArea className="relative h-[60vh] min-h-[500px] " scrollHideDelay={999}>
+                                <>
+                                    <div className=" container flex justify-end">
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="outline" className="ml-auto">
+                                                    Колонки <ChevronDown className="ml-2 h-4 w-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end">
+                                                {table
+                                                    .getAllColumns()
+                                                    .filter((column) => column.getCanHide())
+                                                    .map((column) => {
+                                                        return (
+                                                            <DropdownMenuCheckboxItem
+                                                                key={column.id}
+                                                                className="capitalize"
+                                                                checked={column.getIsVisible()}
+                                                                onCheckedChange={(value) =>
+                                                                    column.toggleVisibility(!!value)
+                                                                }
+                                                            >
+                                                                {column.id}
+                                                            </DropdownMenuCheckboxItem>
+                                                        );
+                                                    })}
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
                                     <Table className="relative">
                                         <TableHeader className="sticky top-0 bg-background">
                                             {table.getHeaderGroups().map((headerGroup) => (
@@ -276,7 +350,7 @@ const TagsTabContent: React.FC = () => {
                                                         {row.getVisibleCells().map((cell, index) => (
                                                             <TableCell
                                                                 key={cell.id}
-                                                                className={cn({
+                                                                className={cn('align-top', {
                                                                     'pl-7': index === 0,
                                                                 })}
                                                             >
@@ -291,43 +365,40 @@ const TagsTabContent: React.FC = () => {
                                             ) : (
                                                 <TableRow>
                                                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                        На жаль, не було знайдено потрібних тегів. Спробуйте інший запит
+                                                        На жаль, не було знайдено потрібних дисциплін. Спробуйте інший
+                                                        запит
                                                     </TableCell>
                                                 </TableRow>
                                             )}
                                         </TableBody>
                                     </Table>
-                                </ScrollArea>
+                                </>
                             )}
                         </>
                     )}
                 </div>
             </div>
-            <CreateTagDialog open={isCreateTagDialogOpen} onOpenChange={setCreateTagDialogOpen} />
-            <RemoveTagDialog
-                open={isRemoveTagDialogOpen}
-                onOpenChange={(opened) => {
-                    setRemoveTagDialogOpen(opened);
-                }}
-                id={selectedTagsIds[0] ?? ''}
+            <CreateSubjectDialog open={isCreateSubjectDialogOpen} onOpenChange={setCreateSubjectDialogOpen} />
+            <UpdateSubjectDialog
+                open={isUpdateSubjectDialogOpen}
+                onOpenChange={setUpdateSubjectDialogOpen}
+                subjectId={selectedSubjectsIds[0] ?? ''}
                 onSuccess={() => {
                     table.toggleAllPageRowsSelected(false);
                 }}
             />
-            <UpdateTagDialog
-                open={isUpdateTagDialogOpen}
-                onOpenChange={(opened) => {
-                    setUpdateTagDialogOpen(opened);
-                }}
-                id={selectedTagsIds[0] ?? ''}
+            <RemoveSubjectDialog
+                open={isRemoveSubjectDialogOpen}
+                onOpenChange={setRemoveSubjectDialogOpen}
+                id={selectedSubjectsIds[0] ?? ''}
                 onSuccess={() => {
                     table.toggleAllPageRowsSelected(false);
                 }}
             />
-            <ButchRemoveTagsDialog
-                open={isButchRemoveTagsDialogOpen}
-                onOpenChange={setButchRemoveTagsDialogOpen}
-                ids={selectedTagsIds}
+            <ButchRemoveSubjectsDialog
+                open={isButchRemoveSubjectsDialogOpen}
+                onOpenChange={setButchRemoveSubjectsDialogOpen}
+                ids={selectedSubjectsIds}
                 onSuccess={() => {
                     table.toggleAllPageRowsSelected(false);
                 }}
@@ -336,4 +407,4 @@ const TagsTabContent: React.FC = () => {
     );
 };
 
-export default memo(TagsTabContent);
+export default memo(SubjectsTabContent);

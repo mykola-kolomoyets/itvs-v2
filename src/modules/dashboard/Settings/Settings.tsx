@@ -1,9 +1,16 @@
 import { memo, useCallback } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs';
 import Image from 'next/image';
-import TagsTabContent from './components/TagsTabContent';
+import dynamic from 'next/dynamic';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs';
+import DashboardLayout from '@/components/layout/DashboardLayout';
+
+const TagsTabContent = dynamic(() => {
+    return import('./components/TagsTabContent');
+});
+const SubjectsTabContent = dynamic(() => {
+    return import('./components/SubjectsTabContent');
+});
 
 const SettingsModule: React.FC = () => {
     const pathname = usePathname();
@@ -37,13 +44,11 @@ const SettingsModule: React.FC = () => {
                         <TabsTrigger value="staff" disabled>
                             Колектив кафедри
                         </TabsTrigger>
-                        <TabsTrigger value="subjects" disabled>
-                            Дисципліни
-                        </TabsTrigger>
+                        <TabsTrigger value="subjects">Дисципліни</TabsTrigger>
                         <TabsTrigger value="tags">Теги</TabsTrigger>
                     </TabsList>
                 </section>
-                <section className="container mt-6">
+                <section className="mt-6">
                     <TabsContent value="news">
                         <div className="container my-16 flex w-full flex-col items-center">
                             <Image
@@ -69,16 +74,7 @@ const SettingsModule: React.FC = () => {
                         </div>
                     </TabsContent>
                     <TabsContent value="subjects">
-                        <div className="container my-16 flex w-full flex-col items-center">
-                            <Image
-                                className="dark:rounded-2xl dark:bg-foreground dark:py-5"
-                                src="/images/error.png"
-                                width={316}
-                                height={202}
-                                alt="Ще нічого не опубліковано"
-                            />
-                            <h3 className="mt-5 text-center text-base">Упс, ця секція ще в процесі розробки</h3>
-                        </div>
+                        <SubjectsTabContent />
                     </TabsContent>
                     <TabsContent value="tags">
                         <TagsTabContent />

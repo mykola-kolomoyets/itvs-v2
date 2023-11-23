@@ -1,14 +1,23 @@
 import { memo } from 'react';
+import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import type { MarkdownProps } from './types';
 import { cn } from '@/utils/common';
-import Image from 'next/image';
 
 const Markdown: React.FC<MarkdownProps> = ({ children }) => {
     return (
         <ReactMarkdown
             className="text-foreground"
             components={{
+                h1(props) {
+                    const { node: _, children, className, ...rest } = props;
+
+                    return (
+                        <h1 className={cn('my-4 text-4xl font-semibold', className)} {...rest}>
+                            {children}
+                        </h1>
+                    );
+                },
                 h2(props) {
                     const { node: _, children, className, ...rest } = props;
 
@@ -16,6 +25,15 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
                         <h2 className={cn('my-4 text-2xl font-semibold', className)} {...rest}>
                             {children}
                         </h2>
+                    );
+                },
+                h3(props) {
+                    const { node: _, children, className, ...rest } = props;
+
+                    return (
+                        <h3 className={cn('my-4 text-xl font-semibold', className)} {...rest}>
+                            {children}
+                        </h3>
                     );
                 },
                 p(props) {
@@ -59,6 +77,24 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
                                 {children}
                             </Image>
                         </span>
+                    );
+                },
+                li(props) {
+                    const { node: _, children, className, ...rest } = props;
+
+                    return (
+                        <li className={cn('mb-2 text-base', className)} {...rest}>
+                            -&nbsp;{children}
+                        </li>
+                    );
+                },
+                blockquote(props) {
+                    const { node: _, ...rest } = props;
+                    return (
+                        <blockquote
+                            {...rest}
+                            className="border-opacity-8 bg-dark bg-opacity-3 mt-4 border-l-4 border-solid border-l-muted-foreground px-4 pt-4 font-semibold"
+                        />
                     );
                 },
             }}

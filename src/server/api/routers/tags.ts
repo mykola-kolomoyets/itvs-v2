@@ -109,7 +109,7 @@ export const tagsRouter = createTRPCRouter({
         });
 
         try {
-            const removeTagFromRElativeArticlesPromises = allArticlesIncludeTag.map((article) => {
+            const removeTagFromRelativeArticlesPromises = allArticlesIncludeTag.map((article) => {
                 return async () => {
                     const tags = article.tags.filter((tag) => tag.id !== input.id);
 
@@ -126,7 +126,7 @@ export const tagsRouter = createTRPCRouter({
                 };
             });
 
-            await Promise.allSettled(removeTagFromRElativeArticlesPromises);
+            await Promise.allSettled(removeTagFromRelativeArticlesPromises);
         } catch (e) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',
@@ -203,9 +203,11 @@ export const tagsRouter = createTRPCRouter({
         });
 
         try {
-            const removeTagFromRElativeArticlesPromises = allArticlesIncludeTag.map((article) => {
+            const removeTagFromRelativeArticlesPromises = allArticlesIncludeTag.map((article) => {
                 return async () => {
-                    const tags = article.tags.filter((tag) => !input.ids.includes(tag.id));
+                    const tags = article.tags.filter((tag) => {
+                        return !input.ids.includes(tag.id);
+                    });
 
                     await ctx.db.article.update({
                         where: {
@@ -220,7 +222,7 @@ export const tagsRouter = createTRPCRouter({
                 };
             });
 
-            await Promise.allSettled(removeTagFromRElativeArticlesPromises);
+            await Promise.allSettled(removeTagFromRelativeArticlesPromises);
         } catch (e) {
             throw new TRPCError({
                 code: 'INTERNAL_SERVER_ERROR',

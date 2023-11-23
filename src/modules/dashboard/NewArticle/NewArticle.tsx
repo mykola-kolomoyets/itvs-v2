@@ -38,6 +38,7 @@ const NewArticleModule: React.FC = () => {
     const [selectedTagsIds, setSelectedTagsIds] = useState<string[]>([]);
     const [posterUrl, setPosterUrl] = useState('');
     const [isPosterUrlDialogOpened, , setPosterUrlDialogOpened] = useToggle();
+    // const [attachments, setAttachments] = useState<string[]>([]);
 
     const utils = api.useUtils();
 
@@ -392,6 +393,25 @@ const NewArticleModule: React.FC = () => {
                 </div>
             </section>
             <section className="mt-6">
+                {/* <div className="mr-5 w-full max-w-[400px]">
+                    <Label htmlFor="title">Вкладення</Label>
+                    <Input
+                        type="text"
+                        id="title"
+                        placeholder="Введіть посилання вкладення"
+                        value={attachments[0] ?? ''}
+                        onChange={async (event) => {
+                            if (!event.target.value.length) {
+                                return;
+                            }
+
+                            const file = await fetch(event.target.value.trim());
+                            const a = await file.blob();
+
+                            console.log(a);
+                        }}
+                    />
+                </div> */}
                 {!!nodes.length ? (
                     <div>
                         {nodes.map((node, index) => {

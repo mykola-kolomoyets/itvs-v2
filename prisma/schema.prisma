@@ -52,16 +52,14 @@ model Employee {
 }
 
 model Discipline {
-    id         String    @id @default(cuid())
-    name       String
-    descrption String
-    credits    Float
+    id           String     @id @default(cuid())
+    abbreviation String
+    name         String
+    description  String     @db.LongText
+    credits      Float
     // Comma separated list of courses
-    courses    String
-    Employee   Employee? @relation(fields: [employeeId], references: [id])
-    employeeId String?
-
-    @@index([employeeId])
+    courses      String
+    employees    Employee[]
 }
 
 model NewsSection {

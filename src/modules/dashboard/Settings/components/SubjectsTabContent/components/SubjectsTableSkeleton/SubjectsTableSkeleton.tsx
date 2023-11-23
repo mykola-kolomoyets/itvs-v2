@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/Skeleton';
 
-const ArticlesTableSkeleton: React.FC = () => {
+const SubjectsTableSkeleton: React.FC = () => {
     return (
         <div className="container mt-6">
             <div className="mb-6">
@@ -16,4 +16,4 @@ const ArticlesTableSkeleton: React.FC = () => {
     );
 };
 
-export default ArticlesTableSkeleton;
+export default SubjectsTableSkeleton;

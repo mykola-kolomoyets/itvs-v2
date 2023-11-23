@@ -1,35 +1,33 @@
-import { memo } from "react";
-import { useSession } from "next-auth/react";
-import { useSignIn } from "@/hooks/useSignIn";
-import { getFirstLetters } from "@/utils/common";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/Avatar";
+import { memo } from 'react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useSignIn } from '@/hooks/useSignIn';
+import { getFirstLetters } from '@/utils/common';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
 
 const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
-  const { googleSignIn, signOut } = useSignIn();
+    const { data: sessionData } = useSession();
+    const { googleSignIn, signOut } = useSignIn();
 
-  if (!sessionData) {
+    if (!sessionData) {
+        return (
+            <button className="" onClick={googleSignIn}>
+                Увійти
+            </button>
+        );
+    }
+
     return (
-      <button className="" onClick={googleSignIn}>
-        Увійти
-      </button>
+        <div>
+            <Link href="/dashboard/articles">
+                <Avatar>
+                    <AvatarImage src={sessionData.user.image ?? ''} alt={sessionData.user.name ?? 'No Name'} />
+                    <AvatarFallback>{getFirstLetters(sessionData.user.name ?? '')}</AvatarFallback>
+                </Avatar>
+            </Link>
+            <button onClick={signOut}>Вийти</button>
+        </div>
     );
-  }
-
-  return (
-    <div>
-      <Avatar>
-        <AvatarImage
-          src={sessionData.user.image ?? ""}
-          alt={sessionData.user.name ?? "No Name"}
-        />
-        <AvatarFallback>
-          {getFirstLetters(sessionData.user.name ?? "")}
-        </AvatarFallback>
-      </Avatar>
-      <button onClick={signOut}>Вийти</button>
-    </div>
-  );
 };
 
 export default memo(AuthShowcase);

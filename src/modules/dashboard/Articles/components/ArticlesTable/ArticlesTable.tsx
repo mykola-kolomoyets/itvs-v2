@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import {
     flexRender,
     getCoreRowModel,
@@ -13,6 +14,7 @@ import type { ArticleForTableItem } from '@/types';
 import type { ColumnDef, ColumnFiltersState, VisibilityState } from '@tanstack/react-table';
 import { useMePermissions } from '@/hooks/useMePermissions';
 import { useDebouncedState } from '@/hooks/useDebouncedState';
+import { useToggle } from '@/hooks/useToggle';
 import { cn, formatDate } from '@/utils/common';
 import { api } from '@/utils/api';
 import { ARTICLES_LIMIT } from './constants';
@@ -34,10 +36,12 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
-import ArticlesTableSkeleton from './components/ArticlesTableSkeleton';
-import RemoveArticleDialog from './components/RemoveArticleDialog';
-import { useToggle } from '@/hooks/useToggle';
 import { ScrollArea } from '@/components/ScrollArea';
+import ArticlesTableSkeleton from './components/ArticlesTableSkeleton';
+
+const RemoveArticleDialog = dynamic(() => {
+    return import('./components/RemoveArticleDialog');
+});
 
 const ArticlesTable: React.FC = () => {
     const { user, permissions } = useMePermissions();
@@ -101,7 +105,7 @@ const ArticlesTable: React.FC = () => {
                 cell({ getValue }) {
                     const articleTitle = getValue<string>();
 
-                    return <p className="min-w-[450px] max-w-[550px] text-base">{articleTitle}</p>;
+                    return <p className="min-w-[250px] max-w-[550px] text-base">{articleTitle}</p>;
                 },
             },
             {
@@ -130,7 +134,7 @@ const ArticlesTable: React.FC = () => {
                     const tags = getValue<ArticleForTableItem['tags']>();
 
                     return (
-                        <div className="flex min-w-[500px] max-w-[600px] flex-wrap">
+                        <div className="flex min-w-[150px] max-w-[600px] flex-wrap">
                             {tags.map((tag) => {
                                 return (
                                     <Badge key={tag.id} className="mb-2 mr-2 flex-shrink-0" variant="secondary">
