@@ -30,7 +30,6 @@ export const HEADER_SETTINGS_OPTIONS: HeaderNavigationOption[] = [
         title: 'Дисципліни',
         href: '/dashboard/settings?tab=subjects',
         description: 'Налаштування всіх дисциплін кафедри',
-        disabled: true,
     },
     {
         title: 'Теги',
