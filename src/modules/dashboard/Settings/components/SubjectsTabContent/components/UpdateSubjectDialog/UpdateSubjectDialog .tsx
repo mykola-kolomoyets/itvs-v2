@@ -4,15 +4,18 @@ import { CheckIcon, Loader2 } from 'lucide-react';
 import type { Option } from '@/types';
 import type { UpdateSubjectDialogProps, UpdateSubjectForm } from './types';
 import { useToast } from '@/components/Toaster/hooks/useToast';
+import { useToggle } from '@/hooks/useToggle';
 import { useUpdateSubjectForm } from './hooks/useUpdateSubjectForm';
 import { api } from '@/utils/api';
 import { DISCIPLINE_COURSES_OPTIONS } from '@/constants';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/Dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/Form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover';
+import { ScrollArea } from '@/components/ScrollArea';
+import { Textarea } from '@/components/TextArea';
+import Markdown from '@/components/Markdown';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
-import { Textarea } from '@/components/TextArea';
 
 const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
     open,
@@ -28,6 +31,8 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
         reset,
         formState: { isDirty },
     } = form;
+
+    const [isMarkdownPreview, toggleIsMarkdownPreview] = useToggle();
 
     const utils = api.useUtils();
 
@@ -188,13 +193,33 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
                                             <div className="w-full">
                                                 <FormLabel htmlFor="name">Опис дисципліни</FormLabel>
                                                 <FormControl>
-                                                    <Textarea
-                                                        className="resize-none"
-                                                        id="name"
-                                                        placeholder="Введіть опис дисципліни"
-                                                        rows={7}
-                                                        {...field}
-                                                    />
+                                                    <>
+                                                        {isMarkdownPreview ? (
+                                                            <ScrollArea
+                                                                className="h-[9.875rem] overflow-y-auto rounded-md border border-border px-3 py-2"
+                                                                scrollHideDelay={999}
+                                                            >
+                                                                <Markdown>{field.value}</Markdown>
+                                                            </ScrollArea>
+                                                        ) : (
+                                                            <Textarea
+                                                                className="resize-none"
+                                                                id="description"
+                                                                placeholder="Введіть опис дисципліни"
+                                                                rows={7}
+                                                                {...field}
+                                                            />
+                                                        )}
+                                                        <Button
+                                                            className="mt-2"
+                                                            variant="secondary"
+                                                            type="button"
+                                                            size="sm"
+                                                            onClick={toggleIsMarkdownPreview}
+                                                        >
+                                                            {isMarkdownPreview ? 'Редагувати' : 'Попередній перегляд'}
+                                                        </Button>
+                                                    </>
                                                 </FormControl>
                                                 <FormMessage />
                                             </div>

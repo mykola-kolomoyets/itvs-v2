@@ -72,7 +72,6 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
                                 alt={alt ?? 'Image'}
                                 width={typeof width === 'number' ? width : 1280}
                                 height={typeof height === 'number' ? height : 720}
-                                // {...rest}
                             >
                                 {children}
                             </Image>
@@ -96,6 +95,10 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
                             className="border-opacity-8 bg-dark bg-opacity-3 mt-4 border-l-4 border-solid border-l-muted-foreground px-4 pt-4 font-semibold"
                         />
                     );
+                },
+                code(props) {
+                    const { node: _, ...rest } = props;
+                    return <code {...rest} className="rounded-sm bg-accent px-[0.4em] pb-[0.2em] pt-[0.1em]" />;
                 },
             }}
         >
