@@ -1,6 +1,6 @@
 import Header from '@/components/dashboard/Header';
 
-const APP_VERSION = '0.2.6';
+const APP_VERSION = '0.3.7';
 
 const DashboardLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
     return (

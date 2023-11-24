@@ -68,7 +68,7 @@ const TagsTabContent: React.FC = () => {
         );
     }, [rowSelection, tagsResponse]);
 
-    const isButchRemoveEnabled = !!selectedTagsIds.length && !isRemoveTagDialogOpen && !isUpdateTagDialogOpen;
+    const isButchRemoveEnabled = selectedTagsIds.length > 1 && !isRemoveTagDialogOpen && !isUpdateTagDialogOpen;
 
     const columns = useMemo<ColumnDef<Tag>[]>(() => {
         return [
@@ -114,12 +114,13 @@ const TagsTabContent: React.FC = () => {
                 minSize: 64,
                 maxSize: 64,
                 size: 64,
-                cell({ row }) {
+                cell({ row, table }) {
                     return (
                         <div className="flex w-full justify-end pr-4">
                             <DropdownMenu
                                 onOpenChange={(opened) => {
                                     if (opened) {
+                                        table.toggleAllPageRowsSelected(false);
                                         row.toggleSelected(opened);
                                     }
                                 }}

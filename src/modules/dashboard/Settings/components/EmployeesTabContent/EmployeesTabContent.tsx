@@ -1,19 +1,18 @@
-import { memo, useMemo, useState } from 'react';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import { useReactTable, type ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
-import { ChevronDown, MoreHorizontal } from 'lucide-react';
-import type { Discipline } from '@prisma/client';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useDebouncedState } from '@/hooks/useDebouncedState';
 import { useToggle } from '@/hooks/useToggle';
 import { api } from '@/utils/api';
-import { cn } from '@/utils/common';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Table';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
+import { useReactTable, type ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
 import { Checkbox } from '@/components/Checkbox';
-import { Button } from '@/components/Button';
-import { Label } from '@/components/Label';
-import { Input } from '@/components/Input';
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from '@/components/ContextMenu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
+import { ChevronDown, ExternalLinkIcon, MoreHorizontal } from 'lucide-react';
+import { clickOnLink, cn, copyToClipboard, shimmer, toBase64 } from '@/utils/common';
+import { useToast } from '@/components/Toaster/hooks/useToast';
+import { EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
+import { Dialog, DialogContent } from '@/components/Dialog';
+import { DialogTrigger } from '@radix-ui/react-dialog';
+import Image from 'next/image';
 import { Badge } from '@/components/Badge';
 import {
     DropdownMenu,
@@ -23,57 +22,91 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from '@/components/DropdownMenu';
-import SubjectsTableSkeleton from './components/SubjectsTableSkeleton';
-import ToggledMarkdown from './components/ToggledMarkdown';
+import { Button } from '@/components/Button';
+import { Label } from '@/components/Label';
+import { Input } from '@/components/Input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Table';
+import EmployeesTableSkeleton from './components/EmployeesTableSkeleton';
+import dynamic from 'next/dynamic';
 
-const CreateSubjectDialog = dynamic(() => {
-    return import('./components/CreateSubjectDialog');
+const CreateEmployeeDialog = dynamic(() => {
+    return import('./components/CreateEmployeeDialog');
 });
-const RemoveSubjectDialog = dynamic(() => {
-    return import('./components/RemoveSubjectDialog');
+const UpdateEmployeeDialog = dynamic(() => {
+    return import('./components/UpdateEmployeeDialog');
 });
-const UpdateSubjectDialog = dynamic(() => {
-    return import('./components/UpdateSubjectDialog');
+const RemoveEmployeeDialog = dynamic(() => {
+    return import('./components/RemoveEmployeeDialog');
 });
-const ButchRemoveSubjectsDialog = dynamic(() => {
-    return import('./components/ButchRemoveSubjectsDialog');
+const ButchRemoveEmployeesDialog = dynamic(() => {
+    return import('./components/ButchRemoveEmployeesDialog');
 });
 
-const SubjectsTabContent: React.FC = () => {
+const EmployeesTabContent: React.FC = () => {
     const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
-    const [isCreateSubjectDialogOpen, , setCreateSubjectDialogOpen] = useToggle();
-    const [isRemoveSubjectDialogOpen, , setRemoveSubjectDialogOpen] = useToggle();
-    const [isButchRemoveSubjectsDialogOpen, , setButchRemoveSubjectsDialogOpen] = useToggle();
-    const [isUpdateSubjectDialogOpen, , setUpdateSubjectDialogOpen] = useToggle();
+    const [isCreateEmployeesDialogOpen, , setCreateEmployeesDialogOpen] = useToggle();
+    const [isRemoveEmployeesDialogOpen, , setRemoveEmployeesDialogOpen] = useToggle();
+    const [isButchRemoveEmployeesDialogOpen, , setButchRemoveEmployeesDialogOpen] = useToggle();
+    const [isUpdateEmployeesDialogOpen, , setUpdateEmployeesDialogOpen] = useToggle();
     const [rowSelection, setRowSelection] = useState({});
 
+    const { toast } = useToast();
+
     const {
-        data: subjectResponse,
-        isLoading: isSubjectsLoading,
-        isRefetching: isSubjectsRefetching,
-    } = api.subjects.getAllSubjects.useQuery({
+        data: employeesResponse,
+        isLoading: isEmployeesLoading,
+        isRefetching: isEmployeesRefetching,
+    } = api.employees.getAllEmployees.useQuery({
         search: debouncedSearchValue.trim(),
     });
+    type EmployeeItem = NonNullable<typeof employeesResponse>[number];
 
-    const isEmpty = !debouncedSearchValue.trim() && !subjectResponse?.length;
-    const isLoading = isSubjectsLoading && !isSubjectsRefetching;
+    const isEmpty = !debouncedSearchValue.trim() && !employeesResponse?.length;
+    const isLoading = isEmployeesLoading && !isEmployeesRefetching;
 
-    const selectedSubjectsIds = useMemo(() => {
+    const selectedEmployeesIds = useMemo(() => {
         return (
-            subjectResponse
+            employeesResponse
                 ?.filter((_, index) => {
                     return rowSelection[index as keyof typeof rowSelection];
                 })
-                .map((subject) => {
-                    return subject.id;
+                .map((employee) => {
+                    return employee.id;
                 }) ?? []
         );
-    }, [rowSelection, subjectResponse]);
+    }, [employeesResponse, rowSelection]);
 
     const isButchRemoveEnabled =
-        selectedSubjectsIds.length > 1 && !isRemoveSubjectDialogOpen && !isUpdateSubjectDialogOpen;
+        selectedEmployeesIds.length > 1 && !isRemoveEmployeesDialogOpen && !isUpdateEmployeesDialogOpen;
 
-    const columns = useMemo<ColumnDef<Discipline>[]>(() => {
+    const sendEmailHandler = useCallback((email: string) => {
+        clickOnLink(`mailto:${email}`);
+    }, []);
+
+    const copyToClipboardHandler = useCallback(
+        async (value: string) => {
+            await copyToClipboard(
+                value,
+                () => {
+                    toast({
+                        title: 'Пошта скопійована',
+                        description: `Пошта ${value} скопійована в буфер обміну`,
+                    });
+                },
+                () => {
+                    toast({
+                        title: 'Пошта  не була скопійована',
+                        description:
+                            'Виникла помилка під час копіювання пошти. Спробуйте ще раз пізніше, або скопіюйте вручну за допомогою клавіш Ctrl+C',
+                        variant: 'destructive',
+                    });
+                }
+            );
+        },
+        [toast]
+    );
+
+    const columns = useMemo<ColumnDef<EmployeeItem>[]>(() => {
         return [
             {
                 id: 'select',
@@ -104,48 +137,158 @@ const SubjectsTabContent: React.FC = () => {
             },
             {
                 accessorKey: 'name',
-                header: 'Назва',
+                header: 'ПІП',
                 cell({ getValue }) {
-                    const subjectName = getValue<Discipline['name']>();
+                    const employeeName = getValue<EmployeeItem['name']>();
 
-                    return <p className="text-base">{subjectName}</p>;
+                    return (
+                        <p className="max-w-[550px] truncate text-base" title={employeeName}>
+                            {employeeName}
+                        </p>
+                    );
                 },
                 enableHiding: false,
             },
             {
-                accessorKey: 'description',
-                header: 'Опис',
-                id: 'Опис',
+                accessorKey: 'email',
+                header: 'Пошта',
                 cell({ getValue }) {
-                    const subjectDescription = getValue<Discipline['description']>();
-
-                    return <ToggledMarkdown className="max-w-[500px]">{subjectDescription}</ToggledMarkdown>;
-                },
-            },
-            {
-                accessorKey: 'credits',
-                header: 'Кредити',
-                id: 'Кредити',
-                cell({ getValue }) {
-                    const subjectCredits = getValue<Discipline['credits']>();
-
-                    return <p className="text-base">{subjectCredits.toFixed(2)}</p>;
-                },
-            },
-            {
-                accessorKey: 'courses',
-                header: 'Курси',
-                id: 'Курси',
-                cell({ getValue }) {
-                    const subjectCourses = getValue<Discipline['courses']>();
-                    const splittedCourses = subjectCourses.split(',');
+                    const email = getValue<EmployeeItem['email']>();
 
                     return (
-                        <div className="flex min-w-[150px] flex-wrap">
-                            {splittedCourses.map((course) => {
+                        <ContextMenu>
+                            <ContextMenuTrigger>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <a
+                                                className=" inline-flex items-center text-base hover:underline"
+                                                href={`mailto:${email}`}
+                                            >
+                                                {email}
+                                                <ExternalLinkIcon className="ml-1" size={16} />
+                                            </a>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Натисніть щоб написати листа, або правий клік для додаткових дій</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </ContextMenuTrigger>
+                            <ContextMenuContent className="mt-5 w-64">
+                                <ContextMenuItem
+                                    onClick={() => {
+                                        void copyToClipboardHandler(email);
+                                    }}
+                                >
+                                    Скопіювати пошту
+                                </ContextMenuItem>
+                                <ContextMenuItem
+                                    onClick={() => {
+                                        sendEmailHandler(email);
+                                    }}
+                                >
+                                    Написати листа
+                                </ContextMenuItem>
+                            </ContextMenuContent>
+                        </ContextMenu>
+                    );
+                },
+                enableHiding: false,
+            },
+            {
+                accessorKey: 'academicStatus',
+                header: 'Науковий ступінь',
+                id: 'Науковий ступінь',
+                cell({ getValue }) {
+                    const academicStatus = getValue<EmployeeItem['academicStatus']>();
+
+                    if (!academicStatus) {
+                        return <p className="max-w-[550px] truncate text-base">Не вказано</p>;
+                    }
+
+                    const academicStatusLabel = EMPLOYEE_ACADEMIC_STATUSES[academicStatus].label;
+
+                    return (
+                        <p className="truncate text-base" title={academicStatusLabel}>
+                            {academicStatusLabel}
+                        </p>
+                    );
+                },
+            },
+            {
+                accessorKey: 'image',
+                header: 'Фото',
+                id: 'Фото',
+                cell({ row, getValue }) {
+                    const employeeName = row.original.name;
+                    const image = getValue<EmployeeItem['image']>();
+
+                    if (!image) {
+                        return <p className="text-base">Немає</p>;
+                    }
+
+                    return (
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant="link" className="h-6 p-0">
+                                    Переглянути
+                                    <ExternalLinkIcon className="ml-1" size={16} />
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <div className="mt-6">
+                                    <Image
+                                        className="w-full rounded-lg"
+                                        src={image}
+                                        width={720}
+                                        height={720}
+                                        alt={employeeName}
+                                        placeholder="blur"
+                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(720, 720))}`}
+                                    />
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    );
+                },
+            },
+            {
+                accessorKey: 'url',
+                header: 'Wiki',
+                id: 'Wiki',
+                cell({ getValue }) {
+                    const url = getValue<EmployeeItem['url']>();
+
+                    if (!url) {
+                        return <p className="text-base">Немає</p>;
+                    }
+
+                    return (
+                        <a className=" inline-flex items-center text-base hover:underline" href={url} target="_blank">
+                            Перейти
+                            <ExternalLinkIcon className="ml-1" size={16} />
+                        </a>
+                    );
+                },
+            },
+            {
+                accessorKey: 'disciplines',
+                header: 'Дисципліни',
+                id: 'Дисципліни',
+                cell({ getValue }) {
+                    const disciplines = getValue<EmployeeItem['disciplines']>();
+
+                    if (!disciplines?.length) {
+                        return <p className="text-base">Немає</p>;
+                    }
+
+                    return (
+                        <div className="-mt-1 flex flex-wrap">
+                            {disciplines.map((discipline) => {
                                 return (
-                                    <Badge className="mr-2 mt-2" key={course}>
-                                        {course}
+                                    <Badge className="mr-1 mt-1" variant="secondary" key={discipline.id}>
+                                        {discipline.name}
                                     </Badge>
                                 );
                             })}
@@ -190,14 +333,14 @@ const SubjectsTabContent: React.FC = () => {
                                     <DropdownMenuLabel>Дії</DropdownMenuLabel>
                                     <DropdownMenuItem
                                         onClick={() => {
-                                            setUpdateSubjectDialogOpen(true);
+                                            setUpdateEmployeesDialogOpen(true);
                                         }}
                                     >
                                         Редагувати
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         onClick={() => {
-                                            setRemoveSubjectDialogOpen(true);
+                                            setRemoveEmployeesDialogOpen(true);
                                         }}
                                     >
                                         Видалити
@@ -209,10 +352,10 @@ const SubjectsTabContent: React.FC = () => {
                 },
             },
         ];
-    }, [setRemoveSubjectDialogOpen, setUpdateSubjectDialogOpen]);
+    }, [copyToClipboardHandler, sendEmailHandler, setRemoveEmployeesDialogOpen, setUpdateEmployeesDialogOpen]);
 
     const table = useReactTable({
-        data: subjectResponse ?? [],
+        data: employeesResponse ?? [],
         columns,
         getCoreRowModel: getCoreRowModel(),
         onRowSelectionChange: setRowSelection,
@@ -231,7 +374,7 @@ const SubjectsTabContent: React.FC = () => {
                             <Input
                                 type="search"
                                 id="search"
-                                placeholder="Введіть назву дисципліни"
+                                placeholder="Введіть ПІБ або пошту"
                                 disabled={isEmpty}
                                 value={searchValue}
                                 onChange={(event) => {
@@ -245,12 +388,12 @@ const SubjectsTabContent: React.FC = () => {
                             <Button
                                 variant="destructive"
                                 onClick={() => {
-                                    if (selectedSubjectsIds.length === 1) {
-                                        setRemoveSubjectDialogOpen(true);
+                                    if (selectedEmployeesIds.length === 1) {
+                                        setRemoveEmployeesDialogOpen(true);
                                         return;
                                     }
 
-                                    setButchRemoveSubjectsDialogOpen(true);
+                                    setButchRemoveEmployeesDialogOpen(true);
                                 }}
                             >
                                 Видалити вибрані
@@ -259,10 +402,10 @@ const SubjectsTabContent: React.FC = () => {
                         <Button
                             className="ml-2"
                             onClick={() => {
-                                setCreateSubjectDialogOpen(true);
+                                setCreateEmployeesDialogOpen(true);
                             }}
                         >
-                            Додати дисципліну
+                            Додати співробітника
                         </Button>
                     </div>
                 </div>
@@ -277,14 +420,14 @@ const SubjectsTabContent: React.FC = () => {
                                 alt="Ще нічого не опубліковано"
                             />
                             <h3 className="mt-3 text-center text-base">
-                                Ще не було створено жодної дисципліни, почніть з додавання нової
+                                Ще не було створено жодного співробітника, почніть з додавання нового
                             </h3>
                         </div>
                     ) : (
                         <>
                             {isLoading ? (
                                 <div>
-                                    <SubjectsTableSkeleton />
+                                    <EmployeesTableSkeleton />
                                 </div>
                             ) : (
                                 <>
@@ -351,7 +494,7 @@ const SubjectsTabContent: React.FC = () => {
                                                         {row.getVisibleCells().map((cell, index) => (
                                                             <TableCell
                                                                 key={cell.id}
-                                                                className={cn('align-top', {
+                                                                className={cn({
                                                                     'pl-7': index === 0,
                                                                 })}
                                                             >
@@ -366,8 +509,8 @@ const SubjectsTabContent: React.FC = () => {
                                             ) : (
                                                 <TableRow>
                                                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                        На жаль, не було знайдено потрібних дисциплін. Спробуйте інший
-                                                        запит
+                                                        На жаль, не було знайдено потрібних співробітників. Спробуйте
+                                                        інший запит
                                                     </TableCell>
                                                 </TableRow>
                                             )}
@@ -379,27 +522,27 @@ const SubjectsTabContent: React.FC = () => {
                     )}
                 </div>
             </div>
-            <CreateSubjectDialog open={isCreateSubjectDialogOpen} onOpenChange={setCreateSubjectDialogOpen} />
-            <UpdateSubjectDialog
-                open={isUpdateSubjectDialogOpen}
-                onOpenChange={setUpdateSubjectDialogOpen}
-                subjectId={selectedSubjectsIds[0] ?? ''}
+            <CreateEmployeeDialog open={isCreateEmployeesDialogOpen} onOpenChange={setCreateEmployeesDialogOpen} />
+            <UpdateEmployeeDialog
+                open={isUpdateEmployeesDialogOpen}
+                employeeId={selectedEmployeesIds[0] ?? ''}
+                onOpenChange={setUpdateEmployeesDialogOpen}
                 onSuccess={() => {
                     table.toggleAllPageRowsSelected(false);
                 }}
             />
-            <RemoveSubjectDialog
-                open={isRemoveSubjectDialogOpen}
-                onOpenChange={setRemoveSubjectDialogOpen}
-                id={selectedSubjectsIds[0] ?? ''}
+            <RemoveEmployeeDialog
+                open={isRemoveEmployeesDialogOpen}
+                employeeId={selectedEmployeesIds[0] ?? ''}
+                onOpenChange={setRemoveEmployeesDialogOpen}
                 onSuccess={() => {
                     table.toggleAllPageRowsSelected(false);
                 }}
             />
-            <ButchRemoveSubjectsDialog
-                open={isButchRemoveSubjectsDialogOpen}
-                onOpenChange={setButchRemoveSubjectsDialogOpen}
-                ids={selectedSubjectsIds}
+            <ButchRemoveEmployeesDialog
+                open={isButchRemoveEmployeesDialogOpen}
+                ids={selectedEmployeesIds}
+                onOpenChange={setButchRemoveEmployeesDialogOpen}
                 onSuccess={() => {
                     table.toggleAllPageRowsSelected(false);
                 }}
@@ -408,4 +551,4 @@ const SubjectsTabContent: React.FC = () => {
     );
 };
 
-export default memo(SubjectsTabContent);
+export default memo(EmployeesTabContent);

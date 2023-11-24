@@ -42,6 +42,23 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
         },
         {
             enabled: !!subjectId,
+            // NOTE: deprecated
+            onSuccess(data) {
+                if (data) {
+                    form.setValue('name', data.name);
+                    form.setValue('abbreviation', data.abbreviation ?? '');
+                    form.setValue('description', data.description);
+                    form.setValue('credits', data.credits);
+                    form.setValue(
+                        'courses',
+                        Object.values(DISCIPLINE_COURSES_OPTIONS)
+                            .flat()
+                            .filter((course) => {
+                                return data.courses.split(',').includes(course.value);
+                            })
+                    );
+                }
+            },
         }
     );
 

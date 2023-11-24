@@ -23,8 +23,7 @@ export const HEADER_SETTINGS_OPTIONS: HeaderNavigationOption[] = [
     {
         title: 'Колектив кафедри',
         href: '/dashboard/settings?tab=staff',
-        description: 'Налаштування всіх викладачів кафедри',
-        disabled: true,
+        description: 'Налаштування всіх співробітників кафедри',
     },
     {
         title: 'Дисципліни',

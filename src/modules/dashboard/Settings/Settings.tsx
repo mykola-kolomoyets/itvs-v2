@@ -11,6 +11,9 @@ const TagsTabContent = dynamic(() => {
 const SubjectsTabContent = dynamic(() => {
     return import('./components/SubjectsTabContent');
 });
+const EmployeesTabContent = dynamic(() => {
+    return import('./components/EmployeesTabContent');
+});
 
 const SettingsModule: React.FC = () => {
     const pathname = usePathname();
@@ -41,9 +44,7 @@ const SettingsModule: React.FC = () => {
                         <TabsTrigger value="news" disabled>
                             Новини
                         </TabsTrigger>
-                        <TabsTrigger value="staff" disabled>
-                            Колектив кафедри
-                        </TabsTrigger>
+                        <TabsTrigger value="staff">Колектив кафедри</TabsTrigger>
                         <TabsTrigger value="subjects">Дисципліни</TabsTrigger>
                         <TabsTrigger value="tags">Теги</TabsTrigger>
                     </TabsList>
@@ -62,16 +63,7 @@ const SettingsModule: React.FC = () => {
                         </div>
                     </TabsContent>
                     <TabsContent value="staff">
-                        <div className="container my-16 flex w-full flex-col items-center">
-                            <Image
-                                className="dark:rounded-2xl dark:bg-foreground dark:py-5"
-                                src="/images/error.png"
-                                width={316}
-                                height={202}
-                                alt="Ще нічого не опубліковано"
-                            />
-                            <h3 className="mt-5 text-center text-base">Упс, ця секція ще в процесі розробки</h3>
-                        </div>
+                        <EmployeesTabContent />
                     </TabsContent>
                     <TabsContent value="subjects">
                         <SubjectsTabContent />

@@ -1,5 +1,6 @@
 import type { Option } from '@/types';
 import { env } from '@/env.mjs';
+import { AcademicStatus } from '@prisma/client';
 
 export const LOCK_SCROLL_Y_CLASS_NAME = 'lock-scroll-y';
 
@@ -69,4 +70,37 @@ export const DISCIPLINE_COURSES_OPTIONS: Record<string, Option[]> = {
             value: '6',
         },
     ],
+};
+
+export const EMPLOYEE_ACADEMIC_STATUSES: Record<AcademicStatus, { label: string; id: string; priority: number }> = {
+    assistant: {
+        label: 'Асистент кафедри, к.т.н.',
+        id: 'assistant',
+        priority: 1,
+    },
+    senior_lecturer: {
+        label: 'Старший викладач кафедри, к.т.н.',
+        id: 'senior_lecturer',
+        priority: 2,
+    },
+    docent: {
+        label: 'Доцент кафедри, к.т.н.',
+        id: 'docent',
+        priority: 3,
+    },
+    professor: {
+        label: 'Професор кафедри, д.т.н.',
+        id: 'professor',
+        priority: 4,
+    },
+    sub_director: {
+        label: 'В.О. Завідувач кафедри, д.т.н.',
+        id: 'sub_director',
+        priority: 5,
+    },
+    director: {
+        label: 'Завідувач кафедри, д.т.н.',
+        id: 'director',
+        priority: 6,
+    },
 };

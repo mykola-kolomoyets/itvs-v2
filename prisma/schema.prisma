@@ -17,6 +17,15 @@ enum Role {
     ADMIN
 }
 
+enum AcademicStatus {
+    assistant
+    senior_lecturer
+    docent
+    professor
+    sub_director
+    director
+}
+
 model Article {
     id        String   @id @default(cuid())
     title     String
@@ -43,11 +52,12 @@ model Tag {
 }
 
 model Employee {
-    id             String       @id @default(cuid())
+    id             String          @id @default(cuid())
     name           String
     email          String
     image          String?
-    academicStatus String?
+    academicStatus AcademicStatus?
+    url            String?
     disciplines    Discipline[]
 }
 
