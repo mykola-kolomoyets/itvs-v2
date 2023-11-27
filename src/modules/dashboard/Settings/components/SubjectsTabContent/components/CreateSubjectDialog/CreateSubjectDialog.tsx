@@ -34,21 +34,8 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProps> = ({ open, onOpenC
     const utils = api.useUtils();
 
     const { mutateAsync: createSubject, isLoading: isSubjectCreating } = api.subjects.createSubject.useMutation({
-        async onSuccess() {
+        async onSuccess(createdSubject) {
             await utils.subjects.getAllSubjects.invalidate();
-        },
-    });
-
-    const { toast } = useToast();
-
-    const createSubjectHandler = useCallback(
-        async ({ courses, ...rest }: CreateSubjectForm) => {
-            const newSubject = await createSubject({
-                ...rest,
-                courses: courses.map((course) => {
-                    return course.value;
-                }),
-            });
 
             onOpenChange?.(false);
 
@@ -56,13 +43,26 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProps> = ({ open, onOpenC
                 title: 'Дисципліну успішно створено',
                 description: (
                     <p>
-                        Тег <strong>{newSubject.name}</strong> успішно створено. Тепер ви можете віднести викладача до
-                        цієї дисципліни
+                        Тег <strong>{createdSubject.name}</strong> успішно створено. Тепер ви можете віднести викладача
+                        до цієї дисципліни
                     </p>
                 ),
             });
         },
-        [createSubject, onOpenChange, toast]
+    });
+
+    const { toast } = useToast();
+
+    const createSubjectHandler = useCallback(
+        async ({ courses, ...rest }: CreateSubjectForm) => {
+            await createSubject({
+                ...rest,
+                courses: courses.map((course) => {
+                    return course.value;
+                }),
+            });
+        },
+        [createSubject]
     );
 
     const toggleCourseItemHandler = useCallback(

@@ -18,8 +18,20 @@ const RemoveTagDialog: React.FC<ButchRemoveTagsDialogProps> = ({ ids, open, onOp
     const utils = api.useUtils();
 
     const { mutateAsync: removeTags, isLoading: isTagsRemoving } = api.tags.butchRemoveTags.useMutation({
-        async onSuccess() {
+        async onSuccess(removedTagsAmount) {
             await utils.tags.getAllTags.invalidate();
+
+            onSuccess?.();
+            onOpenChange?.(false);
+
+            toast({
+                title: 'Теги успішно видалені',
+                description: (
+                    <p>
+                        було видалено <strong>{removedTagsAmount}</strong> тегів. Всі статті з цими тегами були оновлені
+                    </p>
+                ),
+            });
         },
     });
 
@@ -45,21 +57,8 @@ const RemoveTagDialog: React.FC<ButchRemoveTagsDialogProps> = ({ ids, open, onOp
                         variant="destructive"
                         disabled={isTagsRemoving}
                         onClick={async () => {
-                            const removedTagsAmount = await removeTags({
+                            await removeTags({
                                 ids,
-                            });
-
-                            onSuccess?.();
-                            onOpenChange?.(false);
-
-                            toast({
-                                title: 'Теги успішно видалені',
-                                description: (
-                                    <p>
-                                        було видалено <strong>{removedTagsAmount}</strong> тегів. Всі статті з цими
-                                        тегами були оновлені
-                                    </p>
-                                ),
                             });
                         }}
                     >

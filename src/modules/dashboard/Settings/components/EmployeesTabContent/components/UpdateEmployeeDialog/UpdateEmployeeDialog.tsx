@@ -74,8 +74,22 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
         }
     );
     const { mutateAsync: updateEmployee, isLoading: isEmployeeUpdating } = api.employees.updateEmployee.useMutation({
-        async onSuccess() {
+        async onSuccess(updatedEmployee) {
             await utils.employees.getAllEmployees.invalidate();
+
+            onSuccess?.();
+
+            onOpenChange?.(false);
+
+            toast({
+                title: 'Дисципліну успішно створено',
+                description: (
+                    <p>
+                        Тег <strong>{updatedEmployee.name}</strong> успішно створено. Тепер ви можете віднести викладача
+                        до цієї дисципліни
+                    </p>
+                ),
+            });
         },
     });
 
@@ -94,7 +108,7 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
 
     const createEmployeeHandler = useCallback(
         async ({ academicStatus, disciplines = [], ...rest }: UpdateEmployeeForm) => {
-            const newEmployee = await updateEmployee({
+            await updateEmployee({
                 id: employeeId!,
                 ...rest,
                 academicStatus: academicStatus as AcademicStatus,
@@ -102,22 +116,8 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
                     return discipline.value;
                 }),
             });
-
-            onSuccess?.();
-
-            onOpenChange?.(false);
-
-            toast({
-                title: 'Дисципліну успішно створено',
-                description: (
-                    <p>
-                        Тег <strong>{newEmployee.name}</strong> успішно створено. Тепер ви можете віднести викладача до
-                        цієї дисципліни
-                    </p>
-                ),
-            });
         },
-        [updateEmployee, employeeId, onSuccess, onOpenChange, toast]
+        [updateEmployee, employeeId]
     );
 
     const toggleDisciplineItemHandler = useCallback(

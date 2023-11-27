@@ -24,8 +24,21 @@ const ButchRemoveEmployeesDialog: React.FC<ButchRemoveEmployeesDialogProps> = ({
 
     const { mutateAsync: removeEmployees, isLoading: isEmployeesRemoving } =
         api.employees.butchRemoveEmployees.useMutation({
-            async onSuccess() {
+            async onSuccess(removedEmployeesAmount) {
                 await utils.employees.getAllEmployees.invalidate();
+
+                onSuccess?.();
+
+                onOpenChange?.(false);
+
+                toast({
+                    title: 'Співробітники успішно видалені',
+                    description: (
+                        <p>
+                            було видалено <strong>{removedEmployeesAmount}</strong> співробітників.
+                        </p>
+                    ),
+                });
             },
         });
 
@@ -47,21 +60,8 @@ const ButchRemoveEmployeesDialog: React.FC<ButchRemoveEmployeesDialogProps> = ({
                         variant="destructive"
                         disabled={isEmployeesRemoving}
                         onClick={async () => {
-                            const removedEmployeesAmount = await removeEmployees({
+                            await removeEmployees({
                                 ids,
-                            });
-
-                            onSuccess?.();
-
-                            onOpenChange?.(false);
-
-                            toast({
-                                title: 'Співробітники успішно видалені',
-                                description: (
-                                    <p>
-                                        було видалено <strong>{removedEmployeesAmount}</strong> співробітників.
-                                    </p>
-                                ),
                             });
                         }}
                     >

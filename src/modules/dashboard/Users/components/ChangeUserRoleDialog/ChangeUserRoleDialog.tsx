@@ -28,13 +28,25 @@ const ChangeUserRoleDialog: React.FC<ChangeUserRoleDialogProps> = ({ user, ...re
         return user?.role ?? 'USER';
     });
 
+    const { toast } = useToast();
+
     const { mutateAsync: updateUserRole, isLoading: isUserRoleUpdating } = api.users.updateUserRole.useMutation({
-        async onSuccess() {
+        async onSuccess(updatedUser) {
             await utils.users.getAllUsers.invalidate();
+
+            rest.onOpenChange?.(false);
+
+            toast({
+                title: 'Роль користувача оновлено',
+                description: (
+                    <p>
+                        Роль <strong>{updatedUser.name}</strong> до{' '}
+                        <strong>{USER_ROLE_LABELS[selectedUserRole]}</strong> успішно оновлено
+                    </p>
+                ),
+            });
         },
     });
-
-    const { toast } = useToast();
 
     return (
         <Dialog {...rest}>
@@ -96,18 +108,6 @@ const ChangeUserRoleDialog: React.FC<ChangeUserRoleDialogProps> = ({ user, ...re
                             await updateUserRole({
                                 id: user!.id,
                                 role: selectedUserRole,
-                            });
-
-                            rest.onOpenChange?.(false);
-
-                            toast({
-                                title: 'Роль користувача оновлено',
-                                description: (
-                                    <p>
-                                        Роль <strong>{user?.name}</strong> до{' '}
-                                        <strong>{USER_ROLE_LABELS[selectedUserRole]}</strong> успішно оновлено
-                                    </p>
-                                ),
                             });
                         }}
                     >

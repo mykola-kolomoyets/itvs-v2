@@ -18,8 +18,20 @@ const RemoveTagDialog: React.FC<RemoveTagDialogProps> = ({ id, open, onOpenChang
     const utils = api.useUtils();
 
     const { mutateAsync: removeTag, isLoading: isTagRemoving } = api.tags.removeTag.useMutation({
-        async onSuccess() {
+        async onSuccess(removedTag) {
             await utils.tags.getAllTags.invalidate();
+
+            onSuccess?.();
+            onOpenChange?.(false);
+
+            toast({
+                title: 'Тег успішно видалено',
+                description: (
+                    <p>
+                        Тег <strong>{removedTag.name}</strong> успішно видалено. Всі статті з цим тегом були оновлені
+                    </p>
+                ),
+            });
         },
     });
 
@@ -43,21 +55,8 @@ const RemoveTagDialog: React.FC<RemoveTagDialogProps> = ({ id, open, onOpenChang
                         variant="destructive"
                         disabled={isTagRemoving}
                         onClick={async () => {
-                            const removedTag = await removeTag({
+                            await removeTag({
                                 id,
-                            });
-
-                            onSuccess?.();
-                            onOpenChange?.(false);
-
-                            toast({
-                                title: 'Тег успішно видалено',
-                                description: (
-                                    <p>
-                                        Тег <strong>{removedTag.name}</strong> успішно видалено. Всі статті з цим тегом
-                                        були оновлені
-                                    </p>
-                                ),
                             });
                         }}
                     >

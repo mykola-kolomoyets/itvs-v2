@@ -25,8 +25,21 @@ const ButchRemoveSubjectsDialog: React.FC<ButchRemoveSubjectsDialogProps> = ({
 
     const { mutateAsync: removeSubjects, isLoading: isSubjectsRemoving } = api.subjects.butchRemoveSubjects.useMutation(
         {
-            async onSuccess() {
+            async onSuccess(removedTagsAmount) {
                 await utils.subjects.getAllSubjects.invalidate();
+
+                onSuccess?.();
+                onOpenChange?.(false);
+
+                toast({
+                    title: 'Теги успішно видалені',
+                    description: (
+                        <p>
+                            було видалено <strong>{removedTagsAmount}</strong> тегів. Всі статті з цими тегами були
+                            оновлені
+                        </p>
+                    ),
+                });
             },
         }
     );
@@ -53,21 +66,8 @@ const ButchRemoveSubjectsDialog: React.FC<ButchRemoveSubjectsDialogProps> = ({
                         variant="destructive"
                         disabled={isSubjectsRemoving}
                         onClick={async () => {
-                            const removedTagsAmount = await removeSubjects({
+                            await removeSubjects({
                                 ids,
-                            });
-
-                            onSuccess?.();
-                            onOpenChange?.(false);
-
-                            toast({
-                                title: 'Теги успішно видалені',
-                                description: (
-                                    <p>
-                                        було видалено <strong>{removedTagsAmount}</strong> тегів. Всі статті з цими
-                                        тегами були оновлені
-                                    </p>
-                                ),
                             });
                         }}
                     >

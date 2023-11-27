@@ -27,9 +27,21 @@ const RemoveArticleDialog: React.FC<RemoveArticleDialogProps> = ({ id, open, onO
         }
     );
     const { mutateAsync: removeArticle, isLoading: isArticleRemoving } = api.articles.removeArticle.useMutation({
-        async onSuccess() {
+        async onSuccess(removedArticle) {
             await utils.articles.getAllArticles.invalidate();
             await utils.articles.getStatistics.invalidate();
+
+            onSuccess?.();
+            onOpenChange?.(false);
+
+            toast({
+                title: 'Статтю успішно видалено',
+                description: (
+                    <p>
+                        Статтю <strong>{removedArticle.title}</strong> успішно видалено.
+                    </p>
+                ),
+            });
         },
     });
 
@@ -53,20 +65,8 @@ const RemoveArticleDialog: React.FC<RemoveArticleDialogProps> = ({ id, open, onO
                         variant="destructive"
                         disabled={isArticleRemoving}
                         onClick={async () => {
-                            const removedArticle = await removeArticle({
+                            await removeArticle({
                                 id,
-                            });
-
-                            onSuccess?.();
-                            onOpenChange?.(false);
-
-                            toast({
-                                title: 'Статтю успішно видалено',
-                                description: (
-                                    <p>
-                                        Статтю <strong>{removedArticle.title}</strong> успішно видалено.
-                                    </p>
-                                ),
                             });
                         }}
                     >

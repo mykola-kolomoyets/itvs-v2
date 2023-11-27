@@ -21,13 +21,25 @@ const CreateTagDialog: React.FC<CreateTagDialogProps> = ({ open, onOpenChange, .
 
     const utils = api.useUtils();
 
+    const { toast } = useToast();
+
     const { mutateAsync: createTag, isLoading: isTagCreating } = api.tags.createTag.useMutation({
-        async onSuccess() {
+        async onSuccess(createdTag) {
             await utils.tags.getAllTags.invalidate();
+
+            onOpenChange?.(false);
+
+            toast({
+                title: 'Тег успішно створено',
+                description: (
+                    <p>
+                        Тег <strong>{createdTag.name}</strong> успішно створено. Тепер ви можете віднести статтю до цієї
+                        категорії
+                    </p>
+                ),
+            });
         },
     });
-
-    const { toast } = useToast();
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} {...rest}>
@@ -65,18 +77,6 @@ const CreateTagDialog: React.FC<CreateTagDialogProps> = ({ open, onOpenChange, .
                         onClick={async () => {
                             await createTag({
                                 name: tagName,
-                            });
-
-                            onOpenChange?.(false);
-
-                            toast({
-                                title: 'Тег успішно створено',
-                                description: (
-                                    <p>
-                                        Тег <strong>{tagName}</strong> успішно створено. Тепер ви можете віднести статтю
-                                        до цієї категорії
-                                    </p>
-                                ),
                             });
                         }}
                     >

@@ -26,8 +26,20 @@ const RemoveEmployeeDialog: React.FC<RemoveEmployeeDialogProps> = ({
         id: employeeId,
     });
     const { mutateAsync: removeEmployee, isLoading: isEmployeeRemoving } = api.employees.removeEmployee.useMutation({
-        async onSuccess() {
+        async onSuccess(removedEmployee) {
             await utils.employees.getAllEmployees.invalidate();
+
+            onSuccess?.();
+            onOpenChange?.(false);
+
+            toast({
+                title: 'Співробітника успішно видалено',
+                description: (
+                    <p>
+                        Співробітника <strong>{removedEmployee.name}</strong> успішно видалено.
+                    </p>
+                ),
+            });
         },
     });
 
@@ -47,20 +59,8 @@ const RemoveEmployeeDialog: React.FC<RemoveEmployeeDialogProps> = ({
                         variant="destructive"
                         disabled={isEmployeeRemoving}
                         onClick={async () => {
-                            const removedEmployee = await removeEmployee({
+                            await removeEmployee({
                                 id: employeeId,
-                            });
-
-                            onSuccess?.();
-                            onOpenChange?.(false);
-
-                            toast({
-                                title: 'Співробітника успішно видалено',
-                                description: (
-                                    <p>
-                                        Співробітника <strong>{removedEmployee.name}</strong> успішно видалено.
-                                    </p>
-                                ),
                             });
                         }}
                     >

@@ -50,8 +50,20 @@ const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpe
         }
     );
     const { mutateAsync: createEmployee, isLoading: isEmployeeCreating } = api.employees.createEmployee.useMutation({
-        async onSuccess() {
+        async onSuccess(createdEmployee) {
             await utils.employees.getAllEmployees.invalidate();
+
+            onOpenChange?.(false);
+
+            toast({
+                title: 'Дисципліну успішно створено',
+                description: (
+                    <p>
+                        Тег <strong>{createdEmployee.name}</strong> успішно створено. Тепер ви можете віднести викладача
+                        до цієї дисципліни
+                    </p>
+                ),
+            });
         },
     });
 
@@ -70,27 +82,15 @@ const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpe
 
     const createEmployeeHandler = useCallback(
         async ({ academicStatus, disciplines = [], ...rest }: CreateEmployeeForm) => {
-            const newEmployee = await createEmployee({
+            await createEmployee({
                 ...rest,
                 academicStatus: academicStatus as AcademicStatus,
                 disciplines: disciplines.map((discipline) => {
                     return discipline.value;
                 }),
             });
-
-            onOpenChange?.(false);
-
-            toast({
-                title: 'Дисципліну успішно створено',
-                description: (
-                    <p>
-                        Тег <strong>{newEmployee.name}</strong> успішно створено. Тепер ви можете віднести викладача до
-                        цієї дисципліни
-                    </p>
-                ),
-            });
         },
-        [createEmployee, onOpenChange, toast]
+        [createEmployee]
     );
 
     const toggleDisciplineItemHandler = useCallback(

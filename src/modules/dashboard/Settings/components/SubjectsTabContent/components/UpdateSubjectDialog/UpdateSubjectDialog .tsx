@@ -63,22 +63,8 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
     );
 
     const { mutateAsync: updateSubject, isLoading: isSubjectUpdating } = api.subjects.updateSubject.useMutation({
-        async onSuccess() {
+        async onSuccess(updatedSubject) {
             await utils.subjects.getAllSubjects.invalidate();
-        },
-    });
-
-    const { toast } = useToast();
-
-    const createSubjectHandler = useCallback(
-        async ({ courses, ...rest }: UpdateSubjectForm) => {
-            const newSubject = await updateSubject({
-                ...rest,
-                id: subjectId!,
-                courses: courses.map((course) => {
-                    return course.value;
-                }),
-            });
 
             onSuccess?.();
 
@@ -88,12 +74,26 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
                 title: 'Дисципліну успішно оновлено',
                 description: (
                     <p>
-                        Тег <strong>{newSubject.name}</strong> успішно оновлено.
+                        Тег <strong>{updatedSubject.name}</strong> успішно оновлено.
                     </p>
                 ),
             });
         },
-        [onOpenChange, onSuccess, subjectId, toast, updateSubject]
+    });
+
+    const { toast } = useToast();
+
+    const createSubjectHandler = useCallback(
+        async ({ courses, ...rest }: UpdateSubjectForm) => {
+            await updateSubject({
+                ...rest,
+                id: subjectId!,
+                courses: courses.map((course) => {
+                    return course.value;
+                }),
+            });
+        },
+        [subjectId, updateSubject]
     );
 
     const toggleCourseItemHandler = useCallback(

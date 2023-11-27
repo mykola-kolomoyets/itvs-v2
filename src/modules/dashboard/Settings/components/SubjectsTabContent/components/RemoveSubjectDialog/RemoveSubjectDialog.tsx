@@ -21,8 +21,21 @@ const RemoveSubjectDialog: React.FC<RemoveSubjectDialogProps> = ({ id, open, onO
         id,
     });
     const { mutateAsync: removeSubject, isLoading: isSubjectRemoving } = api.subjects.removeSubject.useMutation({
-        async onSuccess() {
+        async onSuccess(removedSubject) {
             await utils.subjects.getAllSubjects.invalidate();
+
+            onSuccess?.();
+            onOpenChange?.(false);
+
+            toast({
+                title: 'Дисципліну успішно видалено',
+                description: (
+                    <p>
+                        Дисципліну <strong>{removedSubject.name}</strong> успішно видалено. Всі викладачі з цією
+                        дисципліною були оновлені
+                    </p>
+                ),
+            });
         },
     });
 
@@ -46,21 +59,8 @@ const RemoveSubjectDialog: React.FC<RemoveSubjectDialogProps> = ({ id, open, onO
                         variant="destructive"
                         disabled={isSubjectRemoving}
                         onClick={async () => {
-                            const removedSubject = await removeSubject({
+                            await removeSubject({
                                 id,
-                            });
-
-                            onSuccess?.();
-                            onOpenChange?.(false);
-
-                            toast({
-                                title: 'Дисципліну успішно видалено',
-                                description: (
-                                    <p>
-                                        Дисципліну <strong>{removedSubject.name}</strong> успішно видалено. Всі
-                                        викладачі з цією дисципліною були оновлені
-                                    </p>
-                                ),
                             });
                         }}
                     >

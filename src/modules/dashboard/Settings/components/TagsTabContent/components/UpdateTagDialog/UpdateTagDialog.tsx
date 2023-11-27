@@ -26,8 +26,20 @@ const UpdateTagDialog: React.FC<UpdateTagDialogProps> = ({ id, open, onOpenChang
         id,
     });
     const { mutateAsync: updateTag, isLoading: isTagUpdating } = api.tags.updateTag.useMutation({
-        async onSuccess() {
+        async onSuccess(updatedTag) {
             await utils.tags.getAllTags.invalidate();
+
+            onSuccess?.();
+            onOpenChange?.(false);
+
+            toast({
+                title: 'Тег успішно оновлено',
+                description: (
+                    <p>
+                        Тег <strong>{updatedTag.name}</strong> успішно оновлено.
+                    </p>
+                ),
+            });
         },
     });
 
@@ -73,18 +85,6 @@ const UpdateTagDialog: React.FC<UpdateTagDialogProps> = ({ id, open, onOpenChang
                             await updateTag({
                                 id,
                                 name: tagName,
-                            });
-
-                            onSuccess?.();
-                            onOpenChange?.(false);
-
-                            toast({
-                                title: 'Тег успішно оновлено',
-                                description: (
-                                    <p>
-                                        Тег <strong>{tagName}</strong> успішно оновлено.
-                                    </p>
-                                ),
                             });
                         }}
                     >

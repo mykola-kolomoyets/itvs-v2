@@ -45,6 +45,12 @@ const NewArticleModule: React.FC = () => {
     const { mutateAsync: createArticle, isLoading: isArticleCreating } = api.articles.createArticle.useMutation({
         async onSuccess() {
             await utils.articles.getAllArticles.invalidate();
+
+            toast({
+                title: 'Стаття успішно створена',
+            });
+
+            router.replace('/dashboard/articles');
         },
     });
     const { data: allTags } = api.tags.getAllTags.useQuery(
@@ -96,14 +102,7 @@ const NewArticleModule: React.FC = () => {
             tags: selectedTagsIds,
             posterUrl,
         });
-
-        toast({
-            title: 'Стаття успішно створена',
-        });
-
-        console.log(markdownString);
-        router.replace('/dashboard/articles');
-    }, [createArticle, posterUrl, router, selectedTagsIds, title, toast, transformNodesToMarkdownString]);
+    }, [createArticle, posterUrl, selectedTagsIds, title, transformNodesToMarkdownString]);
 
     const toggleTagsHandler = useCallback(
         (value: string) => {
