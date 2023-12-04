@@ -29,9 +29,12 @@ const History: React.FC = () => {
                 <div className="flex flex-col">
                     {HISTORY_IMAGES_URLS.map((url) => {
                         return (
-                            <div key={url} className="sticky top-[7rem] mb-32 md:top-[10rem] md:mb-5 md:h-screen">
+                            <div
+                                key={url}
+                                className="sticky top-[7rem] mb-32 h-[70vh] md:top-[10rem] md:mb-5 md:h-screen"
+                            >
                                 <Image
-                                    className=" h-[70vh] w-full rounded-lg border-border object-cover "
+                                    className=" h-full w-full rounded-lg border-border object-cover "
                                     src={url}
                                     width={720}
                                     height={1280}

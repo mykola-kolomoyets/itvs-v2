@@ -8,7 +8,7 @@ const Header: React.FC = () => {
     return (
         <header className="sticky top-3 z-50 flex items-center justify-center">
             <div className="container m-6 mt-2 flex max-w-[1040px] justify-between rounded-lg border border-border bg-accent/95 px-6 py-3 backdrop-blur supports-[backdrop-filter]:bg-accent/50">
-                <Link className="mr-4 flex" href="/">
+                <Link className="focus-primary mr-4 flex rounded-md" href="/">
                     <Image
                         className="w-[6.0625rem] flex-shrink-0 dark:hidden"
                         src="/images/logo-light.svg"

@@ -9,7 +9,7 @@ const AboutCard: React.FC<AboutCardProps> = ({ title, description, Icon }) => {
         <Card className="flex flex-col border-border bg-background/30 backdrop-blur dark:supports-[backdrop-filter]:bg-background/30 ">
             <CardHeader className="flex-grow">
                 <div className="mb-2">
-                    <div className=" bg-background/1 dark:supports-[backdrop-filter]:bg-background/1 inline-block rounded-lg border-border p-3 backdrop-blur ">
+                    <div className="bg-background/1 dark:supports-[backdrop-filter]:bg-background/1 inline-block rounded-lg border-border p-3 backdrop-blur ">
                         <Icon size={36} />
                     </div>
                 </div>

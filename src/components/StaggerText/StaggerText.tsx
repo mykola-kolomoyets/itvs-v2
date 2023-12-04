@@ -12,6 +12,7 @@ const ANIMATED_TEXT_TAGS = {
     p: 'p',
     h1: 'h1',
     h2: 'h2',
+    span: 'span',
 };
 
 // AnimatedCharacters

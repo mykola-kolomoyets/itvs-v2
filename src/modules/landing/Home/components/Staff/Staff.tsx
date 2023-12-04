@@ -1,12 +1,12 @@
 import { memo } from 'react';
-import { STAFF_IMAGES_CONFIG, STAFF_IMAGES_CONFIG_MOBILE } from './constants';
 import Image from 'next/image';
 import { cn } from '@/utils/common';
+import { STAFF_IMAGES_CONFIG, STAFF_IMAGES_CONFIG_MOBILE } from './constants';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/HoverCard';
 
 const Staff: React.FC = () => {
     return (
-        <section className="container my-10">
+        <section className="container my-10 md:my-32">
             <header className="container mb-10 flex max-w-[64rem] flex-col items-center ">
                 <h2 className="mb-4 text-center text-3xl font-black">Коллектив кафедри</h2>
                 <p className="text-md  text-center font-medium md:text-xl">
@@ -24,8 +24,9 @@ const Staff: React.FC = () => {
                         <HoverCard key={url}>
                             <HoverCardTrigger asChild>
                                 <div
+                                    tabIndex={0}
                                     className={cn(
-                                        'mx-1 h-28 w-28 flex-shrink-0 rounded-full border-[0.25rem] border-border transition-all duration-500 hover:border-accent-secondary',
+                                        'focus-primary mx-1 h-28 w-28 flex-shrink-0 rounded-full border-[0.25rem] border-border transition-all duration-500 hover:border-accent-secondary',
                                         {
                                             'z-10 h-36 w-36': index === Math.floor(STAFF_IMAGES_CONFIG.length / 2),
                                         }

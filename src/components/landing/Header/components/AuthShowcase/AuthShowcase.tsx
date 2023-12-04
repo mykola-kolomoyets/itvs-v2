@@ -18,7 +18,7 @@ const AuthShowcase: React.FC = () => {
             {sessionData ? (
                 <HoverCard>
                     <HoverCardTrigger asChild>
-                        <Link href="/dashboard/articles">
+                        <Link className="focus-primary rounded-full" href="/dashboard/articles">
                             <Avatar>
                                 <AvatarImage
                                     src={sessionData.user.image ?? ''}
