@@ -127,4 +127,10 @@
     body .focus-primary-child {
         @apply ring-2 ring-ring;
     }
+
+    img {
+        @apply h-auto max-w-full bg-cover bg-no-repeat align-middle italic;
+
+        shape-margin: 0.75rem;
+    }
 }

@@ -2,13 +2,13 @@ import { forwardRef, memo } from 'react';
 import { cn } from '@/utils/common';
 import { NavigationMenuLink } from '@/components/NavigationMenu';
 import Link, { type LinkProps } from 'next/link';
-import { type HeaderNavigationOption } from '../../types';
+import { type HeaderNavigationOption } from '@/types';
 import type { FCProps } from '@/types';
 
-const ListItem = forwardRef<React.ElementRef<'a'>, FCProps<HeaderNavigationOption> & LinkProps>(
+const NavigationListItem = forwardRef<React.ElementRef<'a'>, FCProps<HeaderNavigationOption> & LinkProps>(
     ({ className, title, children, disabled = false, href, ...props }, ref) => {
         return (
-            <li>
+            <li key={href}>
                 <NavigationMenuLink aria-disabled={disabled} asChild>
                     <Link
                         href={href}
@@ -30,6 +30,6 @@ const ListItem = forwardRef<React.ElementRef<'a'>, FCProps<HeaderNavigationOptio
         );
     }
 );
-ListItem.displayName = 'ListItem';
+NavigationListItem.displayName = 'NavigationListItem';
 
-export default memo(ListItem);
+export default memo(NavigationListItem);

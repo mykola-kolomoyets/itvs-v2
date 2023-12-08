@@ -1,5 +1,6 @@
 import Header from '@/components/landing/Header';
 import Footer from '@/components/landing/Footer';
+import ScrollToTop from '@/components/ScrollToTop';
 
 const LandingLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
     return (
@@ -13,6 +14,7 @@ const LandingLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
                 {children}
             </main>
             <Footer />
+            <ScrollToTop />
         </div>
     );
 };

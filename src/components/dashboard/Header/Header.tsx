@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Head from 'next/head';
 import { ExternalLinkIcon } from 'lucide-react';
 import { HEADER_CREATE_OPTIONS, HEADER_SETTINGS_OPTIONS } from './constants';
+import NavigationListItem from '@/components/NavigationListItem';
 import { Separator } from '@/components/Separator';
 import { Skeleton } from '@/components/Skeleton';
 import { Button } from '@/components/Button';
@@ -20,7 +21,6 @@ import {
 } from '@/components/NavigationMenu';
 import { AuthShowcase } from './components/AuthShowcase';
 import ThemeChanger from './components/ThemeChanger';
-import ListItem from './components/ListItem';
 
 const Header: React.FC = () => {
     const { data: session, status: sessionStatus } = useSession();
@@ -122,9 +122,12 @@ const Header: React.FC = () => {
                                                     <NavigationMenuContent>
                                                         <ul className="w-[400px] gap-3 p-4">
                                                             {HEADER_CREATE_OPTIONS.map((component) => (
-                                                                <ListItem key={component.title} {...component}>
+                                                                <NavigationListItem
+                                                                    key={component.title}
+                                                                    {...component}
+                                                                >
                                                                     {component.description}
-                                                                </ListItem>
+                                                                </NavigationListItem>
                                                             ))}
                                                         </ul>
                                                     </NavigationMenuContent>
@@ -134,9 +137,12 @@ const Header: React.FC = () => {
                                                     <NavigationMenuContent>
                                                         <ul className=" w-[400px] gap-3 p-4">
                                                             {HEADER_SETTINGS_OPTIONS.map((component) => (
-                                                                <ListItem key={component.title} {...component}>
+                                                                <NavigationListItem
+                                                                    key={component.title}
+                                                                    {...component}
+                                                                >
                                                                     {component.description}
-                                                                </ListItem>
+                                                                </NavigationListItem>
                                                             ))}
                                                         </ul>
                                                     </NavigationMenuContent>

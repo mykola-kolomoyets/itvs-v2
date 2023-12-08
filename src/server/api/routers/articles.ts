@@ -9,6 +9,7 @@ const getAllArticlesQuerySchema = z
     .object({
         search: z.string().optional(),
         author: z.string().optional(),
+        authors: z.array(z.string()).optional(),
         tags: z.array(z.string()).optional(),
     })
     .merge(paginatedQuerySchema);
@@ -123,6 +124,17 @@ export const articlesRouter = createTRPCRouter({
                 contains: input.search?.trim(),
             },
             authorId: input.author,
+            OR: [
+                {
+                    authorId: input.author,
+                },
+                {
+                    authorId: {
+                        in: input.authors?.length ? input.authors : undefined,
+                        notIn: input.authors?.length ? undefined : [],
+                    },
+                },
+            ],
             ...(input.tags?.length
                 ? {
                       tags: {
@@ -152,11 +164,13 @@ export const articlesRouter = createTRPCRouter({
                 id: true,
                 title: true,
                 slug: true,
+                posterUrl: true,
                 author: {
                     select: {
                         id: true,
                         name: true,
                         role: true,
+                        image: true,
                     },
                 },
                 tags: true,

@@ -1,4 +1,4 @@
-import type { HeaderNavigationOption } from './types';
+import type { HeaderNavigationOption } from '@/types';
 
 export const HEADER_CREATE_OPTIONS: HeaderNavigationOption[] = [
     {

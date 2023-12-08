@@ -34,3 +34,10 @@ export type ArticleForTableItem = Pick<Article, 'id' | 'title' | 'createdAt' | '
 };
 
 export type UserForTableItem = Omit<NonNullable<inferAsyncReturnType<typeof db.user.findFirst>>, 'emailVerified'>;
+
+export type HeaderNavigationOption = {
+    title: string;
+    href: string;
+    description: string;
+    disabled?: boolean;
+};
