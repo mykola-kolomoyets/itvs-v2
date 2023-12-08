@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 
 const getAllTagsQuerySchema = z.object({
@@ -23,15 +23,15 @@ const butchRemoveTagsSchema = z.object({
 });
 
 export const tagsRouter = createTRPCRouter({
-    getAllTags: protectedProcedure.input(getAllTagsQuerySchema).query(async ({ ctx, input }) => {
-        const user = ctx.session?.user;
+    getAllTags: publicProcedure.input(getAllTagsQuerySchema).query(async ({ ctx, input }) => {
+        // const user = ctx.session?.user;
 
-        if (!user) {
-            throw new TRPCError({
-                code: 'FORBIDDEN',
-                message: 'You must be logged in to view this page',
-            });
-        }
+        // if (!user) {
+        //     throw new TRPCError({
+        //         code: 'FORBIDDEN',
+        //         message: 'You must be logged in to view this page',
+        //     });
+        // }
 
         const filter = {
             name: {

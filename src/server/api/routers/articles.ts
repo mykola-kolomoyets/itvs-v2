@@ -105,19 +105,19 @@ export const articlesRouter = createTRPCRouter({
 
         return article;
     }),
-    getAllArticles: protectedProcedure.input(getAllArticlesQuerySchema).query(async ({ ctx, input }) => {
+    getAllArticles: publicProcedure.input(getAllArticlesQuerySchema).query(async ({ ctx, input }) => {
         const limit = input.limit ?? 10;
         const cursor = input.cursor;
         const skip = input.skip ?? 0;
 
-        const user = ctx.session?.user;
+        // const user = ctx.session?.user;
 
-        if (!user) {
-            throw new TRPCError({
-                code: 'FORBIDDEN',
-                message: 'You must be logged in to view this page',
-            });
-        }
+        // if (!user) {
+        //     throw new TRPCError({
+        //         code: 'FORBIDDEN',
+        //         message: 'You must be logged in to view this page',
+        //     });
+        // }
 
         const filter = {
             title: {
