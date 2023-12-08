@@ -1,6 +1,6 @@
+import type { AcademicStatus } from '@prisma/client';
 import type { Option } from '@/types';
 import { env } from '@/env.mjs';
-import { AcademicStatus } from '@prisma/client';
 
 export const LOCK_SCROLL_Y_CLASS_NAME = 'lock-scroll-y';
 

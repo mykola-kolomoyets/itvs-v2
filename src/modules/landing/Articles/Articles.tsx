@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
 import { getFirstLetters } from '@/utils/common';
 import Link from 'next/link';
 import { Button } from '@/components/Button';
-import { ArrowRightIcon, CheckIcon, Delete, DeleteIcon, RotateCcw, Tag, UsersIcon } from 'lucide-react';
+import { ArrowRightIcon, CheckIcon, DeleteIcon, RotateCcw, Tag, UsersIcon } from 'lucide-react';
 import { Badge } from '@/components/Badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
 import Image from 'next/image';

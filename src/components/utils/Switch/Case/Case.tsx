@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import type { CaseProps } from './types';
 
 const Case: React.FC<CaseProps> = ({ children }) => {

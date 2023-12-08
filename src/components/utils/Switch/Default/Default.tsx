@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import type { DefaultProps } from './types';
 
 const Default: React.FC<DefaultProps> = ({ children }) => {
