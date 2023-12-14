@@ -5,11 +5,6 @@ import { tagsRouter } from './routers/tags';
 import { subjectsRouter } from './routers/subjects';
 import { employeesRouter } from './routers/employees';
 
-/**
- * This is the primary router for your server.
- *
- * All routers added in /api/routers should be manually added here.
- */
 export const appRouter = createTRPCRouter({
     articles: articlesRouter,
     users: usersRouter,

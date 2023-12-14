@@ -1,8 +1,11 @@
 import { memo } from 'react';
-import AuthShowcase from './components/AuthShowcase';
+import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { HEADER_DEPARTMENT_OPTIONS, HEADER_STUDY_OPTIONS } from './constants';
+import { Dialog, DialogContent, DialogPortal, DialogTrigger } from '@/components/Dialog';
 import NavigationListItem from '@/components/NavigationListItem';
+import { Button } from '@/components/Button';
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -10,8 +13,8 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
 } from '@/components/NavigationMenu';
+import AuthShowcase from './components/AuthShowcase';
 import ThemeChanger from '../ThemeChanger';
-import { HEADER_DEPARTMENT_OPTIONS, HEADER_STUDY_OPTIONS } from './constants';
 
 const Header: React.FC = () => {
     return (
@@ -34,7 +37,7 @@ const Header: React.FC = () => {
                     />
                 </Link>
                 <div className="flex items-center">
-                    <NavigationMenu>
+                    <NavigationMenu className="hidden md:block">
                         <NavigationMenuList className="flex justify-center">
                             <NavigationMenuItem>
                                 <NavigationMenuTrigger>Кафедра</NavigationMenuTrigger>
@@ -62,6 +65,34 @@ const Header: React.FC = () => {
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
+                    <Dialog modal>
+                        <DialogTrigger className="mr-2 md:hidden" asChild>
+                            <Button size="icon">
+                                <Menu size={16} />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogPortal>
+                            <DialogContent className="h-screen w-screen">
+                                <div className="flex-grow-0">
+                                    <AuthShowcase />
+                                </div>
+                                <NavigationMenu className="w-full">
+                                    <ul className="w-full gap-3 p-4">
+                                        {HEADER_DEPARTMENT_OPTIONS.map((component) => (
+                                            <NavigationListItem className="w-full" key={component.title} {...component}>
+                                                {component.description}
+                                            </NavigationListItem>
+                                        ))}
+                                        {HEADER_STUDY_OPTIONS.map((component) => (
+                                            <NavigationListItem key={component.title} {...component}>
+                                                {component.description}
+                                            </NavigationListItem>
+                                        ))}
+                                    </ul>
+                                </NavigationMenu>
+                            </DialogContent>
+                        </DialogPortal>
+                    </Dialog>
                     <ThemeChanger />
                     <div className="hidden md:block">
                         <AuthShowcase />

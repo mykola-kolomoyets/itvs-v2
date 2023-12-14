@@ -17,15 +17,15 @@ const config = {
         locales: ['en'],
         defaultLocale: 'en',
     },
-    images: {
-        domains: [
-            'https://lh3.googleusercontent.com',
-            'drive.google.com',
-            'images.unsplash.com',
-            'images.pexels.com',
-            'lpnu.ua',
-        ],
-    },
+images: {
+    domains: [
+        'https://lh3.googleusercontent.com',
+        'drive.google.com',
+        'images.unsplash.com',
+        'images.pexels.com',
+        'lpnu.ua',
+    ],
+},
 };
 
 export default config;

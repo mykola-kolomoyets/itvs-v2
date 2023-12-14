@@ -532,7 +532,7 @@ const ArticlesModule: React.FC = () => {
                                             </div>
                                         </CardHeader>
                                         <CardContent>
-                                            <Button asChild>
+                                            <Button variant="secondary" asChild>
                                                 <Link href={`/articles/${article.slug}`}>
                                                     <span>Детальніше</span>
                                                     <ArrowRightIcon className="ml-2" size={16} />

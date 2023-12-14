@@ -31,7 +31,7 @@ const Hiro: React.FC = () => {
                         },
                     }}
                 >
-                    <h1 className="mx-32 mb-2 flex flex-wrap justify-center text-5xl font-black sm:text-7xl md:mx-48 md:mb-12 md:text-8xl">
+                    <h1 className="mx-32 mb-2 mt-20 flex flex-wrap justify-center text-5xl font-black sm:text-7xl md:mx-48 md:mb-12 md:mt-0 md:text-8xl">
                         {HIRO_TITLE_MAIN.split(' ').map((word, index) => {
                             return <AnimatedCharacters key={index} text={word} type="p" />;
                         })}
