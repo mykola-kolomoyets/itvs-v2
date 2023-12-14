@@ -18,7 +18,7 @@ import ThemeChanger from '../ThemeChanger';
 
 const Header: React.FC = () => {
     return (
-        <header className="sticky top-3 flex items-center justify-center">
+        <header className="sticky top-3 z-50 flex items-center justify-center">
             <div className="container m-6 mt-2 flex max-w-[1040px] justify-between rounded-lg border border-border bg-accent/95 px-6 py-3 backdrop-blur supports-[backdrop-filter]:bg-accent/50">
                 <Link className="focus-primary isolate z-[99] mr-4 flex rounded-md" href="/">
                     <Image
