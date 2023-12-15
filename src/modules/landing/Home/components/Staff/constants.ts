@@ -12,7 +12,7 @@ const RASHKEVYCH: StaffConfigItem = {
 const TKACHENKO: StaffConfigItem = {
     name: 'Ткаченко Роман Олексійович',
     position: 'д.т.н, професор',
-    url: '/images/staff/Ткаченко.jpg',
+    url: '/images/staff/Ткаченко.JPG',
 };
 const LOTOSHYNSKA: StaffConfigItem = {
     name: 'Лотошинська Наталія Дмитрівна',
@@ -37,7 +37,7 @@ const MIYUSHKOVYCH: StaffConfigItem = {
 const MARCYSHYN: StaffConfigItem = {
     name: 'Марцишин Роман Степанович',
     position: 'к.т.н, доцент',
-    url: '/images/staff/Марцишин.jpg',
+    url: '/images/staff/Марцишин.JPG',
 };
 const KOVALCHUK: StaffConfigItem = {
     name: 'Ковальчук Анатолій Михайлович',

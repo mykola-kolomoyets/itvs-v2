@@ -9,7 +9,7 @@ import Header from '@/components/dashboard/Header';
 import { Dialog, DialogContent, DialogPortal } from '../Dialog';
 import { Button } from '../Button';
 
-const APP_VERSION = '0.8.13';
+const APP_VERSION = '0.8.14';
 
 const DashboardLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
     // const { data: sessionData } = useSession();
