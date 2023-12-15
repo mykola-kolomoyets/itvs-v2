@@ -8,7 +8,7 @@ import { EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { api } from '@/utils/api';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
-import { getFirstLetters } from '@/utils/common';
+import { getFirstLetters, shimmer, toBase64 } from '@/utils/common';
 
 const StaffModule: React.FC = () => {
     const { data: staff } = api.employees.getAllEmployees.useQuery({
@@ -45,6 +45,10 @@ const StaffModule: React.FC = () => {
                                                         alt={employee.name}
                                                         width={400}
                                                         height={200}
+                                                        placeholder="blur"
+                                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                                                            shimmer(400, 200)
+                                                        )}`}
                                                     />
                                                 </div>
                                             ) : null}
