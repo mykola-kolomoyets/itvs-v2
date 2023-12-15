@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createTRPCRouter, protectedProcedure } from '../trpc';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { AcademicStatus } from '@prisma/client';
 import { EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
@@ -35,15 +35,15 @@ const butchRemoveEmployeesSchema = z.object({
 });
 
 export const employeesRouter = createTRPCRouter({
-    getAllEmployees: protectedProcedure.input(getAllEmployeesQuerySchema).query(async ({ ctx, input }) => {
-        const user = ctx.session?.user;
+    getAllEmployees: publicProcedure.input(getAllEmployeesQuerySchema).query(async ({ ctx, input }) => {
+        // const user = ctx.session?.user;
 
-        if (!user) {
-            throw new TRPCError({
-                code: 'FORBIDDEN',
-                message: 'You must be logged in to view this page',
-            });
-        }
+        // if (!user) {
+        //     throw new TRPCError({
+        //         code: 'FORBIDDEN',
+        //         message: 'You must be logged in to view this page',
+        //     });
+        // }
 
         const employees = await ctx.db.employee.findMany({
             where: {
@@ -71,16 +71,20 @@ export const employeesRouter = createTRPCRouter({
             },
         });
 
-        const sortedEmployees = employees.sort((a, b) => {
-            if (!a.academicStatus || !b.academicStatus) {
-                return 0;
-            }
+        const sortedEmployees = employees
+            .sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            })
+            .sort((a, b) => {
+                if (!a.academicStatus || !b.academicStatus) {
+                    return 0;
+                }
 
-            const aPriority = EMPLOYEE_ACADEMIC_STATUSES[a.academicStatus].priority;
-            const bPriority = EMPLOYEE_ACADEMIC_STATUSES[b.academicStatus].priority;
+                const aPriority = EMPLOYEE_ACADEMIC_STATUSES[a.academicStatus].priority;
+                const bPriority = EMPLOYEE_ACADEMIC_STATUSES[b.academicStatus].priority;
 
-            return bPriority - aPriority;
-        });
+                return bPriority - aPriority;
+            });
 
         return sortedEmployees;
     }),

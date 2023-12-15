@@ -4,12 +4,16 @@ import { NavigationMenuLink } from '@/components/NavigationMenu';
 import Link, { type LinkProps } from 'next/link';
 import { type HeaderNavigationOption } from '@/types';
 import type { FCProps } from '@/types';
+import { usePathname } from 'next/navigation';
 
 const NavigationListItem = forwardRef<React.ElementRef<'a'>, FCProps<HeaderNavigationOption> & LinkProps>(
     ({ className, title, children, disabled = false, href, ...props }, ref) => {
+        const pathname = usePathname();
+        console.log(pathname, href);
+
         return (
             <li key={href}>
-                <NavigationMenuLink aria-disabled={disabled} asChild>
+                <NavigationMenuLink aria-disabled={disabled} active={pathname.includes(href)} asChild>
                     <Link
                         href={href}
                         ref={ref}
@@ -18,6 +22,7 @@ const NavigationListItem = forwardRef<React.ElementRef<'a'>, FCProps<HeaderNavig
                             className,
                             {
                                 'pointer-events-none cursor-not-allowed opacity-50': disabled,
+                                'bg-accent/75': pathname.includes(href),
                             }
                         )}
                         {...props}

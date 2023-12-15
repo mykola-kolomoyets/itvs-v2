@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+// import { useRouter } from 'next/navigation';
+// import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { ArrowLeft, TabletSmartphone } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
@@ -9,21 +9,25 @@ import Header from '@/components/dashboard/Header';
 import { Dialog, DialogContent, DialogPortal } from '../Dialog';
 import { Button } from '../Button';
 
-const APP_VERSION = '0.7.11';
+const APP_VERSION = '0.8.11';
 
 const DashboardLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
-    const { data: sessionData } = useSession();
+    // const { data: sessionData } = useSession();
     const [isRendered, , setIsRendered] = useToggle();
     const isWidthSuitable = useMediaQuery('(min-width: 1024px)');
-    const router = useRouter();
+    // const router = useRouter();
 
     useLayoutEffect(() => {
         setIsRendered(true);
     }, [setIsRendered]);
 
-    if (isRendered && !sessionData?.user) {
-        router.replace('/');
-        return;
+    // if (isRendered && !sessionData?.user) {
+    //     router.replace('/');
+    //     return;
+    // }
+
+    if (!isRendered) {
+        return null;
     }
 
     return (

@@ -40,10 +40,10 @@ const SettingsModule: React.FC = () => {
                     <div className="container flex items-start justify-between">
                         <h1 className="mb-[1.125rem] text-3xl font-semibold">Налаштування</h1>
                     </div>
-                    <TabsList className="mx-6 grid w-[750px] grid-cols-4">
-                        <TabsTrigger value="news" disabled>
+                    <TabsList className="mx-6 grid w-[550px] grid-cols-3">
+                        {/* <TabsTrigger value="news" disabled>
                             Новини
-                        </TabsTrigger>
+                        </TabsTrigger> */}
                         <TabsTrigger value="staff">Колектив кафедри</TabsTrigger>
                         <TabsTrigger value="subjects">Дисципліни</TabsTrigger>
                         <TabsTrigger value="tags">Теги</TabsTrigger>

@@ -133,4 +133,8 @@
 
         shape-margin: 0.75rem;
     }
+
+    body .text-balance {
+        text-wrap: balance;
+    }
 }

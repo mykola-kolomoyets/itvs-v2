@@ -3,6 +3,7 @@ import type { AboutCardProps } from './types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/Card';
 import { Button } from '@/components/Button';
 import { ArrowUpRightIcon } from 'lucide-react';
+import Link from 'next/link';
 
 const AboutCard: React.FC<AboutCardProps> = ({ title, description, Icon }) => {
     return (
@@ -16,9 +17,11 @@ const AboutCard: React.FC<AboutCardProps> = ({ title, description, Icon }) => {
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>{description}</CardDescription>
                 <CardContent className="flex flex-grow items-end p-0 pt-5">
-                    <Button variant="outline">
-                        Детальніше
-                        <ArrowUpRightIcon className="ml-2" size={16} />
+                    <Button variant="outline" asChild>
+                        <Link href="/about">
+                            Детальніше
+                            <ArrowUpRightIcon className="ml-2" size={16} />
+                        </Link>
                     </Button>
                 </CardContent>
             </CardHeader>

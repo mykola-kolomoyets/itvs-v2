@@ -40,7 +40,7 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
                     const { node: _, children, className, ...rest } = props;
 
                     return (
-                        <p className={cn('mb-2 text-base', className)} {...rest}>
+                        <p className={cn('mb-2 text-base sm:text-justify', className)} {...rest}>
                             {children}
                         </p>
                     );
