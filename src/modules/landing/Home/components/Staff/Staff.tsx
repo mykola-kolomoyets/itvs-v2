@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import Image from 'next/image';
-import { cn } from '@/utils/common';
+import { cn, shimmer, toBase64 } from '@/utils/common';
 import { STAFF_IMAGES_CONFIG, STAFF_IMAGES_CONFIG_MOBILE } from './constants';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/HoverCard';
 
@@ -19,16 +19,16 @@ const Staff: React.FC = () => {
                 </p>
             </header>
             <div className="mx-auto hidden flex-col items-center justify-center lg:flex lg:flex-row">
-                {STAFF_IMAGES_CONFIG.map(({ url, name, position }, index) => {
+                {STAFF_IMAGES_CONFIG?.slice(0, 8).map(({ name, position, url }, index) => {
                     return (
-                        <HoverCard key={url}>
+                        <HoverCard key={name}>
                             <HoverCardTrigger asChild>
                                 <div
                                     tabIndex={0}
                                     className={cn(
                                         'focus-primary mx-1 h-28 w-28 flex-shrink-0 rounded-full border-[0.25rem] border-border transition-all duration-500 hover:border-accent-secondary',
                                         {
-                                            'z-10 h-36 w-36': index === Math.floor(STAFF_IMAGES_CONFIG.length / 2),
+                                            // 'z-10 h-36 w-36':÷= index === Math.floor(STAFF_IMAGES_CONFIG.length / 2),
                                         }
                                     )}
                                 >
@@ -37,7 +37,11 @@ const Staff: React.FC = () => {
                                         width={index === 2 ? 196 : 128}
                                         height={index === 2 ? 196 : 128}
                                         src={url}
-                                        alt="Викладачі кафедри"
+                                        placeholder="blur"
+                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                                            shimmer(index === 2 ? 196 : 128, index === 2 ? 196 : 128)
+                                        )}`}
+                                        alt={name}
                                     />
                                 </div>
                             </HoverCardTrigger>

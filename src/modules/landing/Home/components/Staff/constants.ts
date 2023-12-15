@@ -1,17 +1,4 @@
 import type { StaffConfigItem } from './types';
-
-// export const STAFF_IMAGES_URLS = [
-//     '/images/staff/Ковальчук.jpg',
-//     '/images/staff/Міюшкович.jpg',
-//     '/images/staff/ГавришБ.jpg',
-//     '/images/staff/Ткаченко.jpg',
-//     '/images/staff/Кустра.jpg',
-//     '/images/staff/Лотошинська.jpg',
-//     '/images/staff/Марцишин.jpg',
-//     '/images/staff/Різник.jpg',
-//     '/images/staff/Рашкевич.jpeg',
-// ];
-
 const KUSTRA: StaffConfigItem = {
     name: 'Кустра Наталія Омелянівна',
     position: 'Зав. кафедри к.т.н, доцент',
