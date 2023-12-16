@@ -17,7 +17,7 @@ export const HEADER_DEPARTMENT_OPTIONS: HeaderNavigationOption[] = [
         description: 'Активності, оголошення кафедри та факультету',
     },
     {
-        title: 'Контакти',
+        title: 'Звʼязатися з нами',
         href: '/contacts',
         description: 'Наші координати, телефони та адреса',
     },

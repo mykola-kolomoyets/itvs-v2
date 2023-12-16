@@ -21,6 +21,8 @@ import { Label } from '@/components/Label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover';
 import { ScrollArea } from '@/components/ScrollArea';
 import Pagination from '@/components/Pagination';
+import { APP_HOSTNAME, DEFAULT_POSTER_URL } from '@/constants';
+import Head from 'next/head';
 
 const ArticlesModule: React.FC = () => {
     const router = useRouter();
@@ -171,6 +173,21 @@ const ArticlesModule: React.FC = () => {
 
     return (
         <LandingLayout>
+            <Head>
+                <title>ІТВС | Новини</title>
+                <link rel="icon" href="/images/logo-mini.svg" />
+                <meta name="robots" content="all" />
+                <meta name="description" content="Кафедра Інформаційних Технологій Видавничої Справи" />
+                <meta property="og:image" content={DEFAULT_POSTER_URL} />
+                <meta property="og:title" content="ІТВС" />
+                <meta property="og:description" content="Кафедра Інформаційних Технологій Видавничої Справи" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:site" content={APP_HOSTNAME} />
+                <meta name="twitter:title" content="ІТВС" />
+                <meta name="twitter:description" content="Кафедра Інформаційних Технологій Видавничої Справи" />
+                <meta name="twitter:image" content={DEFAULT_POSTER_URL} />
+                <meta name="twitter:url" content={`${APP_HOSTNAME}/articles`} />
+            </Head>
             <section className="container my-5 flex flex-col">
                 <div className="flex flex-col md:flex-row md:items-end">
                     <div className="flex-grow md:max-w-[500px]">

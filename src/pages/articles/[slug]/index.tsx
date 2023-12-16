@@ -20,14 +20,12 @@ import Markdown from '@/components/Markdown';
 import { Button } from '@/components/Button';
 import { Badge } from '@/components/Badge';
 import LandingLayout from '@/components/layout/LandingLayout';
+import { APP_HOSTNAME, DEFAULT_POSTER_URL } from '@/constants';
 
 type ArticleItem = NonNullable<Article> & {
     tags: Tag[];
     author: Pick<User, 'name' | 'image'>;
 };
-
-const DEFAULT_POSTER_URL = 'https://lpnu.ua/sites/default/files/2023/7/18/news/24194/itvs-prog-t.jpg';
-const APP_HOSTNAME = ' https://itvs-v2-dev.vercel.app';
 
 const ArticleItemPage: NextPage<{ article: ArticleItem }> = ({ article }) => {
     console.log(article);

@@ -25,6 +25,9 @@ export const USER_ROLES = {
 export const EMPTY_AVATAR_URL = '/images/avatar-default.webp';
 export const DEFAULT_USER_NAME = "Ім'я користувача";
 
+export const DEFAULT_POSTER_URL = 'https://lpnu.ua/sites/default/files/2023/7/18/news/24194/itvs-prog-t.jpg';
+export const APP_HOSTNAME = ' https://itvs-v2-dev.vercel.app';
+
 export const AVATAR_MINI_SIZE = 32;
 export const AVATAR_BASE_SIZE = 74;
 

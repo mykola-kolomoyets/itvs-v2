@@ -4,11 +4,12 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/Dialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/Card';
 import { Button } from '@/components/Button';
 import { ArrowUpRightIcon, ExternalLink } from 'lucide-react';
-import { EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
+import { APP_HOSTNAME, DEFAULT_POSTER_URL, EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { api } from '@/utils/api';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
 import { getFirstLetters, shimmer, toBase64 } from '@/utils/common';
+import Head from 'next/head';
 
 const StaffModule: React.FC = () => {
     const { data: staff } = api.employees.getAllEmployees.useQuery({
@@ -21,6 +22,21 @@ const StaffModule: React.FC = () => {
 
     return (
         <LandingLayout>
+            <Head>
+                <title>ІТВС | Колектив кафедри</title>
+                <link rel="icon" href="/images/logo-mini.svg" />
+                <meta name="robots" content="all" />
+                <meta name="description" content="Кафедра Інформаційних Технологій Видавничої Справи" />
+                <meta property="og:image" content={DEFAULT_POSTER_URL} />
+                <meta property="og:title" content="ІТВС" />
+                <meta property="og:description" content="Кафедра Інформаційних Технологій Видавничої Справи" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:site" content={APP_HOSTNAME} />
+                <meta name="twitter:title" content="ІТВС" />
+                <meta name="twitter:description" content="Кафедра Інформаційних Технологій Видавничої Справи" />
+                <meta name="twitter:image" content={DEFAULT_POSTER_URL} />
+                <meta name="twitter:url" content={`${APP_HOSTNAME}/staff`} />
+            </Head>
             <section className="container">
                 <h2 className="my-8  text-center text-3xl font-black">Колектив кафедри</h2>
 
