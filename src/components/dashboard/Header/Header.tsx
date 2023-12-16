@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import Link from 'next/link';
 import Head from 'next/head';
 import { ExternalLinkIcon } from 'lucide-react';
@@ -21,6 +21,7 @@ import {
 } from '@/components/NavigationMenu';
 import { AuthShowcase } from './components/AuthShowcase';
 import ThemeChanger from './components/ThemeChanger';
+import Logo from '@/components/Logo';
 
 const Header: React.FC = () => {
     const { data: session, status: sessionStatus } = useSession();
@@ -38,22 +39,7 @@ const Header: React.FC = () => {
             </Head>
             <header className="sticky top-0 z-50 flex items-center justify-between border-y border-solid border-border bg-background/95 px-6 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <section className="flex items-center">
-                    <Link className="mr-4 flex" href="/">
-                        <Image
-                            className="w-[6.0625rem] flex-shrink-0 dark:hidden"
-                            src="/images/logo-light.svg"
-                            width={97}
-                            height={32}
-                            alt="ITVS"
-                        />
-                        <Image
-                            className="hidden w-[6.0625rem] flex-shrink-0 dark:block"
-                            src="/images/logo-dark.svg"
-                            width={97}
-                            height={32}
-                            alt="ITVS"
-                        />
-                    </Link>
+                    <Logo className="scale-[80%]" />
                     <Separator orientation="vertical" className="-my-2 mx-3 h-[3.5625rem]" />
                     <Button variant="link" asChild>
                         <Link href="/">
@@ -89,15 +75,6 @@ const Header: React.FC = () => {
                                                 </NavigationMenuLink>
                                             </Link>
                                         </NavigationMenuItem>
-                                        {/* <NavigationMenuItem>
-                      <Link href="/science-articles" legacyBehavior passHref>
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          Публікації
-                        </NavigationMenuLink>
-                      </Link>
-                    </NavigationMenuItem> */}
                                         {isAdmin ? (
                                             <NavigationMenuItem>
                                                 <Link href="/dashboard/users" legacyBehavior passHref>

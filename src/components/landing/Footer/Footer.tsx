@@ -34,22 +34,17 @@ const Footer: React.FC = () => {
                     </p>
                     <a
                         className="focus-primary inline-flex items-center rounded-sm transition-colors hover:text-accent-secondary hover:underline"
-                        href="mailto:ikni_info(at)lp.edu.ua"
+                        href="mailto:iitvs.dept@lpnu.ua"
                     >
                         <Mail className="mr-3" size={16} />
-                        ikni_info(at)lp.edu.ua
+                        iitvs.dept@lpnu.ua
                     </a>
-                    <div className="flex items-baseline">
-                        <PhoneCallIcon className="mr-3" size={16} />
+                    <div className="group flex items-baseline">
+                        <PhoneCallIcon
+                            className="mr-3 group-hover:text-accent-secondary group-hover:underline"
+                            size={16}
+                        />
                         <ul>
-                            <li>
-                                <a
-                                    className="focus-primary inline-flex items-center rounded-sm transition-colors hover:text-accent-secondary hover:underline"
-                                    href="tel:+380322582404"
-                                >
-                                    (032) 258-24-04
-                                </a>
-                            </li>
                             <li>
                                 <a
                                     className="focus-primary inline-flex items-center rounded-sm transition-colors hover:text-accent-secondary hover:underline"
