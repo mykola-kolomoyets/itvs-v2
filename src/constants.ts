@@ -161,4 +161,9 @@ export const EMPLOYEE_ACADEMIC_STATUSES: Record<AcademicStatus, { label: string;
         id: 'director',
         priority: 6,
     },
+    director_ktn: {
+        label: 'Завідувач кафедри, к.т.н.',
+        id: 'director_ktn',
+        priority: 6,
+    },
 };

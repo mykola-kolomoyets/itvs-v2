@@ -38,10 +38,10 @@ const DepartmentInfo: React.FC<DepartmentInfoProps> = ({ isWithNULPLogo = true }
             </a>
             <a
                 className="focus-primary inline-flex items-center rounded-sm transition-colors hover:text-accent-secondary hover:underline"
-                href="mailto:iitvs.dept@lpnu.ua"
+                href="mailto:itvs.dept@lpnu.ua"
             >
                 <Mail className="mr-3" size={16} />
-                iitvs.dept@lpnu.ua
+                itvs.dept@lpnu.ua
             </a>
             <div className="group flex items-baseline">
                 <PhoneCallIcon className="mr-3 group-hover:text-accent-secondary group-hover:underline" size={16} />
