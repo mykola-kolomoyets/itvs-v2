@@ -25,7 +25,9 @@ const updateSubjectSchema = z.object({
     abbreviation: z.string().optional(),
     description: z.string().optional(),
     credits: z.number().optional(),
-    courses: z.array(z.string()).optional(),
+    semesters: z.array(selectOptionSchema).optional(),
+    departmentLecturers: z.array(selectOptionSchema).optional(),
+    otherLecturers: z.array(z.string()).optional(),
 });
 const removeSubjectSchema = z.object({
     id: z.string(),
@@ -88,12 +90,29 @@ export const subjectsRouter = createTRPCRouter({
             });
         }
 
-        const { courses, ...rest } = input;
+        const { semesters, departmentLecturers, otherLecturers, ...rest } = input;
+
+        const departmentLecturersData = await ctx.db.employee.findMany({
+            where: {
+                id: {
+                    in: departmentLecturers?.map((lecturer) => {
+                        return lecturer.value;
+                    }),
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
 
         const subject = await ctx.db.discipline.create({
             data: {
                 ...rest,
-                courses: courses.join(','),
+                semesters: semesters.join(','),
+                otherLecturers: otherLecturers.join(','),
+                departmentLecturers: {
+                    connect: departmentLecturersData,
+                },
             },
         });
 
@@ -109,7 +128,28 @@ export const subjectsRouter = createTRPCRouter({
             });
         }
 
-        const { courses, ...rest } = input;
+        const { semesters, otherLecturers, departmentLecturers, ...rest } = input;
+
+        const departmentLecturersData = await ctx.db.employee.findMany({
+            where: {
+                id: {
+                    in: departmentLecturers?.map((lecturer) => {
+                        return lecturer.value;
+                    }),
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        const departmentLecturersConfig = departmentLecturers?.length
+            ? {
+                  departmentLecturers: {
+                      connect: departmentLecturersData,
+                  },
+              }
+            : {};
 
         const subject = await ctx.db.discipline.update({
             where: {
@@ -117,7 +157,9 @@ export const subjectsRouter = createTRPCRouter({
             },
             data: {
                 ...rest,
-                courses: courses?.join(','),
+                semesters: semesters?.join(','),
+                ...(otherLecturers?.length ? { otherLecturers: otherLecturers.join(',') } : {}),
+                ...departmentLecturersConfig,
             },
         });
 
