@@ -1,4 +1,5 @@
-export const ABOUT_VIDEO_LINK = 'https://www.youtube.com/watch?v=tz0trfFRl0k';
+export const ABOUT_VIDEO_URL = 'https://www.youtube.com/watch?v=WmllAlOu4sU';
+export const ABOUT_VIDEO_POSTER_URL = 'https://lpnu.ua/sites/default/files/2023/7/18/news/24194/itvs-prog-t.jpg';
 
 export const ABOUT_CONTENT = `
 # Наша історія 
