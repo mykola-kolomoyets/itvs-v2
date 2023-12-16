@@ -1,20 +1,63 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import LandingLayout from '@/components/layout/LandingLayout';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/Dialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/Card';
 import { Button } from '@/components/Button';
-import { ArrowUpRightIcon, ExternalLink } from 'lucide-react';
+import { ArrowUpRightIcon, Check, Copy, ExternalLink, X } from 'lucide-react';
 import { APP_HOSTNAME, DEFAULT_POSTER_URL, EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { api } from '@/utils/api';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
-import { getFirstLetters, shimmer, toBase64 } from '@/utils/common';
+import { copyToClipboard, getFirstLetters, shimmer, toBase64 } from '@/utils/common';
 import Head from 'next/head';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
+import { useToast } from '@/components/Toaster/hooks/useToast';
+import { useToggle } from '@/hooks/useToggle';
+import { Switch, Case, Default } from '@/components/utils/Switch';
 
 const StaffModule: React.FC = () => {
+    const [isCopyingEmail, toggleIsCopyingEmail] = useToggle();
+    const [isCopyEmailError, toggleIsCopyEmailError] = useToggle();
+
+    const { toast } = useToast();
+
     const { data: staff } = api.employees.getAllEmployees.useQuery({
         search: '',
     });
+
+    const copyEmailToClipboardHandler = useCallback(
+        async (email: string) => {
+            await copyToClipboard(
+                email,
+                () => {
+                    toggleIsCopyingEmail();
+                    toast({
+                        title: 'Пошта скопійована',
+                        description: `Пошта ${email} скопійована в буфер обміну`,
+                    });
+
+                    setTimeout(() => {
+                        toggleIsCopyingEmail();
+                    }, 1000);
+                },
+                () => {
+                    toggleIsCopyEmailError();
+
+                    toast({
+                        title: 'Пошта  не була скопійована',
+                        description:
+                            'Виникла помилка під час копіювання пошти. Спробуйте ще раз пізніше, або скопіюйте вручну за допомогою клавіш Ctrl+C',
+                        variant: 'destructive',
+                    });
+
+                    setTimeout(() => {
+                        toggleIsCopyEmailError();
+                    }, 1000);
+                }
+            );
+        },
+        [toast, toggleIsCopyEmailError, toggleIsCopyingEmail]
+    );
 
     if (!staff) {
         return null;
@@ -44,9 +87,11 @@ const StaffModule: React.FC = () => {
                     {staff.map((employee) => {
                         return (
                             <Dialog key={employee.id}>
-                                <Card className=" group flex flex-col border-border bg-background/30 backdrop-blur dark:supports-[backdrop-filter]:bg-background/30 ">
+                                <Card className="group flex flex-col border-border bg-background/30 backdrop-blur dark:supports-[backdrop-filter]:bg-background/30">
                                     <CardHeader className="flex-grow">
-                                        <CardTitle>{employee.name}</CardTitle>
+                                        <CardTitle className="line-clamp-2" title={employee.name}>
+                                            {employee.name}
+                                        </CardTitle>
                                         {employee.academicStatus ? (
                                             <CardDescription>
                                                 {EMPLOYEE_ACADEMIC_STATUSES[employee.academicStatus].label}
@@ -54,13 +99,13 @@ const StaffModule: React.FC = () => {
                                         ) : null}
                                         <CardContent className="flex flex-grow flex-col items-start p-0 pt-5">
                                             {employee.image ? (
-                                                <div className="h-full min-h-[300px] w-full flex-grow overflow-hidden rounded-lg">
+                                                <div className="h-full max-h-[350px] min-h-[300px] w-full flex-grow overflow-hidden rounded-lg">
                                                     <Image
                                                         className="group-focus-visible:-110 h-full max-h-[350px] w-full  object-cover transition-transform hover:scale-110 group-focus-within:scale-110 group-hover:scale-110 group-focus:scale-110"
                                                         src={employee.image}
                                                         alt={employee.name}
                                                         width={400}
-                                                        height={200}
+                                                        height={300}
                                                         placeholder="blur"
                                                         blurDataURL={`data:image/svg+xml;base64,${toBase64(
                                                             shimmer(400, 200)
@@ -68,12 +113,14 @@ const StaffModule: React.FC = () => {
                                                     />
                                                 </div>
                                             ) : null}
-                                            <DialogTrigger asChild>
-                                                <Button className="mt-5" variant="outline">
-                                                    Детальніше
-                                                    <ArrowUpRightIcon className="ml-2" size={16} />
-                                                </Button>
-                                            </DialogTrigger>
+                                            <div className="flex flex-grow items-end">
+                                                <DialogTrigger asChild>
+                                                    <Button className="mt-5" variant="outline">
+                                                        Детальніше
+                                                        <ArrowUpRightIcon className="ml-2" size={16} />
+                                                    </Button>
+                                                </DialogTrigger>
+                                            </div>
                                             <DialogContent>
                                                 <div className="max-h-[500px] overflow-auto">
                                                     <h3 className="text-xl font-bold">{employee.name}</h3>
@@ -96,6 +143,46 @@ const StaffModule: React.FC = () => {
                                                             </Avatar>
                                                         ) : null}
                                                         <p className="text-muted-foreground">{employee.email}</p>
+                                                        <TooltipProvider>
+                                                            <Tooltip>
+                                                                <TooltipTrigger asChild>
+                                                                    <Button
+                                                                        className="ml-auto"
+                                                                        size="icon"
+                                                                        variant="outline"
+                                                                        onClick={(event) => {
+                                                                            event.preventDefault();
+
+                                                                            void copyEmailToClipboardHandler(
+                                                                                employee.email
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <Switch>
+                                                                            <Case condition={isCopyingEmail}>
+                                                                                <Check
+                                                                                    className="animate-fade-in text-green-600"
+                                                                                    size={16}
+                                                                                />
+                                                                            </Case>
+                                                                            <Case condition={isCopyEmailError}>
+                                                                                <X
+                                                                                    className="animate-fade-in text-red-600"
+                                                                                    size={16}
+                                                                                />
+                                                                            </Case>
+                                                                            <Default>
+                                                                                <Copy
+                                                                                    className="animate-fade-in"
+                                                                                    size={16}
+                                                                                />
+                                                                            </Default>
+                                                                        </Switch>
+                                                                    </Button>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent>Копіювати email</TooltipContent>
+                                                            </Tooltip>
+                                                        </TooltipProvider>
                                                     </div>
                                                     <p>
                                                         <span className="text-muted-foreground">Wiki: </span>
