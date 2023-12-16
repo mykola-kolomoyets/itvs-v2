@@ -50,11 +50,11 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
                     form.setValue('description', data.description);
                     form.setValue('credits', data.credits);
                     form.setValue(
-                        'courses',
+                        'semesters',
                         Object.values(DISCIPLINE_SEMESTERS_OPTIONS)
                             .flat()
-                            .filter((course) => {
-                                return data.courses.split(',').includes(course.value);
+                            .filter((semester) => {
+                                return data.semesters.split(',').includes(semester.value);
                             })
                     );
                 }
@@ -84,13 +84,10 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
     const { toast } = useToast();
 
     const createSubjectHandler = useCallback(
-        async ({ courses, ...rest }: UpdateSubjectForm) => {
+        async (data: UpdateSubjectForm) => {
             await updateSubject({
-                ...rest,
+                ...data,
                 id: subjectId!,
-                courses: courses.map((course) => {
-                    return course.value;
-                }),
             });
         },
         [subjectId, updateSubject]
@@ -100,14 +97,14 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
         (course: Option) => {
             return () => {
                 const isIncluded =
-                    form.getValues('courses').findIndex((item) => {
+                    form.getValues('semesters').findIndex((item) => {
                         return item.value === course.value;
                     }) !== -1;
 
                 if (isIncluded) {
                     form.setValue(
-                        'courses',
-                        form.getValues('courses').filter((item) => {
+                        'semesters',
+                        form.getValues('semesters').filter((item) => {
                             return item.value !== course.value;
                         })
                     );
@@ -115,7 +112,7 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
                     return;
                 }
 
-                form.setValue('courses', [...form.getValues('courses'), course]);
+                form.setValue('semesters', [...form.getValues('semesters'), course]);
             };
         },
         [form]
@@ -129,14 +126,14 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
 
     useEffect(() => {
         if (subjectToEditData) {
-            const subjectCourses = subjectToEditData.courses.split(',');
+            const subjectCourses = subjectToEditData.semesters.split(',');
 
             form.setValue('name', subjectToEditData.name);
             form.setValue('abbreviation', subjectToEditData.abbreviation ?? '');
             form.setValue('description', subjectToEditData.description);
             form.setValue('credits', subjectToEditData.credits);
             form.setValue(
-                'courses',
+                'semesters',
                 Object.values(DISCIPLINE_SEMESTERS_OPTIONS)
                     .flat()
                     .filter((course) => {
@@ -271,7 +268,7 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
                             />
                             <FormField
                                 control={control}
-                                name="courses"
+                                name="semesters"
                                 render={({ field }) => {
                                     const selectedCourses = field.value
                                         .map((item) => {

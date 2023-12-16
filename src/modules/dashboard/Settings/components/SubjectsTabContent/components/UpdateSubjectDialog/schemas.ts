@@ -6,5 +6,5 @@ export const updateSubjectSchema = z.object({
     abbreviation: z.string({ required_error: 'Абревіатура обовʼязкова!' }),
     description: z.string({ required_error: 'Опис обовʼязковий!' }),
     credits: z.number({ required_error: 'Кредити обовʼязкові!' }).min(0.1, { message: 'Мінімальний кредит - 0.1!' }),
-    courses: z.array(selectOptionSchema).min(1, { message: 'Потрібно вибрати хоча б один курс' }),
+    semesters: z.array(selectOptionSchema).min(1, { message: 'Потрібно вибрати хоча б один семестр' }),
 });
