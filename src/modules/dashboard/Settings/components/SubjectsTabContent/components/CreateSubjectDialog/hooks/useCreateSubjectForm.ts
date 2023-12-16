@@ -11,7 +11,10 @@ export const useCreateSubjectForm = () => {
             description: undefined,
             abbreviation: undefined,
             credits: undefined,
-            courses: [],
+            code: undefined,
+            departmentLecturers: [],
+            otherLecturers: [],
+            semesters: [],
         },
     });
 

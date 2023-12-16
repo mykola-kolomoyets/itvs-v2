@@ -1,15 +1,15 @@
 import { memo, useCallback, useEffect } from 'react';
 import { NumericFormat } from 'react-number-format';
-import { CheckIcon, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import type { CreateSubjectDialogProps, CreateSubjectForm } from './types';
 import type { Option } from '@/types';
 import { useToast } from '@/components/Toaster/hooks/useToast';
 import { useCreateSubjectForm } from './hooks/useCreateSubjectForm';
 import { useToggle } from '@/hooks/useToggle';
 import { api } from '@/utils/api';
-import { DISCIPLINE_COURSES_OPTIONS } from '@/constants';
+// import { DISCIPLINE_COURSES_OPTIONS } from '@/constants';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/Form';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover';
+// import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover';
 import { ScrollArea } from '@/components/ScrollArea';
 import { Textarea } from '@/components/TextArea';
 import Markdown from '@/components/Markdown';
@@ -33,7 +33,7 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProps> = ({ open, onOpenC
 
     const utils = api.useUtils();
 
-    const { mutateAsync: createSubject, isLoading: isSubjectCreating } = api.subjects.createSubject.useMutation({
+    const { mutateAsync: _createSubject, isLoading: isSubjectCreating } = api.subjects.createSubject.useMutation({
         async onSuccess(createdSubject) {
             await utils.subjects.getAllSubjects.invalidate();
 
@@ -54,41 +54,36 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProps> = ({ open, onOpenC
     const { toast } = useToast();
 
     const createSubjectHandler = useCallback(
-        async ({ courses, ...rest }: CreateSubjectForm) => {
-            await createSubject({
-                ...rest,
-                courses: courses.map((course) => {
-                    return course.value;
-                }),
-            });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        async (_: CreateSubjectForm) => {
+            // await createSubject({
+            //     ...rest,
+            //     courses: courses.map((course) => {
+            //         return course.value;
+            //     }),
+            // });
         },
-        [createSubject]
+        []
     );
 
-    const toggleCourseItemHandler = useCallback(
-        (course: Option) => {
-            return () => {
-                const isIncluded =
-                    form.getValues('courses').findIndex((item) => {
-                        return item.value === course.value;
-                    }) !== -1;
-
-                if (isIncluded) {
-                    form.setValue(
-                        'courses',
-                        form.getValues('courses').filter((item) => {
-                            return item.value !== course.value;
-                        })
-                    );
-
-                    return;
-                }
-
-                form.setValue('courses', [...form.getValues('courses'), course]);
-            };
-        },
-        [form]
-    );
+    const _toggleCourseItemHandler = useCallback((_course: Option) => {
+        return () => {
+            // const isIncluded =
+            //     form.getValues('courses').findIndex((item) => {
+            //         return item.value === course.value;
+            //     }) !== -1;
+            // if (isIncluded) {
+            //     form.setValue(
+            //         'courses',
+            //         form.getValues('courses').filter((item) => {
+            //             return item.value !== course.value;
+            //         })
+            //     );
+            //     return;
+            // }
+            // form.setValue('courses', [...form.getValues('courses'), course]);
+        };
+    }, []);
 
     useEffect(() => {
         if (!open) {
@@ -223,7 +218,7 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProps> = ({ open, onOpenC
                                     );
                                 }}
                             />
-                            <FormField
+                            {/* <FormField
                                 control={control}
                                 name="courses"
                                 render={({ field }) => {
@@ -301,7 +296,7 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProps> = ({ open, onOpenC
                                         </FormItem>
                                     );
                                 }}
-                            />
+                            /> */}
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>

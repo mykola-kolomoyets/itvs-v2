@@ -1,8 +1,6 @@
 import { memo } from 'react';
 import { Menu } from 'lucide-react';
-// import Image from 'next/image';
-// import Link from 'next/link';
-import { HEADER_DEPARTMENT_OPTIONS, HEADER_STUDY_OPTIONS } from './constants';
+import { HEADER_DEPARTMENT_OPTIONS, HEADER_STUDY_OPTIONS } from '@/constants';
 import { Dialog, DialogContent, DialogOverlay, DialogPortal, DialogTrigger } from '@/components/Dialog';
 import NavigationListItem from '@/components/NavigationListItem';
 import { Button } from '@/components/Button';

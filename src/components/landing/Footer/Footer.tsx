@@ -1,6 +1,8 @@
 import { memo } from 'react';
-import Link from 'next/link';
 import DepartmentInfo from './components/DepartmentInfo';
+import { HEADER_DEPARTMENT_OPTIONS, HEADER_STUDY_OPTIONS } from '@/constants';
+import NavigationListItem from '@/components/NavigationListItem';
+import { NavigationMenu } from '@/components/NavigationMenu';
 
 const Footer: React.FC = () => {
     const currentYear = new Date().getFullYear();
@@ -11,39 +13,24 @@ const Footer: React.FC = () => {
                 <DepartmentInfo />
                 <div className="flex flex-col md:flex-row">
                     <div className="mb-5 mr-10 flex flex-col md:mb-0">
-                        <h5 className="mb-3 text-xl font-medium">Про нас</h5>
-                        <ul>
-                            <li>
-                                <Link className="focus-primary rounded-sm hover:underline" href="/history">
-                                    Історія
-                                </Link>
-                            </li>
-                            <li>
-                                <Link className="focus-primary rounded-sm hover:underline" href="/staff">
-                                    Коллектив кафедри
-                                </Link>
-                            </li>
-                        </ul>
+                        <h5 className="mb-3 text-xl font-medium">Кафедра</h5>
+                        <NavigationMenu className="flex-grow-0" orientation="vertical">
+                            <ul>
+                                {HEADER_DEPARTMENT_OPTIONS.map((component) => (
+                                    <NavigationListItem key={component.title} {...component} />
+                                ))}
+                            </ul>
+                        </NavigationMenu>
                     </div>
                     <div className="flex flex-col">
                         <h5 className="mb-3 text-xl font-medium">Навчання</h5>
-                        <ul>
-                            <li>
-                                <Link className="focus-primary rounded-sm hover:underline" href="/history">
-                                    Дисципліни
-                                </Link>
-                            </li>
-                            <li>
-                                <Link className="focus-primary rounded-sm hover:underline" href="/staff">
-                                    Бібліотека
-                                </Link>
-                            </li>
-                            <li>
-                                <Link className="focus-primary rounded-sm hover:underline" href="/staff">
-                                    Наукова робота
-                                </Link>
-                            </li>
-                        </ul>
+                        <NavigationMenu className="flex-grow-0" orientation="vertical">
+                            <ul>
+                                {HEADER_STUDY_OPTIONS.map((component) => (
+                                    <NavigationListItem key={component.title} {...component} />
+                                ))}
+                            </ul>
+                        </NavigationMenu>
                     </div>
                 </div>
             </div>

@@ -62,14 +62,17 @@ model Employee {
 }
 
 model Discipline {
-    id           String     @id @default(cuid())
-    abbreviation String
-    name         String
-    description  String     @db.LongText
-    credits      Float
-    // Comma separated list of courses
-    courses      String
-    employees    Employee[]
+    id                  String     @id @default(cuid())
+    name                String
+    abbreviation        String?
+    code                String?
+    description         String     @db.LongText
+    credits             Float
+    // Comma separated list of semesters
+    semesters           String
+    departmentLecturers Employee[]
+    // Comma separated list of lecturers names
+    otherLecturers      String     @db.LongText
 }
 
 model NewsSection {

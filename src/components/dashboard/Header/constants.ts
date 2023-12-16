@@ -14,12 +14,12 @@ export const HEADER_CREATE_OPTIONS: HeaderNavigationOption[] = [
 ];
 
 export const HEADER_SETTINGS_OPTIONS: HeaderNavigationOption[] = [
-    {
-        title: 'Новини',
-        href: '/dashboard/settings?tab=news',
-        description: 'Налаштування всіх новин та їх атрибутів',
-        disabled: true,
-    },
+    // {
+    //     title: 'Новини',
+    //     href: '/dashboard/settings?tab=news',
+    //     description: 'Налаштування всіх новин та їх атрибутів',
+    //     disabled: true,
+    // },
     {
         title: 'Колектив кафедри',
         href: '/dashboard/settings?tab=staff',

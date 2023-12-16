@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { memo, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -46,6 +47,8 @@ const SubjectsTabContent: React.FC = () => {
     const [isButchRemoveSubjectsDialogOpen, , setButchRemoveSubjectsDialogOpen] = useToggle();
     const [isUpdateSubjectDialogOpen, , setUpdateSubjectDialogOpen] = useToggle();
     const [rowSelection, setRowSelection] = useState({});
+
+    console.log(isCreateSubjectDialogOpen);
 
     const {
         data: subjectResponse,
@@ -134,10 +137,10 @@ const SubjectsTabContent: React.FC = () => {
             },
             {
                 accessorKey: 'courses',
-                header: 'Курси',
-                id: 'Курси',
+                header: 'Семестри',
+                id: 'Семестри',
                 cell({ getValue }) {
-                    const subjectCourses = getValue<Discipline['courses']>();
+                    const subjectCourses = getValue<Discipline['semesters']>();
                     const splittedCourses = subjectCourses.split(',');
 
                     return (

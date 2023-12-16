@@ -91,7 +91,7 @@ const ArticleItemPage: NextPage<{ article: ArticleItem }> = ({ article }) => {
                             )}
                         >
                             <div className="mx-auto w-full max-w-[1024px] md:px-8">
-                                <h1 className="mb-3 line-clamp-6 w-full text-4xl font-bold md:text-5xl">
+                                <h1 className="mb-3 line-clamp-6 w-full text-3xl font-bold md:text-5xl">
                                     {article.title}
                                 </h1>
                                 {article.tags.length ? (

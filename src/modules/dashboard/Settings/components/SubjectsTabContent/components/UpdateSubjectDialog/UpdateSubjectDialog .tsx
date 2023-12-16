@@ -7,7 +7,7 @@ import { useToast } from '@/components/Toaster/hooks/useToast';
 import { useToggle } from '@/hooks/useToggle';
 import { useUpdateSubjectForm } from './hooks/useUpdateSubjectForm';
 import { api } from '@/utils/api';
-import { DISCIPLINE_COURSES_OPTIONS } from '@/constants';
+import { DISCIPLINE_SEMESTERS_OPTIONS } from '@/constants';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/Dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/Form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover';
@@ -51,7 +51,7 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
                     form.setValue('credits', data.credits);
                     form.setValue(
                         'courses',
-                        Object.values(DISCIPLINE_COURSES_OPTIONS)
+                        Object.values(DISCIPLINE_SEMESTERS_OPTIONS)
                             .flat()
                             .filter((course) => {
                                 return data.courses.split(',').includes(course.value);
@@ -137,7 +137,7 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
             form.setValue('credits', subjectToEditData.credits);
             form.setValue(
                 'courses',
-                Object.values(DISCIPLINE_COURSES_OPTIONS)
+                Object.values(DISCIPLINE_SEMESTERS_OPTIONS)
                     .flat()
                     .filter((course) => {
                         return subjectCourses.includes(course.value);
@@ -300,7 +300,7 @@ const UpdateSubjectDialog: React.FC<UpdateSubjectDialogProps> = ({
                                                             />
                                                         </PopoverTrigger>
                                                         <PopoverContent className=" w-80" align="start" side="top">
-                                                            {Object.entries(DISCIPLINE_COURSES_OPTIONS).map(
+                                                            {Object.entries(DISCIPLINE_SEMESTERS_OPTIONS).map(
                                                                 ([key, options]) => {
                                                                     return (
                                                                         <>

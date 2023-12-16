@@ -40,7 +40,50 @@ export const MOCK_ARTICLE_IMAGE =
 export const VNS_URL = 'https://vns.lpnu.ua/';
 export const STUDENTS_SCHEDULE_URL = 'https://student.lpnu.ua/students_schedule';
 
-export const DISCIPLINE_COURSES_OPTIONS: Record<string, Option[]> = {
+import type { HeaderNavigationOption } from '@/types';
+
+export const HEADER_DEPARTMENT_OPTIONS: HeaderNavigationOption[] = [
+    {
+        title: 'Про Нас',
+        href: '/about',
+        description: 'Історія кафедри, її завдання та цілі',
+    },
+    {
+        title: 'Колектив',
+        href: '/staff',
+        description: 'Викладацький склад кафедри, їх контакти',
+    },
+    {
+        title: 'Новини',
+        href: '/articles',
+        description: 'Активності, оголошення кафедри та факультету',
+    },
+    {
+        title: 'Звʼязатися з нами',
+        href: '/contacts',
+        description: 'Наші координати, телефони та адреса',
+    },
+];
+
+export const HEADER_STUDY_OPTIONS: HeaderNavigationOption[] = [
+    {
+        title: 'Дисципліни',
+        href: '/subjects',
+        description: 'Всі дисципліни кафедри по семестрам',
+    },
+    {
+        title: 'Наукова робота',
+        href: '/science',
+        description: 'Викладацькі та студентські наукові роботи',
+    },
+    {
+        title: 'Бібліотека',
+        href: '/library',
+        description: 'Портфоліо опублікованих матеріалів кафедри',
+    },
+];
+
+export const DISCIPLINE_SEMESTERS_OPTIONS: Record<string, Option[]> = {
     Бакалаврат: [
         {
             label: '1',
@@ -62,15 +105,27 @@ export const DISCIPLINE_COURSES_OPTIONS: Record<string, Option[]> = {
             label: '5',
             value: '5',
         },
-    ],
-    Магістатура: [
-        {
-            label: '5',
-            value: '5',
-        },
         {
             label: '6',
             value: '6',
+        },
+        {
+            label: '7',
+            value: '7',
+        },
+        {
+            label: '8',
+            value: '8',
+        },
+    ],
+    Магістатура: [
+        {
+            label: '9',
+            value: '9',
+        },
+        {
+            label: '10',
+            value: '10',
         },
     ],
 };
