@@ -53,18 +53,14 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProps> = ({ open, onOpenC
 
     const { toast } = useToast();
 
-    const createSubjectHandler = useCallback(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        async (_: CreateSubjectForm) => {
-            // await createSubject({
-            //     ...rest,
-            //     courses: courses.map((course) => {
-            //         return course.value;
-            //     }),
-            // });
-        },
-        []
-    );
+    const createSubjectHandler = useCallback(async (_: CreateSubjectForm) => {
+        // await createSubject({
+        //     ...rest,
+        //     courses: courses.map((course) => {
+        //         return course.value;
+        //     }),
+        // });
+    }, []);
 
     const _toggleCourseItemHandler = useCallback((_course: Option) => {
         return () => {

@@ -1,13 +1,17 @@
-import { memo, useEffect } from 'react';
-import LandingLayout from '@/components/layout/LandingLayout';
-import { ABOUT_CONTENT, ABOUT_VIDEO_POSTER_URL, ABOUT_VIDEO_URL } from './constants';
-import { useToggle } from '@/hooks/useToggle';
 import Markdown from '@/components/Markdown';
-import Head from 'next/head';
+import LandingLayout from '@/components/layout/LandingLayout';
 import { APP_HOSTNAME, DEFAULT_POSTER_URL } from '@/constants';
-import YouTubeVideoPlayer from '@/components/YouTubeVideoPlayer/YouTubeVideoPlayer';
+import Head from 'next/head';
+import { memo, useEffect } from 'react';
+import {
+    SCIENCE_WORK_INTERNATIONAL_ACTIVITY_INTRO_SECTION,
+    SCIENCE_WORK_EDUCATIONAL_SERVICES_SECTION,
+    SCIENCE_WORK_HISTORY_SECTION,
+} from './constants';
+import { useToggle } from '@/hooks/useToggle';
+import GoogleDriveVideoPlayer from '@/components/GoogleDriveVideoPlayer/GoogleDriveVideoPlayer';
 
-const AboutModule: React.FC = () => {
+const ScienceWorkModule: React.FC = () => {
     const [isRendered, , setIsRendered] = useToggle();
 
     useEffect(() => {
@@ -21,7 +25,7 @@ const AboutModule: React.FC = () => {
     return (
         <LandingLayout>
             <Head>
-                <title>ІТВС | Про нас</title>
+                <title>ІТВС | Наукова робота</title>
                 <link rel="icon" href="/images/logo-mini.svg" />
                 <meta name="robots" content="all" />
                 <meta name="description" content="Кафедра Інформаційних Технологій Видавничої Справи" />
@@ -33,17 +37,20 @@ const AboutModule: React.FC = () => {
                 <meta name="twitter:title" content="ІТВС" />
                 <meta name="twitter:description" content="Кафедра Інформаційних Технологій Видавничої Справи" />
                 <meta name="twitter:image" content={DEFAULT_POSTER_URL} />
-                <meta name="twitter:url" content={`${APP_HOSTNAME}/about`} />
+                <meta name="twitter:url" content={`${APP_HOSTNAME}/science`} />
             </Head>
             <section className="container">
-                <h2 className="my-8 mb-4 text-center text-3xl font-black">Хто ми?</h2>
-                <YouTubeVideoPlayer url={ABOUT_VIDEO_URL} poster={ABOUT_VIDEO_POSTER_URL} />
-                <div className="mx-auto mt-12 max-w-[1100px] md:px-8">
-                    <Markdown>{ABOUT_CONTENT}</Markdown>
+                <h2 className="my-8 text-center text-3xl font-black">Наукова робота кафедри</h2>
+                <div>
+                    <Markdown>{SCIENCE_WORK_INTERNATIONAL_ACTIVITY_INTRO_SECTION}</Markdown>
+                    <GoogleDriveVideoPlayer url="https://drive.google.com/file/d/1sPM7bz2Eb5Gc5GxbFLjU1D-YoXhvBaj4/preview" />
+                    <Markdown>{SCIENCE_WORK_EDUCATIONAL_SERVICES_SECTION}</Markdown>
+                    <GoogleDriveVideoPlayer url="https://drive.google.com/file/d/1bR8A6hF6hw7Gin4PAA7d7HtI4IU9rAi0/preview" />
+                    <Markdown>{SCIENCE_WORK_HISTORY_SECTION}</Markdown>
                 </div>
             </section>
         </LandingLayout>
     );
 };
 
-export default memo(AboutModule);
+export default memo(ScienceWorkModule);
