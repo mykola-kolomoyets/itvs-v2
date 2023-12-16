@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import Image from 'next/image';
-import { ExternalLink, Mail, MapPin, PhoneCallIcon } from 'lucide-react';
+import { ExternalLink, FacebookIcon, Mail, MapPin, PhoneCallIcon } from 'lucide-react';
 import Link from 'next/link';
 
 const Footer: React.FC = () => {
@@ -28,10 +28,14 @@ const Footer: React.FC = () => {
                         />
                     </a>
                     <p className="mb-3 mt-1 text-lg font-medium">Кафедра “Інформаційні технології видавничої справи”</p>
-                    <p className="inline-flex items-center">
+                    <a
+                        className="focus-primary inline-flex  items-center  rounded-sm transition-colors hover:text-accent-secondary hover:underline"
+                        href="https://maps.app.goo.gl/1ikwNJ1eVS6R2wtz9"
+                        target="_blank"
+                    >
                         <MapPin className="mr-3" size={16} />
                         вул. С.Бандери, 28а, Львів-13, 79013.
-                    </p>
+                    </a>
                     <a
                         className="focus-primary inline-flex items-center rounded-sm transition-colors hover:text-accent-secondary hover:underline"
                         href="mailto:iitvs.dept@lpnu.ua"
@@ -51,6 +55,23 @@ const Footer: React.FC = () => {
                                     href="tel:+380322582779"
                                 >
                                     (032) 258-27-79
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="group relative flex items-baseline">
+                        <FacebookIcon
+                            className="ml-[-2px] mr-3 group-hover:text-accent-secondary group-hover:underline"
+                            size={20}
+                        />
+                        <ul>
+                            <li>
+                                <a
+                                    className="focus-primary inline-flex items-center rounded-sm transition-colors hover:text-accent-secondary hover:underline"
+                                    href="https://www.facebook.com/ITVSDepartment"
+                                    target="_blank"
+                                >
+                                    ITVSDepartment
                                 </a>
                             </li>
                         </ul>
