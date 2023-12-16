@@ -41,7 +41,7 @@ const ScienceWorkModule: React.FC = () => {
             </Head>
             <section className="container">
                 <h2 className="my-8 text-center text-3xl font-black">Наукова робота кафедри</h2>
-                <div>
+                <div className="mx-auto w-full max-w-[1040px]">
                     <Markdown>{SCIENCE_WORK_INTERNATIONAL_ACTIVITY_INTRO_SECTION}</Markdown>
                     <GoogleDriveVideoPlayer url="https://drive.google.com/file/d/1sPM7bz2Eb5Gc5GxbFLjU1D-YoXhvBaj4/preview" />
                     <Markdown>{SCIENCE_WORK_EDUCATIONAL_SERVICES_SECTION}</Markdown>
