@@ -23,6 +23,8 @@ enum AcademicStatus {
     assistant_ktn
     senior_lecturer
     docent
+    docent_math_phys
+    doctor_math_phys_master
     professor
     sub_director
     director

@@ -21,6 +21,7 @@ import { useToast } from '@/components/Toaster/hooks/useToast';
 import { ArrowUpRightIcon, Check, Copy, ExternalLink, X } from 'lucide-react';
 import { Badge } from '@/components/Badge';
 import Link from 'next/link';
+import { Skeleton } from '@/components/Skeleton';
 
 const SubjectsModule: React.FC = () => {
     const router = useRouter();
@@ -40,7 +41,7 @@ const SubjectsModule: React.FC = () => {
 
     const debouncedSearchValue = useDebounce(searchValue);
 
-    const { data: subjects = {} } = api.subjects.getAllSubjectsBySemesters.useQuery({
+    const { data: subjects = {}, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery({
         search: debouncedSearchValue,
     });
 
@@ -122,6 +123,34 @@ const SubjectsModule: React.FC = () => {
                 </div>
 
                 <Switch>
+                    <Case condition={isLoading}>
+                        <div className="mt-6 flex flex-col gap-3">
+                            <div className="h-[56px] w-full overflow-hidden rounded-lg  ">
+                                <Skeleton className="h-full w-full" />
+                            </div>
+                            <div className="h-[56px] w-full overflow-hidden rounded-lg  ">
+                                <Skeleton className="h-full w-full" />
+                            </div>
+                            <div className="h-[56px] w-full overflow-hidden rounded-lg  ">
+                                <Skeleton className="h-full w-full" />
+                            </div>
+                            <div className="h-[56px] w-full overflow-hidden rounded-lg  ">
+                                <Skeleton className="h-full w-full" />
+                            </div>
+                            <div className="h-[56px] w-full overflow-hidden rounded-lg  ">
+                                <Skeleton className="h-full w-full" />
+                            </div>
+                            <div className="h-[56px] w-full overflow-hidden rounded-lg  ">
+                                <Skeleton className="h-full w-full" />
+                            </div>
+                            <div className="h-[56px] w-full overflow-hidden rounded-lg  ">
+                                <Skeleton className="h-full w-full" />
+                            </div>
+                            <div className="h-[56px] w-full overflow-hidden rounded-lg  ">
+                                <Skeleton className="h-full w-full" />
+                            </div>
+                        </div>
+                    </Case>
                     <Case condition={!Object.keys(subjects).length}>
                         <div className="flex items-center justify-center p-16">
                             <p className="text-base text-muted-foreground">Нічого не знайдено</p>

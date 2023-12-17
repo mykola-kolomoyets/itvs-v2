@@ -150,7 +150,7 @@ export const employeesRouter = createTRPCRouter({
             });
         }
 
-        const { disciplines = [], ...rest } = input;
+        const { disciplines: _, ...rest } = input;
 
         const employee = await ctx.db.employee.update({
             where: {
@@ -158,11 +158,11 @@ export const employeesRouter = createTRPCRouter({
             },
             data: {
                 ...rest,
-                disciplines: {
-                    connect: disciplines.map((discipline) => ({
-                        id: discipline,
-                    })),
-                },
+                // disciplines: {
+                //     connect: disciplines.map((discipline) => ({
+                //         id: discipline,
+                //     })),
+                // },
             },
         });
 

@@ -1,12 +1,12 @@
-import { memo, useCallback, useEffect, useMemo } from 'react';
-import { CheckIcon, Loader2, TrashIcon } from 'lucide-react';
+import { memo, useCallback, useEffect } from 'react';
+import { Loader2, TrashIcon } from 'lucide-react';
 import type { CreateEmployeeDialogProps, CreateEmployeeForm } from './types';
-import type { Option } from '@/types';
+// import type { Option } from '@/types';
 import { useToast } from '@/components/Toaster/hooks/useToast';
 import { useCreateEmployeeForm } from './hooks/useCreateEmployeeForm';
 import { api } from '@/utils/api';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/Form';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover';
+// import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import {
@@ -25,30 +25,30 @@ import { EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { ScrollArea } from '@/components/ScrollArea';
 import Image from 'next/image';
 import { shimmer, toBase64 } from '@/utils/common';
-import { useDebouncedState } from '@/hooks/useDebouncedState';
-import { Case, Default, Switch } from '@/components/utils/Switch';
-import Link from 'next/link';
+// import { useDebouncedState } from '@/hooks/useDebouncedState';
+// import { Case, Default, Switch } from '@/components/utils/Switch';
+// import Link from 'next/link';
 
 const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpenChange, ...rest }) => {
-    const [disciplineSearchValue, debouncedDisciplineSearchValue, setDisciplineSearchValue] = useDebouncedState('');
+    // const [disciplineSearchValue, debouncedDisciplineSearchValue, setDisciplineSearchValue] = useDebouncedState('');
 
     const form = useCreateEmployeeForm();
     const { control, handleSubmit, reset } = form;
 
     const utils = api.useUtils();
 
-    const {
-        data: subjectsResponse,
-        isLoading: isSubjectsLoading,
-        isRefetching: isSubjectsRefetching,
-    } = api.subjects.getAllSubjects.useQuery(
-        {
-            search: debouncedDisciplineSearchValue.trim(),
-        },
-        {
-            keepPreviousData: true,
-        }
-    );
+    // const {
+    //     data: subjectsResponse,
+    //     isLoading: isSubjectsLoading,
+    //     isRefetching: isSubjectsRefetching,
+    // } = api.subjects.getAllSubjects.useQuery(
+    //     {
+    //         search: debouncedDisciplineSearchValue.trim(),
+    //     },
+    //     {
+    //         keepPreviousData: true,
+    //     }
+    // );
     const { mutateAsync: createEmployee, isLoading: isEmployeeCreating } = api.employees.createEmployee.useMutation({
         async onSuccess(createdEmployee) {
             await utils.employees.getAllEmployees.invalidate();
@@ -69,16 +69,16 @@ const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpe
 
     const { toast } = useToast();
 
-    const subjectsOptions = useMemo(() => {
-        return (
-            subjectsResponse?.map((subject) => {
-                return {
-                    label: subject.name,
-                    value: subject.id,
-                };
-            }) ?? []
-        );
-    }, [subjectsResponse]);
+    // const subjectsOptions = useMemo(() => {
+    //     return (
+    //         subjectsResponse?.map((subject) => {
+    //             return {
+    //                 label: subject.name,
+    //                 value: subject.id,
+    //             };
+    //         }) ?? []
+    //     );
+    // }, [subjectsResponse]);
 
     const createEmployeeHandler = useCallback(
         async ({ academicStatus, disciplines = [], ...rest }: CreateEmployeeForm) => {
@@ -93,30 +93,30 @@ const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpe
         [createEmployee]
     );
 
-    const toggleDisciplineItemHandler = useCallback(
-        (course: Option) => {
-            return () => {
-                const isIncluded =
-                    form.getValues('disciplines')?.findIndex((item) => {
-                        return item.value === course.value;
-                    }) !== -1;
+    // const toggleDisciplineItemHandler = useCallback(
+    //     (course: Option) => {
+    //         return () => {
+    //             const isIncluded =
+    //                 form.getValues('disciplines')?.findIndex((item) => {
+    //                     return item.value === course.value;
+    //                 }) !== -1;
 
-                if (isIncluded) {
-                    form.setValue(
-                        'disciplines',
-                        form.getValues('disciplines')?.filter((item) => {
-                            return item.value !== course.value;
-                        })
-                    );
+    //             if (isIncluded) {
+    //                 form.setValue(
+    //                     'disciplines',
+    //                     form.getValues('disciplines')?.filter((item) => {
+    //                         return item.value !== course.value;
+    //                     })
+    //                 );
 
-                    return;
-                }
+    //                 return;
+    //             }
 
-                form.setValue('disciplines', [...(form.getValues('disciplines') ?? []), course]);
-            };
-        },
-        [form]
-    );
+    //             form.setValue('disciplines', [...(form.getValues('disciplines') ?? []), course]);
+    //         };
+    //     },
+    //     [form]
+    // );
 
     useEffect(() => {
         if (!open) {
@@ -363,7 +363,7 @@ const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpe
                                         );
                                     }}
                                 />
-                                <FormField
+                                {/* <FormField
                                     control={control}
                                     name="disciplines"
                                     render={({ field }) => {
@@ -527,7 +527,7 @@ const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpe
                                             </FormItem>
                                         );
                                     }}
-                                />
+                                /> */}
                             </div>
                         </ScrollArea>
                         <DialogFooter>

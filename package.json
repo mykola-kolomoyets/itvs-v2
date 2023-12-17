@@ -1,6 +1,6 @@
 {
     "name": "itvs",
-    "version": "0.13.19",
+    "version": "0.14.19",
     "private": true,
     "scripts": {
         "build": "next build",

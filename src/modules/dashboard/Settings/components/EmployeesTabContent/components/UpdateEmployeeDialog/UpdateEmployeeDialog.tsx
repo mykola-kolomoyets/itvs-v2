@@ -1,12 +1,12 @@
-import { memo, useCallback, useEffect, useMemo } from 'react';
-import { CheckIcon, Loader2, TrashIcon } from 'lucide-react';
+import { memo, useCallback, useEffect } from 'react';
+import { Loader2, TrashIcon } from 'lucide-react';
 import type { UpdateEmployeeDialogProps, UpdateEmployeeForm } from './types';
-import type { Option } from '@/types';
+// import type { Option } from '@/types';
 import { useToast } from '@/components/Toaster/hooks/useToast';
 import { useUpdateEmployeeForm } from './hooks/useUpdateEmployeeForm';
 import { api } from '@/utils/api';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/Form';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover';
+// import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/Dialog';
@@ -17,9 +17,9 @@ import { EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { ScrollArea } from '@/components/ScrollArea';
 import Image from 'next/image';
 import { shimmer, toBase64 } from '@/utils/common';
-import { useDebouncedState } from '@/hooks/useDebouncedState';
-import { Case, Default, Switch } from '@/components/utils/Switch';
-import Link from 'next/link';
+// import { useDebouncedState } from '@/hooks/useDebouncedState';
+// import { Case, Default, Switch } from '@/components/utils/Switch';
+// import Link from 'next/link';
 
 const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
     open,
@@ -28,51 +28,49 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
     onOpenChange,
     ...rest
 }) => {
-    const [disciplineSearchValue, debouncedDisciplineSearchValue, setDisciplineSearchValue] = useDebouncedState('');
+    // const [disciplineSearchValue, debouncedDisciplineSearchValue, setDisciplineSearchValue] = useDebouncedState('');
 
     const form = useUpdateEmployeeForm();
     const { control, handleSubmit, reset } = form;
 
     const utils = api.useUtils();
 
-    const {} = api.employees.getEmployeesItem.useQuery(
-        {
-            id: employeeId ?? '',
-        },
-        {
-            // NOTE: deprecated
-            onSuccess(data) {
-                if (data) {
-                    form.setValue('name', data.name);
-                    form.setValue('email', data.email);
-                    form.setValue('url', data?.url ?? '');
-                    form.setValue('image', data?.image ?? '');
-                    form.setValue('academicStatus', data.academicStatus ?? 'assistant');
-                    form.setValue(
-                        'disciplines',
-                        data.disciplines.map((discipline) => {
-                            return {
-                                label: discipline.name,
-                                value: discipline.id,
-                            };
-                        })
-                    );
-                }
-            },
+    const { data: employeeData, isFetched } = api.employees.getEmployeesItem.useQuery({
+        id: employeeId ?? '',
+    });
+
+    useEffect(() => {
+        if (isFetched && employeeData) {
+            form.setValue('name', employeeData.name);
+            form.setValue('email', employeeData.email);
+            form.setValue('url', employeeData?.url ?? '');
+            form.setValue('image', employeeData?.image ?? '');
+            form.setValue('academicStatus', employeeData.academicStatus ?? 'assistant');
+            form.setValue(
+                'disciplines',
+                employeeData.disciplines.map((discipline) => {
+                    return {
+                        label: discipline.name,
+                        value: discipline.id,
+                    };
+                })
+            );
         }
-    );
-    const {
-        data: subjectsResponse,
-        isLoading: isSubjectsLoading,
-        isRefetching: isSubjectsRefetching,
-    } = api.subjects.getAllSubjects.useQuery(
-        {
-            search: debouncedDisciplineSearchValue.trim(),
-        },
-        {
-            keepPreviousData: true,
-        }
-    );
+    }, [employeeData, form, isFetched]);
+
+    // const {
+    //     data: subjectsResponse,
+    //     isLoading: isSubjectsLoading,
+    //     isRefetching: isSubjectsRefetching,
+    // } = api.subjects.getAllSubjects.useQuery(
+    //     {
+    //         search: debouncedDisciplineSearchValue.trim(),
+    //     },
+    //     {
+    //         keepPreviousData: true,
+    //     }
+    // );
+
     const { mutateAsync: updateEmployee, isLoading: isEmployeeUpdating } = api.employees.updateEmployee.useMutation({
         async onSuccess(updatedEmployee) {
             await utils.employees.getAllEmployees.invalidate();
@@ -95,16 +93,16 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
 
     const { toast } = useToast();
 
-    const subjectsOptions = useMemo(() => {
-        return (
-            subjectsResponse?.map((subject) => {
-                return {
-                    label: subject.name,
-                    value: subject.id,
-                };
-            }) ?? []
-        );
-    }, [subjectsResponse]);
+    // const subjectsOptions = useMemo(() => {
+    //     return (
+    //         subjectsResponse?.map((subject) => {
+    //             return {
+    //                 label: subject.name,
+    //                 value: subject.id,
+    //             };
+    //         }) ?? []
+    //     );
+    // }, [subjectsResponse]);
 
     const createEmployeeHandler = useCallback(
         async ({ academicStatus, disciplines = [], ...rest }: UpdateEmployeeForm) => {
@@ -120,30 +118,30 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
         [updateEmployee, employeeId]
     );
 
-    const toggleDisciplineItemHandler = useCallback(
-        (course: Option) => {
-            return () => {
-                const isIncluded =
-                    form.getValues('disciplines')?.findIndex((item) => {
-                        return item.value === course.value;
-                    }) !== -1;
+    // const toggleDisciplineItemHandler = useCallback(
+    //     (course: Option) => {
+    //         return () => {
+    //             const isIncluded =
+    //                 form.getValues('disciplines')?.findIndex((item) => {
+    //                     return item.value === course.value;
+    //                 }) !== -1;
 
-                if (isIncluded) {
-                    form.setValue(
-                        'disciplines',
-                        form.getValues('disciplines')?.filter((item) => {
-                            return item.value !== course.value;
-                        })
-                    );
+    //             if (isIncluded) {
+    //                 form.setValue(
+    //                     'disciplines',
+    //                     form.getValues('disciplines')?.filter((item) => {
+    //                         return item.value !== course.value;
+    //                     })
+    //                 );
 
-                    return;
-                }
+    //                 return;
+    //             }
 
-                form.setValue('disciplines', [...(form.getValues('disciplines') ?? []), course]);
-            };
-        },
-        [form]
-    );
+    //             form.setValue('disciplines', [...(form.getValues('disciplines') ?? []), course]);
+    //         };
+    //     },
+    //     [form]
+    // );
 
     useEffect(() => {
         if (!open) {
@@ -389,7 +387,7 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
                                         );
                                     }}
                                 />
-                                <FormField
+                                {/* <FormField
                                     control={control}
                                     name="disciplines"
                                     render={({ field }) => {
@@ -553,7 +551,7 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
                                             </FormItem>
                                         );
                                     }}
-                                />
+                                /> */}
                             </div>
                         </ScrollArea>
                         <DialogFooter>

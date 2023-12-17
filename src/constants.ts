@@ -156,24 +156,34 @@ export const EMPLOYEE_ACADEMIC_STATUSES: Record<AcademicStatus, { label: string;
         id: 'docent',
         priority: 5,
     },
+    docent_math_phys: {
+        label: 'к.ф.-м.н, доцент',
+        id: 'docent_math_phys',
+        priority: 5,
+    },
+    doctor_math_phys_master: {
+        label: 'д.ф.-м.н., ст.н.с.',
+        id: 'doctor_math_phys_master',
+        priority: 5,
+    },
     professor: {
         label: 'Професор кафедри, д.т.н.',
         id: 'professor',
-        priority: 6,
+        priority: 8,
     },
     sub_director: {
         label: 'В.О. Завідувач кафедри, д.т.н.',
         id: 'sub_director',
-        priority: 7,
+        priority: 9,
     },
     director: {
         label: 'Завідувач кафедри, д.т.н.',
         id: 'director',
-        priority: 8,
+        priority: 10,
     },
     director_ktn: {
         label: 'Завідувач кафедри, к.т.н.',
         id: 'director_ktn',
-        priority: 9,
+        priority: 11,
     },
 };
