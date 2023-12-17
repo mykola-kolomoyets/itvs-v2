@@ -73,6 +73,16 @@ const DepartmentInfo: React.FC<DepartmentInfoProps> = ({ isWithNULPLogo = true }
                     </li>
                 </ul>
             </div>
+            <div className="group relative my-5 inline-flex w-full flex-col flex-wrap items-center rounded-xl bg-white p-5 md:w-max md:flex-row">
+                <Image src="/images/ui-ux.webp" width={64} height={60} alt="https://itcluster.lviv.ua/ux-ui_nulp/" />
+                <a
+                    className="focus-primary ml-5 mt-3 items-center break-words rounded-sm text-center font-bold text-black transition-colors hover:text-accent-secondary hover:underline md:mt-0 md:text-left"
+                    href="https://www.facebook.com/ITVSDepartment"
+                    target="_blank"
+                >
+                    ОСВІТНЯ ПРОГРАМА “UX/UI DESIGN”
+                </a>
+            </div>
         </div>
     );
 };

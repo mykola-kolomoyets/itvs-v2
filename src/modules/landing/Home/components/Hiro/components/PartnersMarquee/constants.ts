@@ -1,7 +1,8 @@
 export const PARTNERS_IMAGES = [
-    'link-up.png',
-    'global-logic.png',
-    'lviv-it-cluster.png',
-    'softserve.png',
-    'embrox.png',
+    '/images/link-up.png',
+    '/images/global-logic.png',
+    '/images/lviv-it-cluster.png',
+    '/images/ui-ux.webp',
+    '/images/softserve.png',
+    '/images/embrox.png',
 ];

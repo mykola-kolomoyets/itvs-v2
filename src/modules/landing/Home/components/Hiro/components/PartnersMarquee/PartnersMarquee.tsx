@@ -7,11 +7,11 @@ const PartnersMarquee: React.FC = () => {
         return (
             <div
                 key={index}
-                className=" mr-6 inline-flex w-[10.625rem] rounded-lg border-border bg-background/30 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/30 dark:bg-white dark:backdrop-blur-none"
+                className=" mr-6 inline-flex w-[10.625rem] rounded-lg border-border bg-background p-4 backdrop-blur  dark:bg-white dark:backdrop-blur-none"
             >
                 <Image
                     className="h-[80px] w-[250px] object-contain "
-                    src={`/images/${image}`}
+                    src={image}
                     width={500}
                     height={80}
                     alt="Partners"
