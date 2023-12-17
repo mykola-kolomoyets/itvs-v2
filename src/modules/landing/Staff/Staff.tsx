@@ -122,7 +122,7 @@ const StaffModule: React.FC = () => {
                                                 </DialogTrigger>
                                             </div>
                                             <DialogContent>
-                                                <div className="max-h-[500px] overflow-auto">
+                                                <div className="max-h-[500px]">
                                                     <h3 className="text-xl font-bold">{employee.name}</h3>
                                                     {employee.academicStatus ? (
                                                         <p className="text-muted-foreground">

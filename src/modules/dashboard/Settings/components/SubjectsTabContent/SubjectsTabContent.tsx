@@ -25,6 +25,7 @@ import {
 } from '@/components/DropdownMenu';
 import SubjectsTableSkeleton from './components/SubjectsTableSkeleton';
 import ToggledMarkdown from './components/ToggledMarkdown';
+import Link from 'next/link';
 
 const CreateSubjectDialog = dynamic(() => {
     return import('./components/CreateSubjectDialog');
@@ -114,14 +115,36 @@ const SubjectsTabContent: React.FC = () => {
                 },
                 enableHiding: false,
             },
-            {
-                accessorKey: 'description',
-                header: 'Опис',
-                id: 'Опис',
-                cell({ getValue }) {
-                    const subjectDescription = getValue<Discipline['description']>();
+            // {
+            //     accessorKey: 'description',
+            //     header: 'Опис',
+            //     id: 'Опис',
+            //     cell({ getValue }) {
+            //         const subjectDescription = getValue<Discipline['description']>();
 
-                    return <ToggledMarkdown className="max-w-[500px]">{subjectDescription}</ToggledMarkdown>;
+            //         return <ToggledMarkdown className="max-w-[500px]">{subjectDescription}</ToggledMarkdown>;
+            //     },
+            // },
+            {
+                accessorKey: 'code',
+                header: 'Код',
+                id: 'Код',
+                size: 150,
+                cell({ getValue }) {
+                    const subjectCode = getValue<Discipline['code']>();
+
+                    return <p className="text-base">{subjectCode}</p>;
+                },
+            },
+            {
+                accessorKey: 'abbreviation',
+                header: 'Абревіатура',
+                id: 'Абревіатура',
+                size: 150,
+                cell({ getValue }) {
+                    const subjectAbbreviation = getValue<Discipline['abbreviation']>();
+
+                    return <p className="text-base">{subjectAbbreviation}</p>;
                 },
             },
             {
@@ -242,6 +265,9 @@ const SubjectsTabContent: React.FC = () => {
                                 </TooltipProvider>
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Дії</DropdownMenuLabel>
+                                    <Link href={`/subjects/${row.original.id}`} target="_blank">
+                                        <DropdownMenuItem>Відкрити</DropdownMenuItem>
+                                    </Link>
                                     <DropdownMenuItem
                                         onClick={() => {
                                             setUpdateSubjectDialogOpen(true);

@@ -97,8 +97,6 @@ const ArticlesModule: React.FC = () => {
         return articlesResponse?.pages[0] ?? null;
     }, [articlesResponse?.pages]);
 
-    console.log(articlesResponse);
-
     const toggleTagsFilterHandler = useCallback(
         (value: string) => {
             if (tagsIdsArray.includes(value)) {

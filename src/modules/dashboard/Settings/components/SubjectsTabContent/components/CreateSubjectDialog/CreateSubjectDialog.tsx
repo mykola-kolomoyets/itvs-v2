@@ -228,14 +228,14 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProps> = ({ open, onOpenC
                                                         <>
                                                             {isMarkdownPreview ? (
                                                                 <ScrollArea
-                                                                    className="h-[9.875rem] overflow-y-auto rounded-md border border-border px-3 py-2"
+                                                                    className="h-[350px] overflow-y-auto rounded-md border border-border px-3 py-2"
                                                                     scrollHideDelay={999}
                                                                 >
                                                                     <Markdown>{field.value}</Markdown>
                                                                 </ScrollArea>
                                                             ) : (
                                                                 <Textarea
-                                                                    className="resize-none"
+                                                                    className="h-[350px] resize-none"
                                                                     id="description"
                                                                     placeholder="Введіть опис дисципліни"
                                                                     rows={7}

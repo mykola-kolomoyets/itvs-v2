@@ -1,7 +1,9 @@
 import { z } from 'zod';
-import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 import { selectOptionSchema } from '@/schemas';
+import type { Discipline, Employee } from '@prisma/client';
+import { produce } from 'immer';
 
 const getAllSubjectsQuerySchema = z.object({
     search: z.string().optional(),
@@ -47,14 +49,12 @@ export const subjectsRouter = createTRPCRouter({
             });
         }
 
-        const filter = {
-            name: {
-                contains: input.search?.trim(),
-            },
-        };
-
         const subjects = await ctx.db.discipline.findMany({
-            where: filter,
+            where: {
+                name: {
+                    contains: input.search?.trim(),
+                },
+            },
             orderBy: {
                 name: 'asc',
             },
@@ -72,6 +72,46 @@ export const subjectsRouter = createTRPCRouter({
         });
 
         return subjects;
+    }),
+    getAllSubjectsBySemesters: publicProcedure.input(getAllSubjectsQuerySchema).query(async ({ ctx, input }) => {
+        const subjects = await ctx.db.discipline.findMany({
+            where: {
+                name: {
+                    contains: input.search?.trim(),
+                },
+            },
+            orderBy: {
+                name: 'asc',
+            },
+            select: {
+                id: true,
+                name: true,
+                abbreviation: true,
+                code: true,
+                description: true,
+                credits: true,
+                semesters: true,
+                otherLecturers: true,
+                departmentLecturers: true,
+            },
+        });
+
+        const subjectsBySemesters = subjects.reduce(
+            (acc, subject) => {
+                return produce(acc, (prev) => {
+                    subject.semesters.split(',').forEach((semester) => {
+                        if (!prev[semester]) {
+                            prev[semester] = [subject];
+                        } else {
+                            prev[semester]!.push(subject);
+                        }
+                    });
+                });
+            },
+            {} as Record<string, (Discipline & { departmentLecturers: Employee[] })[]>
+        );
+
+        return subjectsBySemesters;
     }),
     getSubjectItem: protectedProcedure.input(getSubjectItemQuerySchema).query(async ({ ctx, input }) => {
         const user = ctx.session?.user;
