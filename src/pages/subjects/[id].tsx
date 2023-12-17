@@ -96,7 +96,7 @@ const SubjectPage: NextPage = () => {
                 <meta name="twitter:image" content={DEFAULT_POSTER_URL} />
                 <meta name="twitter:url" content={getMetaPageUrl()} />
             </Head>
-            <div className=" container mt-10">
+            <div className=" container mt-10 max-w-[1080px]">
                 <Button className="mb-5" variant="ghost" asChild>
                     <Link href="/subjects">
                         <ArrowLeft className="mr-2" size={16} />
