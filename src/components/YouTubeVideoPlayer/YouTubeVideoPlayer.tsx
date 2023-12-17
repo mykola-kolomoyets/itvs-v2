@@ -19,7 +19,7 @@ const YouTubeVideoPlayer: React.FC<YouTubeVideoPlayerProps> = ({ url, poster }) 
                 pip
                 config={{
                     youtube: {
-                        playerVars: { showinfo: 0, autoplay: 1, fs: 1 },
+                        playerVars: { showinfo: 0, autoplay: 0, fs: 1 },
                         embedOptions: {
                             poster: poster,
                         },

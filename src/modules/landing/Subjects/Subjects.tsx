@@ -162,7 +162,9 @@ const SubjectsModule: React.FC = () => {
                                 {Object.entries(subjects).map(([semesterNumber, semesterSubjects]) => {
                                     return (
                                         <AccordionItem key={semesterNumber} value={semesterNumber}>
-                                            <AccordionTrigger>{semesterNumber} семестр</AccordionTrigger>
+                                            <AccordionTrigger className="text-lg">
+                                                {semesterNumber} семестр
+                                            </AccordionTrigger>
                                             <AccordionContent>
                                                 <div className="grid  gap-3 md:grid-cols-2 xl:grid-cols-3">
                                                     {semesterSubjects.map((subject) => {
@@ -187,6 +189,11 @@ const SubjectsModule: React.FC = () => {
                                                                             className="mb-2"
                                                                             label="Код"
                                                                             value={subject.code ?? '--'}
+                                                                        />
+                                                                        <SubjectCardDataItem
+                                                                            className="mb-2"
+                                                                            label="Кредити"
+                                                                            value={subject.credits.toFixed(2)}
                                                                         />
                                                                         <div className="flex-grow">
                                                                             <p className="text-base text-muted-foreground">
