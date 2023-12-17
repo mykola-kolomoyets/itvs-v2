@@ -48,13 +48,21 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
                 a(props) {
                     const { node: _, children, className, ...rest } = props;
 
+                    let href = rest?.href;
+
+                    if (!href?.startsWith('http') && !href?.startsWith('/')) {
+                        href = `https://${href}`;
+                    }
+
                     return (
                         <a
                             className={cn(
-                                'text-blue-600 transition-colors hover:text-blue-400 hover:underline',
+                                'text-accent-secondary transition-colors hover:text-accent-secondary hover:underline',
                                 className
                             )}
                             {...rest}
+                            target="_blank"
+                            href={href}
                         >
                             {children}
                         </a>

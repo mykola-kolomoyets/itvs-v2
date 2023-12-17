@@ -113,15 +113,15 @@ export const subjectsRouter = createTRPCRouter({
 
         return subjectsBySemesters;
     }),
-    getSubjectItem: protectedProcedure.input(getSubjectItemQuerySchema).query(async ({ ctx, input }) => {
-        const user = ctx.session?.user;
+    getSubjectItem: publicProcedure.input(getSubjectItemQuerySchema).query(async ({ ctx, input }) => {
+        // const user = ctx.session?.user;
 
-        if (!user) {
-            throw new TRPCError({
-                code: 'FORBIDDEN',
-                message: 'You must be logged in to view this page',
-            });
-        }
+        // if (!user) {
+        //     throw new TRPCError({
+        //         code: 'FORBIDDEN',
+        //         message: 'You must be logged in to view this page',
+        //     });
+        // }
 
         const subject = await ctx.db.discipline.findUnique({
             where: {

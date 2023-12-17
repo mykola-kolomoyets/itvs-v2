@@ -164,10 +164,10 @@ const SubjectsModule: React.FC = () => {
                                         <AccordionItem key={semesterNumber} value={semesterNumber}>
                                             <AccordionTrigger>{semesterNumber} семестр</AccordionTrigger>
                                             <AccordionContent>
-                                                <div className="grid w-full gap-3 md:grid-cols-2 xl:grid-cols-3">
+                                                <div className="grid  gap-3 md:grid-cols-2 xl:grid-cols-3">
                                                     {semesterSubjects.map((subject) => {
                                                         return (
-                                                            <Card key={subject.id} className="flex flex-col">
+                                                            <Card key={subject.id} className="flex  flex-col md:w-full">
                                                                 <CardHeader>
                                                                     <CardTitle
                                                                         className="line-clamp-3 text-lg md:text-2xl"
@@ -176,8 +176,8 @@ const SubjectsModule: React.FC = () => {
                                                                         {subject.name}
                                                                     </CardTitle>
                                                                 </CardHeader>
-                                                                <CardContent className="flex-grow">
-                                                                    <div className="flex h-full flex-grow flex-col">
+                                                                <CardContent className="flex-shrink flex-grow">
+                                                                    <div className="flex h-full min-w-[200px] flex-grow flex-col">
                                                                         <SubjectCardDataItem
                                                                             className="mb-2"
                                                                             label="Абреваітура"
@@ -194,7 +194,7 @@ const SubjectsModule: React.FC = () => {
                                                                             </p>
 
                                                                             {subject.departmentLecturers.length ? (
-                                                                                <div className="mt-1 flex flex-col">
+                                                                                <div className="mt-1 flex  flex-wrap gap-3">
                                                                                     {subject.departmentLecturers.map(
                                                                                         (lecturer) => {
                                                                                             return (
@@ -206,7 +206,7 @@ const SubjectsModule: React.FC = () => {
                                                                                                     >
                                                                                                         <Button
                                                                                                             variant="ghost"
-                                                                                                            className="group mb-3 inline-flex w-max cursor-pointer items-center justify-start"
+                                                                                                            className="group mb-3 inline-flex w-max flex-shrink cursor-pointer items-center justify-start"
                                                                                                         >
                                                                                                             <Avatar className=" mr-3 h-8 w-8">
                                                                                                                 <AvatarImage
@@ -227,7 +227,7 @@ const SubjectsModule: React.FC = () => {
                                                                                                                     )}
                                                                                                                 </AvatarFallback>
                                                                                                             </Avatar>
-                                                                                                            <span className="truncate text-sm group-hover:underline">
+                                                                                                            <span className="hidden w-full truncate text-sm group-hover:underline sm:block">
                                                                                                                 {lecturer.name ??
                                                                                                                     '--'}
                                                                                                             </span>
