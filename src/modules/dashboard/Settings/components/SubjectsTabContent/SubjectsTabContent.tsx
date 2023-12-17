@@ -24,7 +24,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/DropdownMenu';
 import SubjectsTableSkeleton from './components/SubjectsTableSkeleton';
-import ToggledMarkdown from './components/ToggledMarkdown';
 import Link from 'next/link';
 
 const CreateSubjectDialog = dynamic(() => {
