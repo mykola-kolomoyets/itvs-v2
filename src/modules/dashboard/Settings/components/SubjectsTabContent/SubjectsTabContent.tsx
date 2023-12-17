@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useReactTable, type ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
 import { ChevronDown, MoreHorizontal } from 'lucide-react';
-import type { Discipline } from '@prisma/client';
+import type { Discipline, Employee } from '@prisma/client';
 import { useDebouncedState } from '@/hooks/useDebouncedState';
 import { useToggle } from '@/hooks/useToggle';
 import { api } from '@/utils/api';
@@ -75,7 +75,7 @@ const SubjectsTabContent: React.FC = () => {
     const isButchRemoveEnabled =
         selectedSubjectsIds.length > 1 && !isRemoveSubjectDialogOpen && !isUpdateSubjectDialogOpen;
 
-    const columns = useMemo<ColumnDef<Discipline>[]>(() => {
+    const columns = useMemo<ColumnDef<Discipline & { departmentLecturers: Employee[] }>[]>(() => {
         return [
             {
                 id: 'select',
@@ -128,26 +128,78 @@ const SubjectsTabContent: React.FC = () => {
                 accessorKey: 'credits',
                 header: 'Кредити',
                 id: 'Кредити',
+                size: 70,
                 cell({ getValue }) {
                     const subjectCredits = getValue<Discipline['credits']>();
 
-                    return <p className="text-base">{subjectCredits.toFixed(2)}</p>;
+                    return <p className="w-[70px] text-base">{subjectCredits.toFixed(2)}</p>;
                 },
             },
             {
-                accessorKey: 'courses',
+                accessorKey: 'semesters',
                 header: 'Семестри',
                 id: 'Семестри',
+                size: 70,
                 cell({ getValue }) {
                     const subjectCourses = getValue<Discipline['semesters']>();
                     const splittedCourses = subjectCourses.split(',');
 
                     return (
-                        <div className="flex min-w-[150px] flex-wrap">
+                        <div className="flex w-[70px] flex-wrap">
                             {splittedCourses.map((course) => {
                                 return (
                                     <Badge className="mr-2 mt-2" key={course}>
                                         {course}
+                                    </Badge>
+                                );
+                            })}
+                        </div>
+                    );
+                },
+            },
+            {
+                accessorKey: 'departmentLecturers',
+                header: 'Викладачі від кафедри',
+                id: 'Викладачі від кафедри',
+                size: 300,
+                cell({ getValue }) {
+                    const employees = getValue<Employee[]>();
+
+                    if (!employees?.length) {
+                        return <p className="text-muted-foreground">Немає</p>;
+                    }
+
+                    return (
+                        <div className="flex flex-wrap gap-2">
+                            {employees.map((employee) => {
+                                return (
+                                    <Badge key={employee.id} className="max-w-[250px] truncate">
+                                        {employee.name}
+                                    </Badge>
+                                );
+                            })}
+                        </div>
+                    );
+                },
+            },
+            {
+                accessorKey: 'otherLecturers',
+                header: 'Інші викладачі',
+                id: 'Інші викладачі',
+                size: 300,
+                cell({ getValue }) {
+                    const otherLecturers = getValue<Discipline['otherLecturers']>().split(',').filter(Boolean);
+
+                    if (!otherLecturers?.length) {
+                        return <p className="text-muted-foreground">Немає</p>;
+                    }
+
+                    return (
+                        <div className="flex flex-wrap gap-2">
+                            {otherLecturers.map((lecturer) => {
+                                return (
+                                    <Badge key={lecturer} className="max-w-[250px] truncate">
+                                        {lecturer}
                                     </Badge>
                                 );
                             })}
@@ -289,7 +341,7 @@ const SubjectsTabContent: React.FC = () => {
                                     <SubjectsTableSkeleton />
                                 </div>
                             ) : (
-                                <>
+                                <div>
                                     <div className=" container flex justify-end">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -318,64 +370,69 @@ const SubjectsTabContent: React.FC = () => {
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </div>
-                                    <Table className="relative">
-                                        <TableHeader className="sticky top-0 bg-background">
-                                            {table.getHeaderGroups().map((headerGroup) => (
-                                                <TableRow key={headerGroup.id}>
-                                                    {headerGroup.headers.map((header, index) => {
-                                                        return (
-                                                            <TableHead
-                                                                key={header.id}
-                                                                className={cn({
-                                                                    'pl-7': index === 0,
-                                                                })}
-                                                            >
-                                                                {header.isPlaceholder
-                                                                    ? null
-                                                                    : flexRender(
-                                                                          header.column.columnDef.header,
-                                                                          header.getContext()
-                                                                      )}
-                                                            </TableHead>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            ))}
-                                        </TableHeader>
-                                        <TableBody>
-                                            {table.getRowModel().rows?.length ? (
-                                                table.getRowModel().rows.map((row) => (
-                                                    <TableRow
-                                                        className="cursor-pointer"
-                                                        key={row.id}
-                                                        data-state={row.getIsSelected() && 'selected'}
-                                                    >
-                                                        {row.getVisibleCells().map((cell, index) => (
-                                                            <TableCell
-                                                                key={cell.id}
-                                                                className={cn('align-top', {
-                                                                    'pl-7': index === 0,
-                                                                })}
-                                                            >
-                                                                {flexRender(
-                                                                    cell.column.columnDef.cell,
-                                                                    cell.getContext()
-                                                                )}
-                                                            </TableCell>
-                                                        ))}
+                                    <div className="max-w-full overflow-x-auto">
+                                        <Table className="w-full">
+                                            <TableHeader className="sticky top-0 bg-background">
+                                                {table.getHeaderGroups().map((headerGroup) => (
+                                                    <TableRow key={headerGroup.id}>
+                                                        {headerGroup.headers.map((header, index) => {
+                                                            return (
+                                                                <TableHead
+                                                                    key={header.id}
+                                                                    className={cn({
+                                                                        'pl-7': index === 0,
+                                                                    })}
+                                                                >
+                                                                    {header.isPlaceholder
+                                                                        ? null
+                                                                        : flexRender(
+                                                                              header.column.columnDef.header,
+                                                                              header.getContext()
+                                                                          )}
+                                                                </TableHead>
+                                                            );
+                                                        })}
                                                     </TableRow>
-                                                ))
-                                            ) : (
-                                                <TableRow>
-                                                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                        На жаль, не було знайдено потрібних дисциплін. Спробуйте інший
-                                                        запит
-                                                    </TableCell>
-                                                </TableRow>
-                                            )}
-                                        </TableBody>
-                                    </Table>
-                                </>
+                                                ))}
+                                            </TableHeader>
+                                            <TableBody>
+                                                {table.getRowModel().rows?.length ? (
+                                                    table.getRowModel().rows.map((row) => (
+                                                        <TableRow
+                                                            className="cursor-pointer"
+                                                            key={row.id}
+                                                            data-state={row.getIsSelected() && 'selected'}
+                                                        >
+                                                            {row.getVisibleCells().map((cell, index) => (
+                                                                <TableCell
+                                                                    key={cell.id}
+                                                                    className={cn('align-top', {
+                                                                        'pl-7': index === 0,
+                                                                    })}
+                                                                >
+                                                                    {flexRender(
+                                                                        cell.column.columnDef.cell,
+                                                                        cell.getContext()
+                                                                    )}
+                                                                </TableCell>
+                                                            ))}
+                                                        </TableRow>
+                                                    ))
+                                                ) : (
+                                                    <TableRow>
+                                                        <TableCell
+                                                            colSpan={columns.length}
+                                                            className="h-24 text-center"
+                                                        >
+                                                            На жаль, не було знайдено потрібних дисциплін. Спробуйте
+                                                            інший запит
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
+                                </div>
                             )}
                         </>
                     )}

@@ -1,6 +1,6 @@
 import { memo, useEffect } from 'react';
 import LandingLayout from '@/components/layout/LandingLayout';
-import { ABOUT_CONTENT, ABOUT_VIDEO_POSTER_URL, ABOUT_VIDEO_URL } from './constants';
+import { ABOUT_CONTENT, ABOUT_DEPARTMENT_URL, ABOUT_VIDEO_POSTER_URL, ABOUT_VIDEO_URL } from './constants';
 import { useToggle } from '@/hooks/useToggle';
 import Markdown from '@/components/Markdown';
 import Head from 'next/head';
@@ -37,10 +37,11 @@ const AboutModule: React.FC = () => {
             </Head>
             <section className="container">
                 <h2 className="my-8 mb-4 text-center text-3xl font-black">Хто ми?</h2>
-                <YouTubeVideoPlayer url={ABOUT_VIDEO_URL} poster={ABOUT_VIDEO_POSTER_URL} />
+                <YouTubeVideoPlayer url={ABOUT_DEPARTMENT_URL} poster={ABOUT_VIDEO_POSTER_URL} />
                 <div className="mx-auto mt-12 max-w-[1100px] md:px-8">
                     <Markdown>{ABOUT_CONTENT}</Markdown>
                 </div>
+                <YouTubeVideoPlayer url={ABOUT_VIDEO_URL} />
             </section>
         </LandingLayout>
     );

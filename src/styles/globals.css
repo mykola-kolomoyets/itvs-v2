@@ -102,6 +102,8 @@
 @layer base {
     * {
         @apply border-border;
+
+        text-wrap: balance;
     }
 
     body {

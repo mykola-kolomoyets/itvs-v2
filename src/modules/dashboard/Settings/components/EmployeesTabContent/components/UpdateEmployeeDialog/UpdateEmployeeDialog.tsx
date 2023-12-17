@@ -271,9 +271,16 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
                                                                             return event.target.value.includes(domain);
                                                                         })
                                                                     ) {
-                                                                        const newValue = event.target.value
-                                                                            .replace('file/d/', 'uc?export=view&id=')
-                                                                            .replace('/view?usp=sharing', '');
+                                                                        const url = new URL(event.target.value);
+                                                                        url.search = '';
+                                                                        url.hash = '';
+
+                                                                        const newValue = url
+                                                                            .toString()
+                                                                            // .replace('file/d/', 'uc?export=view&id=')
+                                                                            .replace('/view', '/preview?nulp=true');
+
+                                                                        console.log(newValue);
 
                                                                         field.onChange(newValue);
                                                                     } else {

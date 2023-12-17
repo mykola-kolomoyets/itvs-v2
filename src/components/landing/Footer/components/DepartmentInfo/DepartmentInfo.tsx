@@ -34,7 +34,7 @@ const DepartmentInfo: React.FC<DepartmentInfoProps> = ({ isWithNULPLogo = true }
                 target="_blank"
             >
                 <MapPin className="mr-3" size={16} />
-                вул. С.Бандери, 28а, Львів-13, 79013.
+                вул. С.Бандери, 28а, 5 корпус кімн. 913, Львів-13, 79013.
             </a>
             <a
                 className="focus-primary inline-flex items-center rounded-sm transition-colors hover:text-accent-secondary hover:underline"

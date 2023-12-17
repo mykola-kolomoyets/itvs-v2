@@ -18,7 +18,9 @@ enum Role {
 }
 
 enum AcademicStatus {
+    head_engineer
     assistant
+    assistant_ktn
     senior_lecturer
     docent
     professor

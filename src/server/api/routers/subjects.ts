@@ -58,6 +58,17 @@ export const subjectsRouter = createTRPCRouter({
             orderBy: {
                 name: 'asc',
             },
+            select: {
+                id: true,
+                name: true,
+                abbreviation: true,
+                code: true,
+                description: true,
+                credits: true,
+                semesters: true,
+                otherLecturers: true,
+                departmentLecturers: true,
+            },
         });
 
         return subjects;
@@ -75,6 +86,17 @@ export const subjectsRouter = createTRPCRouter({
         const subject = await ctx.db.discipline.findUnique({
             where: {
                 id: input.id,
+            },
+            select: {
+                id: true,
+                name: true,
+                abbreviation: true,
+                code: true,
+                description: true,
+                credits: true,
+                semesters: true,
+                otherLecturers: true,
+                departmentLecturers: true,
             },
         });
 
@@ -108,7 +130,11 @@ export const subjectsRouter = createTRPCRouter({
         const subject = await ctx.db.discipline.create({
             data: {
                 ...rest,
-                semesters: semesters.join(','),
+                semesters: semesters
+                    .map((semester) => {
+                        return semester.value;
+                    })
+                    .join(','),
                 otherLecturers: otherLecturers.join(','),
                 departmentLecturers: {
                     connect: departmentLecturersData,
@@ -128,28 +154,7 @@ export const subjectsRouter = createTRPCRouter({
             });
         }
 
-        const { semesters, otherLecturers, departmentLecturers, ...rest } = input;
-
-        const departmentLecturersData = await ctx.db.employee.findMany({
-            where: {
-                id: {
-                    in: departmentLecturers?.map((lecturer) => {
-                        return lecturer.value;
-                    }),
-                },
-            },
-            select: {
-                id: true,
-            },
-        });
-
-        const departmentLecturersConfig = departmentLecturers?.length
-            ? {
-                  departmentLecturers: {
-                      connect: departmentLecturersData,
-                  },
-              }
-            : {};
+        const { semesters, otherLecturers, departmentLecturers = [], ...rest } = input;
 
         const subject = await ctx.db.discipline.update({
             where: {
@@ -157,9 +162,19 @@ export const subjectsRouter = createTRPCRouter({
             },
             data: {
                 ...rest,
-                semesters: semesters?.join(','),
+                semesters: semesters
+                    ?.map((semester) => {
+                        return semester.value;
+                    })
+                    .join(','),
                 ...(otherLecturers?.length ? { otherLecturers: otherLecturers.join(',') } : {}),
-                ...departmentLecturersConfig,
+                departmentLecturers: {
+                    set: departmentLecturers.map((lecturer) => {
+                        return {
+                            id: lecturer.value,
+                        };
+                    }),
+                },
             },
         });
 

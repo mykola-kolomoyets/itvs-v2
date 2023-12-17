@@ -312,6 +312,7 @@ const ArticlesModule: React.FC = () => {
                                                             <span className="flex items-center truncate">
                                                                 <Avatar className=" mr-3 h-8 w-8">
                                                                     <AvatarImage
+                                                                        className="object-cover"
                                                                         src={user.image ?? ''}
                                                                         alt={user.name ?? 'No Name'}
                                                                     />

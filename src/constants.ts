@@ -131,39 +131,49 @@ export const DISCIPLINE_SEMESTERS_OPTIONS: Record<string, Option[]> = {
 };
 
 export const EMPLOYEE_ACADEMIC_STATUSES: Record<AcademicStatus, { label: string; id: string; priority: number }> = {
-    assistant: {
-        label: 'Асистент кафедри, к.т.н.',
-        id: 'assistant',
+    head_engineer: {
+        label: 'Провідний інженер',
+        id: 'head_engineer',
         priority: 1,
+    },
+    assistant: {
+        label: 'Асистент кафедри',
+        id: 'assistant',
+        priority: 2,
+    },
+    assistant_ktn: {
+        label: 'Асистент кафедри, к.т.н.',
+        id: 'assistant_ktn',
+        priority: 3,
     },
     senior_lecturer: {
         label: 'Старший викладач кафедри, к.т.н.',
         id: 'senior_lecturer',
-        priority: 2,
+        priority: 4,
     },
     docent: {
         label: 'Доцент кафедри, к.т.н.',
         id: 'docent',
-        priority: 3,
+        priority: 5,
     },
     professor: {
         label: 'Професор кафедри, д.т.н.',
         id: 'professor',
-        priority: 4,
+        priority: 6,
     },
     sub_director: {
         label: 'В.О. Завідувач кафедри, д.т.н.',
         id: 'sub_director',
-        priority: 5,
+        priority: 7,
     },
     director: {
         label: 'Завідувач кафедри, д.т.н.',
         id: 'director',
-        priority: 6,
+        priority: 8,
     },
     director_ktn: {
         label: 'Завідувач кафедри, к.т.н.',
         id: 'director_ktn',
-        priority: 6,
+        priority: 9,
     },
 };

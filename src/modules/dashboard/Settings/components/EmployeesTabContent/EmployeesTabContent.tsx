@@ -198,8 +198,8 @@ const EmployeesTabContent: React.FC = () => {
             },
             {
                 accessorKey: 'academicStatus',
-                header: 'Науковий ступінь',
-                id: 'Науковий ступінь',
+                header: 'Посада',
+                id: 'Посада',
                 cell({ getValue }) {
                     const academicStatus = getValue<EmployeeItem['academicStatus']>();
 
@@ -280,7 +280,7 @@ const EmployeesTabContent: React.FC = () => {
                     const disciplines = getValue<EmployeeItem['disciplines']>();
 
                     if (!disciplines?.length) {
-                        return <p className="text-base">Немає</p>;
+                        return <p className="text-base text-muted-foreground">Немає</p>;
                     }
 
                     return (
@@ -288,7 +288,14 @@ const EmployeesTabContent: React.FC = () => {
                             {disciplines.map((discipline) => {
                                 return (
                                     <Badge className="mr-1 mt-1" variant="secondary" key={discipline.id}>
-                                        {discipline.name}
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger>{discipline.abbreviation}</TooltipTrigger>
+                                                <TooltipContent className="max-w-[300px]">
+                                                    <p>{discipline.name}</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                     </Badge>
                                 );
                             })}
@@ -459,63 +466,68 @@ const EmployeesTabContent: React.FC = () => {
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </div>
-                                    <Table className="relative">
-                                        <TableHeader className="sticky top-0 bg-background">
-                                            {table.getHeaderGroups().map((headerGroup) => (
-                                                <TableRow key={headerGroup.id}>
-                                                    {headerGroup.headers.map((header, index) => {
-                                                        return (
-                                                            <TableHead
-                                                                key={header.id}
-                                                                className={cn({
-                                                                    'pl-7': index === 0,
-                                                                })}
-                                                            >
-                                                                {header.isPlaceholder
-                                                                    ? null
-                                                                    : flexRender(
-                                                                          header.column.columnDef.header,
-                                                                          header.getContext()
-                                                                      )}
-                                                            </TableHead>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            ))}
-                                        </TableHeader>
-                                        <TableBody>
-                                            {table.getRowModel().rows?.length ? (
-                                                table.getRowModel().rows.map((row) => (
-                                                    <TableRow
-                                                        className="cursor-pointer"
-                                                        key={row.id}
-                                                        data-state={row.getIsSelected() && 'selected'}
-                                                    >
-                                                        {row.getVisibleCells().map((cell, index) => (
-                                                            <TableCell
-                                                                key={cell.id}
-                                                                className={cn({
-                                                                    'pl-7': index === 0,
-                                                                })}
-                                                            >
-                                                                {flexRender(
-                                                                    cell.column.columnDef.cell,
-                                                                    cell.getContext()
-                                                                )}
-                                                            </TableCell>
-                                                        ))}
+                                    <div className="max-w-full overflow-x-auto">
+                                        <Table className="relative">
+                                            <TableHeader className="sticky top-0 bg-background">
+                                                {table.getHeaderGroups().map((headerGroup) => (
+                                                    <TableRow key={headerGroup.id}>
+                                                        {headerGroup.headers.map((header, index) => {
+                                                            return (
+                                                                <TableHead
+                                                                    key={header.id}
+                                                                    className={cn({
+                                                                        'pl-7': index === 0,
+                                                                    })}
+                                                                >
+                                                                    {header.isPlaceholder
+                                                                        ? null
+                                                                        : flexRender(
+                                                                              header.column.columnDef.header,
+                                                                              header.getContext()
+                                                                          )}
+                                                                </TableHead>
+                                                            );
+                                                        })}
                                                     </TableRow>
-                                                ))
-                                            ) : (
-                                                <TableRow>
-                                                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                        На жаль, не було знайдено потрібних співробітників. Спробуйте
-                                                        інший запит
-                                                    </TableCell>
-                                                </TableRow>
-                                            )}
-                                        </TableBody>
-                                    </Table>
+                                                ))}
+                                            </TableHeader>
+                                            <TableBody>
+                                                {table.getRowModel().rows?.length ? (
+                                                    table.getRowModel().rows.map((row) => (
+                                                        <TableRow
+                                                            className="group cursor-pointer"
+                                                            key={row.id}
+                                                            data-state={row.getIsSelected() && 'selected'}
+                                                        >
+                                                            {row.getVisibleCells().map((cell, index) => (
+                                                                <TableCell
+                                                                    key={cell.id}
+                                                                    className={cn('relative', {
+                                                                        'pl-7': index === 0,
+                                                                    })}
+                                                                >
+                                                                    {flexRender(
+                                                                        cell.column.columnDef.cell,
+                                                                        cell.getContext()
+                                                                    )}
+                                                                </TableCell>
+                                                            ))}
+                                                        </TableRow>
+                                                    ))
+                                                ) : (
+                                                    <TableRow>
+                                                        <TableCell
+                                                            colSpan={columns.length}
+                                                            className="h-24 text-center"
+                                                        >
+                                                            На жаль, не було знайдено потрібних співробітників.
+                                                            Спробуйте інший запит
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
                                 </>
                             )}
                         </>

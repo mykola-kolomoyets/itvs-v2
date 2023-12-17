@@ -13,7 +13,6 @@ import { useToggle } from '@/hooks/useToggle';
 import { Skeleton } from '@/components/Skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
-import { ScrollArea } from '@/components/ScrollArea';
 import { Checkbox } from '@/components/Checkbox';
 import {
     DropdownMenu,
@@ -241,7 +240,7 @@ const TagsTabContent: React.FC = () => {
                                     <Skeleton />
                                 </div>
                             ) : (
-                                <ScrollArea className="relative h-[60vh] min-h-[500px] " scrollHideDelay={999}>
+                                <div className="max-w-full overflow-x-auto">
                                     <Table className="relative">
                                         <TableHeader className="sticky top-0 bg-background">
                                             {table.getHeaderGroups().map((headerGroup) => (
@@ -298,7 +297,7 @@ const TagsTabContent: React.FC = () => {
                                             )}
                                         </TableBody>
                                     </Table>
-                                </ScrollArea>
+                                </div>
                             )}
                         </>
                     )}

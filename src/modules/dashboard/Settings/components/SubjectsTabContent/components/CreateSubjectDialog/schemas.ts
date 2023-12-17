@@ -8,6 +8,6 @@ export const createSubjectSchema = z.object({
     description: z.string({ required_error: 'Опис обовʼязковий!' }),
     credits: z.number({ required_error: 'Кредити обовʼязкові!' }).min(0.1, { message: 'Мінімальний кредит - 0.1!' }),
     semesters: z.array(selectOptionSchema).min(1, { message: 'Потрібно вибрати хоча б один семестр' }),
-    departmentLecturers: z.array(selectOptionSchema).optional(),
-    otherLecturers: z.array(z.string()),
+    departmentLecturers: z.array(selectOptionSchema),
+    otherLecturers: z.array(selectOptionSchema),
 });

@@ -245,9 +245,16 @@ const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpe
                                                                             return event.target.value.includes(domain);
                                                                         })
                                                                     ) {
-                                                                        const newValue = event.target.value
+                                                                        const url = new URL(event.target.value);
+
+                                                                        url.search = '';
+
+                                                                        const newValue = url
+                                                                            .toString()
                                                                             .replace('file/d/', 'uc?export=view&id=')
-                                                                            .replace('/view?usp=sharing', '');
+                                                                            .replace('/view', '');
+
+                                                                        console.log(newValue);
 
                                                                         field.onChange(newValue);
                                                                     } else {

@@ -10,7 +10,7 @@ export const useCreateEmployeeForm = () => {
             name: undefined,
             email: undefined,
             image: undefined,
-            url: undefined,
+            url: '',
             academicStatus: 'assistant',
             disciplines: [],
         },

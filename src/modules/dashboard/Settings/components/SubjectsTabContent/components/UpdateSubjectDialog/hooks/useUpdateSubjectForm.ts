@@ -12,6 +12,8 @@ export const useUpdateSubjectForm = () => {
             abbreviation: undefined,
             credits: undefined,
             semesters: [],
+            departmentLecturers: [],
+            otherLecturers: [],
         },
     });
 

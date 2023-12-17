@@ -1,6 +1,6 @@
 {
     "name": "itvs",
-    "version": "0.11.18",
+    "version": "0.12.19",
     "private": true,
     "scripts": {
         "build": "next build",
@@ -41,6 +41,7 @@
         "@trpc/next": "^10.37.1",
         "@trpc/react-query": "^10.37.1",
         "@trpc/server": "^10.37.1",
+        "animate.css": "^4.1.1",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.0.0",
         "date-fns": "^2.30.0",

@@ -9,7 +9,7 @@ import Header from '@/components/dashboard/Header';
 import { Dialog, DialogContent, DialogPortal } from '../Dialog';
 import { Button } from '../Button';
 
-const APP_VERSION = '0.11.18';
+const APP_VERSION = '0.12.19';
 
 const DashboardLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
     // const { data: sessionData } = useSession();
@@ -31,7 +31,7 @@ const DashboardLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
     }
 
     return (
-        <div className="relative flex min-h-screen flex-col overflow-hidden md:overflow-auto">
+        <div className="relative flex min-h-screen flex-col ">
             {isWidthSuitable ? null : (
                 <div className="pointer-events-none absolute inset-0 z-[60]  h-screen w-screen overflow-hidden bg-accent/95 px-6 py-3 backdrop-blur supports-[backdrop-filter]:bg-accent/50">
                     <Dialog open={!isWidthSuitable} modal>
