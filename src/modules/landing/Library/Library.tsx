@@ -132,14 +132,11 @@ const LibraryModule: React.FC = () => {
                                                             className="group-focus-visible:-110 h-full max-h-[calc(1280px/1.5)] w-full  object-cover transition-transform hover:scale-110 group-focus-within:scale-110 group-hover:scale-110 group-focus:scale-110"
                                                             src={publication.posterUrl}
                                                             alt={publication.title}
-                                                            width={720 / 1.5}
-                                                            height={1280 / 1.5}
-                                                            // unoptimized
-                                                            quality={80}
-                                                            priority
+                                                            width={720}
+                                                            height={956}
                                                             placeholder="blur"
                                                             blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                                                                shimmer(720 / 1.5, 1280 / 1.5)
+                                                                shimmer(720, 956)
                                                             )}`}
                                                         />
                                                     </div>
