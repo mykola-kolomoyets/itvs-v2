@@ -142,7 +142,9 @@ const LibraryTabContent: React.FC = () => {
                                         className="w-full rounded-lg"
                                         src={image}
                                         width={720}
-                                        height={1280}
+                                        height={956}
+                                        quality={80}
+                                        unoptimized
                                         alt={title}
                                         placeholder="blur"
                                         blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(720, 1280))}`}
