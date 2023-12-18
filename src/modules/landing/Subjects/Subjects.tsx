@@ -41,7 +41,7 @@ const SubjectsModule: React.FC = () => {
 
     const debouncedSearchValue = useDebounce(searchValue);
 
-    const { data: subjects = {}, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery({
+    const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery({
         search: debouncedSearchValue,
     });
 
@@ -151,7 +151,7 @@ const SubjectsModule: React.FC = () => {
                             </div>
                         </div>
                     </Case>
-                    <Case condition={!Object.keys(subjects).length}>
+                    <Case condition={!Object.keys(subjects ?? {}).length}>
                         <div className="flex items-center justify-center p-16">
                             <p className="text-base text-muted-foreground">Нічого не знайдено</p>
                         </div>
@@ -159,7 +159,7 @@ const SubjectsModule: React.FC = () => {
                     <Default>
                         <div className="mt-6">
                             <Accordion type="multiple">
-                                {Object.entries(subjects).map(([semesterNumber, semesterSubjects]) => {
+                                {Object.entries(subjects ?? {}).map(([semesterNumber, semesterSubjects]) => {
                                     return (
                                         <AccordionItem key={semesterNumber} value={semesterNumber}>
                                             <AccordionTrigger className="text-lg">
