@@ -5,11 +5,9 @@ import { Label } from '@/components/Label';
 import LandingLayout from '@/components/layout/LandingLayout';
 import { Case, Default, Switch } from '@/components/utils/Switch';
 import { APP_HOSTNAME, DEFAULT_POSTER_URL, EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
-// import { useDebounce } from '@/hooks/useDebounce';
 import { api } from '@/utils/api';
 import Head from 'next/head';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import SubjectCardDataItem from './components/SubjectCardDataItem';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
 import { copyToClipboard, getFirstLetters } from '@/utils/common';
@@ -32,14 +30,9 @@ const SubjectsModule: React.FC = () => {
 
     const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
 
-    const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery(
-        {
-            search: debouncedSearchValue,
-        },
-        {
-            enabled: true,
-        }
-    );
+    const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery({
+        search: debouncedSearchValue,
+    });
 
     console.log({
         searchValue,
