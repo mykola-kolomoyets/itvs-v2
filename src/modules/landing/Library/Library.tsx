@@ -134,6 +134,8 @@ const LibraryModule: React.FC = () => {
                                                             alt={publication.title}
                                                             width={720}
                                                             height={956}
+                                                            quality={80}
+                                                            unoptimized
                                                             placeholder="blur"
                                                             blurDataURL={`data:image/svg+xml;base64,${toBase64(
                                                                 shimmer(720, 956)

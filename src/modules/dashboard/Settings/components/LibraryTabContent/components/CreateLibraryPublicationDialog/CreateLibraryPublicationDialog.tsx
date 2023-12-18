@@ -161,12 +161,14 @@ const CreateLibraryPublicationDialog: React.FC<CreateLibraryPublicationDialogPro
                                                                         className="max-h-[1280px] w-full rounded-lg object-cover object-center"
                                                                         src={field.value}
                                                                         width={720}
-                                                                        height={1280}
+                                                                        height={956}
                                                                         alt="Зображення публікації"
                                                                         title="Зображення публікації"
+                                                                        unoptimized
+                                                                        quality={80}
                                                                         placeholder="blur"
                                                                         blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                                                                            shimmer(720, 1280)
+                                                                            shimmer(720, 956)
                                                                         )}`}
                                                                         onError={() => {
                                                                             field.onChange('');
