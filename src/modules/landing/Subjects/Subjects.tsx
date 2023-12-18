@@ -5,7 +5,7 @@ import { Label } from '@/components/Label';
 import LandingLayout from '@/components/layout/LandingLayout';
 import { Case, Default, Switch } from '@/components/utils/Switch';
 import { APP_HOSTNAME, DEFAULT_POSTER_URL, EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
-import { useDebounce } from '@/hooks/useDebounce';
+// import { useDebounce } from '@/hooks/useDebounce';
 import { api } from '@/utils/api';
 import Head from 'next/head';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -22,7 +22,7 @@ import { ArrowUpRightIcon, Check, Copy, ExternalLink, X } from 'lucide-react';
 import { Badge } from '@/components/Badge';
 import Link from 'next/link';
 import { Skeleton } from '@/components/Skeleton';
-// import { useDebouncedState } from '@/hooks/useDebouncedState';
+import { useDebouncedState } from '@/hooks/useDebouncedState';
 
 const SubjectsModule: React.FC = () => {
     const router = useRouter();
@@ -38,10 +38,7 @@ const SubjectsModule: React.FC = () => {
         return new URLSearchParams(Array.from(searchParams.entries()));
     }, [searchParams]);
 
-    // const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
-    const searchValue = searchParams.get('search') ?? '';
-
-    const debouncedSearchValue = useDebounce(searchValue);
+    const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
 
     const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery({
         search: debouncedSearchValue,
@@ -116,16 +113,17 @@ const SubjectsModule: React.FC = () => {
                             value={searchValue}
                             placeholder="Наприклад: НУЛП або Шевченко "
                             onChange={(event) => {
+                                setSearchValue(event.target.value);
                                 // if (!event.target.value) {
                                 // currentSearchQuery.delete('search');
                                 // } else {
-                                currentSearchQuery.set('search', event.target.value);
-                                // }
+                                // currentSearchQuery.set('search', event.target.value);
+                                // // }
 
-                                const search = currentSearchQuery.toString();
-                                const query = search ? `?${search}` : '';
+                                // const search = currentSearchQuery.toString();
+                                // const query = search ? `?${search}` : '';
 
-                                router.replace(`${pathname}${query}`);
+                                // router.replace(`${pathname}${query}`);
                             }}
                         />
                     </div>
