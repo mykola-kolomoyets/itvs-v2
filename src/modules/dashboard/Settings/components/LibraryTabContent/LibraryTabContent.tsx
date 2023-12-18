@@ -4,20 +4,24 @@ import { useToggle } from '@/hooks/useToggle';
 import { api } from '@/utils/api';
 import { useReactTable, type ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
 import type { LibraryPublication } from '@prisma/client';
-import { Checkbox } from '@/components/Checkbox';
+// import { Checkbox } from '@/components/Checkbox';
 import { cn, formatDate, shimmer, toBase64 } from '@/utils/common';
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
+    // DropdownMenuItem,
+    // DropdownMenuLabel,
     DropdownMenuTrigger,
 } from '@/components/DropdownMenu';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
+// import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
 import { Button } from '@/components/Button';
-import { ChevronDown, ExternalLinkIcon, MoreHorizontal } from 'lucide-react';
-import Link from 'next/link';
+import {
+    ChevronDown,
+    ExternalLinkIcon,
+    // MoreHorizontal
+} from 'lucide-react';
+// import Link from 'next/link';
 import { Label } from '@/components/Label';
 import { Input } from '@/components/Input';
 import Image from 'next/image';
@@ -65,33 +69,33 @@ const LibraryTabContent: React.FC = () => {
 
     const columns = useMemo<ColumnDef<LibraryPublication>[]>(() => {
         return [
-            {
-                id: 'select',
-                header({ table }) {
-                    return (
-                        <Checkbox
-                            checked={table.getIsAllPageRowsSelected()}
-                            onCheckedChange={(value) => {
-                                table.toggleAllPageRowsSelected(!!value);
-                            }}
-                            aria-label="Select all"
-                        />
-                    );
-                },
-                cell({ row }) {
-                    return (
-                        <Checkbox
-                            className="mt-1"
-                            checked={row.getIsSelected()}
-                            onCheckedChange={(value) => {
-                                row.toggleSelected(!!value);
-                            }}
-                            aria-label="Select row"
-                        />
-                    );
-                },
-                enableHiding: false,
-            },
+            // {
+            //     id: 'select',
+            //     header({ table }) {
+            //         return (
+            //             <Checkbox
+            //                 checked={table.getIsAllPageRowsSelected()}
+            //                 onCheckedChange={(value) => {
+            //                     table.toggleAllPageRowsSelected(!!value);
+            //                 }}
+            //                 aria-label="Select all"
+            //             />
+            //         );
+            //     },
+            //     cell({ row }) {
+            //         return (
+            //             <Checkbox
+            //                 className="mt-1"
+            //                 checked={row.getIsSelected()}
+            //                 onCheckedChange={(value) => {
+            //                     row.toggleSelected(!!value);
+            //                 }}
+            //                 aria-label="Select row"
+            //             />
+            //         );
+            //     },
+            //     enableHiding: false,
+            // },
             {
                 accessorKey: 'title',
                 header: 'Назва',
@@ -198,56 +202,57 @@ const LibraryTabContent: React.FC = () => {
                 minSize: 64,
                 maxSize: 64,
                 size: 64,
-                cell({ row, table }) {
-                    return (
-                        <div className="flex w-full justify-end pr-4">
-                            <DropdownMenu
-                                onOpenChange={(opened) => {
-                                    if (opened) {
-                                        table.toggleAllPageRowsSelected(false);
-                                        row.toggleSelected(opened);
-                                    }
-                                }}
-                            >
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" className="h-8 w-8 p-0">
-                                                    <span className="sr-only">Відкрити меню</span>
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Додаткові дії</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel>Дії</DropdownMenuLabel>
-                                    <Link href={`/subjects/${row.original.id}`} target="_blank">
-                                        <DropdownMenuItem>Відкрити</DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem
-                                        onClick={() => {
-                                            setUpdateLibraryPublicationDialogOpen(true);
-                                        }}
-                                    >
-                                        Редагувати
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onClick={() => {
-                                            setRemoveLibraryPublicationDialogOpen(true);
-                                        }}
-                                    >
-                                        Видалити
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                    );
-                },
+                cell: '',
+                // cell({ row, table }) {
+                //     return (
+                //         <div className="flex w-full justify-end pr-4">
+                //             <DropdownMenu
+                //                 onOpenChange={(opened) => {
+                //                     if (opened) {
+                //                         table.toggleAllPageRowsSelected(false);
+                //                         row.toggleSelected(opened);
+                //                     }
+                //                 }}
+                //             >
+                //                 <TooltipProvider>
+                //                     <Tooltip>
+                //                         <TooltipTrigger asChild>
+                //                             <DropdownMenuTrigger asChild>
+                //                                 <Button variant="ghost" className="h-8 w-8 p-0">
+                //                                     <span className="sr-only">Відкрити меню</span>
+                //                                     <MoreHorizontal className="h-4 w-4" />
+                //                                 </Button>
+                //                             </DropdownMenuTrigger>
+                //                         </TooltipTrigger>
+                //                         <TooltipContent>
+                //                             <p>Додаткові дії</p>
+                //                         </TooltipContent>
+                //                     </Tooltip>
+                //                 </TooltipProvider>
+                //                 <DropdownMenuContent align="end">
+                //                     <DropdownMenuLabel>Дії</DropdownMenuLabel>
+                //                     <Link href={`/subjects/${row.original.id}`} target="_blank">
+                //                         <DropdownMenuItem>Відкрити</DropdownMenuItem>
+                //                     </Link>
+                //                     <DropdownMenuItem
+                //                         onClick={() => {
+                //                             setUpdateLibraryPublicationDialogOpen(true);
+                //                         }}
+                //                     >
+                //                         Редагувати
+                //                     </DropdownMenuItem>
+                //                     <DropdownMenuItem
+                //                         onClick={() => {
+                //                             setRemoveLibraryPublicationDialogOpen(true);
+                //                         }}
+                //                     >
+                //                         Видалити
+                //                     </DropdownMenuItem>
+                //                 </DropdownMenuContent>
+                //             </DropdownMenu>
+                //         </div>
+                //     );
+                // },
             },
         ];
     }, [setRemoveLibraryPublicationDialogOpen, setUpdateLibraryPublicationDialogOpen]);
