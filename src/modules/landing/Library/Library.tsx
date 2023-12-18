@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebounce } from '@/hooks/useDebounce';
 import { api } from '@/utils/api';
@@ -154,4 +154,4 @@ const LibraryModule: React.FC = () => {
     );
 };
 
-export default memo(LibraryModule);
+export default LibraryModule;
