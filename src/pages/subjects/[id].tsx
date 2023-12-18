@@ -1,6 +1,6 @@
 // import SubjectModule from '@/modules/Subject';
 import type { NextPage } from 'next';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { APP_HOSTNAME, DEFAULT_POSTER_URL, EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import LandingLayout from '@/components/layout/LandingLayout';
 import Head from 'next/head';
@@ -23,6 +23,8 @@ import Markdown from '@/components/Markdown';
 
 const SubjectPage: NextPage = () => {
     const params = useParams<{ id: string }>();
+
+    const utils = api.useUtils();
 
     const { toast } = useToast();
 
@@ -74,6 +76,12 @@ const SubjectPage: NextPage = () => {
         },
         [toast, toggleIsCopyEmailError, toggleIsCopyingEmail]
     );
+
+    useEffect(() => {
+        void utils.subjects.getSubjectItem.invalidate({
+            id: params.id,
+        });
+    }, [params.id, utils.subjects.getSubjectItem]);
 
     if (!subject) {
         return null;
