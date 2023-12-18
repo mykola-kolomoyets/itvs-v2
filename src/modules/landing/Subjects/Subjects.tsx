@@ -28,6 +28,8 @@ const SubjectsModule: React.FC = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
+    const utils = api.useUtils();
+
     const { toast } = useToast();
 
     const [isCopyingEmail, toggleIsCopyingEmail] = useToggle();
@@ -40,8 +42,6 @@ const SubjectsModule: React.FC = () => {
     const searchValue = searchParams.get('search') ?? '';
 
     const debouncedSearchValue = useDebounce(searchValue);
-
-    const utils = api.useUtils();
 
     const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery(
         {

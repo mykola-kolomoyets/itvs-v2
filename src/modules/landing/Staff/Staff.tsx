@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useEffect } from 'react';
 import LandingLayout from '@/components/layout/LandingLayout';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/Dialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/Card';
@@ -18,6 +18,8 @@ import { Switch, Case, Default } from '@/components/utils/Switch';
 const StaffModule: React.FC = () => {
     const [isCopyingEmail, toggleIsCopyingEmail] = useToggle();
     const [isCopyEmailError, toggleIsCopyEmailError] = useToggle();
+
+    const utils = api.useUtils();
 
     const { toast } = useToast();
 
@@ -58,6 +60,10 @@ const StaffModule: React.FC = () => {
         },
         [toast, toggleIsCopyEmailError, toggleIsCopyingEmail]
     );
+
+    useEffect(() => {
+        void utils.employees.getAllEmployees.invalidate();
+    }, [utils.employees.getAllEmployees]);
 
     if (!staff) {
         return null;

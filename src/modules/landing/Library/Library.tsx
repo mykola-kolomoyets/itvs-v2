@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebounce } from '@/hooks/useDebounce';
 import { api } from '@/utils/api';
@@ -20,6 +20,8 @@ const LibraryModule: React.FC = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
+    const utils = api.useUtils();
+
     const currentSearchQuery = useMemo(() => {
         return new URLSearchParams(Array.from(searchParams.entries()));
     }, [searchParams]);
@@ -36,6 +38,10 @@ const LibraryModule: React.FC = () => {
     } = api.libraryPublication.getAllLibraryPublications.useQuery({
         search: debouncedSearchValue,
     });
+
+    useEffect(() => {
+        void utils.libraryPublication.getAllLibraryPublications.invalidate();
+    }, [utils.libraryPublication.getAllLibraryPublications]);
 
     return (
         <LandingLayout>
