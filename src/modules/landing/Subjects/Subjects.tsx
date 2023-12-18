@@ -25,31 +25,26 @@ import { Skeleton } from '@/components/Skeleton';
 import { useDebouncedState } from '@/hooks/useDebouncedState';
 
 const SubjectsModule: React.FC = () => {
-    const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-
     const { toast } = useToast();
 
     const [isCopyingEmail, toggleIsCopyingEmail] = useToggle();
     const [isCopyEmailError, toggleIsCopyEmailError] = useToggle();
 
-    const currentSearchQuery = useMemo(() => {
-        return new URLSearchParams(Array.from(searchParams.entries()));
-    }, [searchParams]);
-
     const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
 
-    const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery({
-        search: debouncedSearchValue,
-    });
-
-    useEffect(() => {
-        if (!searchParams.get('search') || !searchParams.has('search')) {
-            currentSearchQuery.set('search', '');
-            router.replace(`${pathname}?${currentSearchQuery.toString()}`);
+    const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery(
+        {
+            search: debouncedSearchValue,
+        },
+        {
+            enabled: true,
         }
-    }, [currentSearchQuery, pathname, router, searchParams]);
+    );
+
+    console.log({
+        searchValue,
+        subjects,
+    });
 
     const copyEmailToClipboardHandler = useCallback(
         async (email: string) => {
