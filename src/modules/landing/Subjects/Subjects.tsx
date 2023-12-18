@@ -7,7 +7,7 @@ import { Case, Default, Switch } from '@/components/utils/Switch';
 import { APP_HOSTNAME, DEFAULT_POSTER_URL, EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { api } from '@/utils/api';
 import Head from 'next/head';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import SubjectCardDataItem from './components/SubjectCardDataItem';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
 import { copyToClipboard, getFirstLetters } from '@/utils/common';
@@ -20,15 +20,26 @@ import { ArrowUpRightIcon, Check, Copy, ExternalLink, X } from 'lucide-react';
 import { Badge } from '@/components/Badge';
 import Link from 'next/link';
 import { Skeleton } from '@/components/Skeleton';
-import { useDebouncedState } from '@/hooks/useDebouncedState';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useDebounce } from '@/hooks/useDebounce';
 
 const SubjectsModule: React.FC = () => {
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
     const { toast } = useToast();
 
     const [isCopyingEmail, toggleIsCopyingEmail] = useToggle();
     const [isCopyEmailError, toggleIsCopyEmailError] = useToggle();
 
-    const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
+    const currentSearchQuery = useMemo(() => {
+        return new URLSearchParams(Array.from(searchParams.entries()));
+    }, [searchParams]);
+
+    const searchValue = searchParams.get('search') ?? '';
+
+    const debouncedSearchValue = useDebounce(searchValue);
 
     const utils = api.useUtils();
 
@@ -40,11 +51,6 @@ const SubjectsModule: React.FC = () => {
             enabled: true,
         }
     );
-
-    console.log({
-        searchValue,
-        subjects,
-    });
 
     const copyEmailToClipboardHandler = useCallback(
         async (email: string) => {
@@ -112,17 +118,16 @@ const SubjectsModule: React.FC = () => {
                             value={searchValue}
                             placeholder="Наприклад: НУЛП або Шевченко "
                             onChange={(event) => {
-                                setSearchValue(event.target.value);
-                                // if (!event.target.value) {
-                                // currentSearchQuery.delete('search');
-                                // } else {
-                                // currentSearchQuery.set('search', event.target.value);
-                                // // }
+                                if (!event.target.value) {
+                                    currentSearchQuery.delete('search');
+                                } else {
+                                    currentSearchQuery.set('search', event.target.value);
+                                }
 
-                                // const search = currentSearchQuery.toString();
-                                // const query = search ? `?${search}` : '';
+                                const search = currentSearchQuery.toString();
+                                const query = search ? `?${search}` : '';
 
-                                // router.replace(`${pathname}${query}`);
+                                router.replace(`${pathname}${query}`);
                             }}
                         />
                     </div>
