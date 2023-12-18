@@ -33,14 +33,9 @@ const LibraryModule: React.FC = () => {
         isLoading,
         isRefetching,
         isFetching,
-    } = api.libraryPublication.getAllLibraryPublications.useQuery(
-        {
-            search: debouncedSearchValue,
-        },
-        {
-            keepPreviousData: true,
-        }
-    );
+    } = api.libraryPublication.getAllLibraryPublications.useQuery({
+        search: debouncedSearchValue,
+    });
 
     return (
         <LandingLayout>
