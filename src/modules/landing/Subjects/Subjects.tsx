@@ -7,7 +7,7 @@ import { Case, Default, Switch } from '@/components/utils/Switch';
 import { APP_HOSTNAME, DEFAULT_POSTER_URL, EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { api } from '@/utils/api';
 import Head from 'next/head';
-import { memo, useCallback } from 'react';
+import { useCallback } from 'react';
 import SubjectCardDataItem from './components/SubjectCardDataItem';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
 import { copyToClipboard, getFirstLetters } from '@/utils/common';
