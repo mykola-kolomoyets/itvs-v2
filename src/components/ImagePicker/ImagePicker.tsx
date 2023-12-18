@@ -7,8 +7,9 @@ import { Label } from '../Label';
 import { TrashIcon } from 'lucide-react';
 import { Button } from '../Button';
 import Img from '../Img';
+import { cn } from '@/utils/common';
 
-const ImagePicker: React.FC<ImagePickerProps> = ({ url, errorMessage, onUrlChange }) => {
+const ImagePicker: React.FC<ImagePickerProps> = ({ imageWrapperClassName, url, errorMessage, onUrlChange }) => {
     const { toast } = useToast();
 
     return (
@@ -68,7 +69,7 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ url, errorMessage, onUrlChang
                 <strong>Unspash</strong>, <strong>Pexels</strong>, <strong>lpnu.ua</strong>
             </span>
             {errorMessage}
-            <div className="w-full max-w-[750px]">
+            <div className={cn('w-full max-w-[750px]', imageWrapperClassName)}>
                 {url ? (
                     <>
                         <div className="relative mt-2 flex justify-center">
@@ -86,6 +87,7 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ url, errorMessage, onUrlChang
                             {/* <Loader2 className="-translate-1/2 absolute left-1/2 top-1/2 z-0 animate-spin" size={32} /> */}
                             <Img
                                 wrapperClassName="max-h-[550px]"
+                                className="w-full"
                                 src={url}
                                 width={720}
                                 height={720}

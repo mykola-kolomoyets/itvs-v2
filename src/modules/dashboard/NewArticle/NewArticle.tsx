@@ -29,6 +29,8 @@ import {
 } from '@/components/Dialog';
 import { useToggle } from '@/hooks/useToggle';
 import { IMAGES_ALLOWED_DOMAINS } from '@/components/ImagePicker/constants';
+import ImagePicker from '@/components/ImagePicker';
+// import Img from '@/components/Img';
 
 const NewArticleModule: React.FC = () => {
     const router = useRouter();
@@ -392,25 +394,6 @@ const NewArticleModule: React.FC = () => {
                 </div>
             </section>
             <section className="mt-6">
-                {/* <div className="mr-5 w-full max-w-[400px]">
-                    <Label htmlFor="title">Вкладення</Label>
-                    <Input
-                        type="text"
-                        id="title"
-                        placeholder="Введіть посилання вкладення"
-                        value={attachments[0] ?? ''}
-                        onChange={async (event) => {
-                            if (!event.target.value.length) {
-                                return;
-                            }
-
-                            const file = await fetch(event.target.value.trim());
-                            const a = await file.blob();
-
-                            console.log(a);
-                        }}
-                    />
-                </div> */}
                 {!!nodes.length ? (
                     <div>
                         {nodes.map((node, index) => {
@@ -579,56 +562,13 @@ const NewArticleModule: React.FC = () => {
                                             <div>
                                                 <div className="flex items-start justify-between">
                                                     <div className="mr-5 w-full">
-                                                        <Label htmlFor="title">Зображення</Label>
-                                                        <Input
-                                                            type="text"
-                                                            id="title"
-                                                            placeholder="Вставте посилання на зображення сюди"
-                                                            value={node.content}
-                                                            onChange={(event) => {
-                                                                if (
-                                                                    IMAGES_ALLOWED_DOMAINS.some((domain) => {
-                                                                        return event.target.value.includes(domain);
-                                                                    })
-                                                                ) {
-                                                                    const newValue = event.target.value
-                                                                        .replace('file/d/', 'uc?export=view&id=')
-                                                                        .replace('/view?usp=sharing', '');
-
-                                                                    nodeValueChangeHandler(node.id, newValue);
-                                                                } else {
-                                                                    setTimeout(() => {
-                                                                        toast({
-                                                                            variant: 'destructive',
-                                                                            title: 'Некоректне посилання на зображення',
-                                                                            description: (
-                                                                                <div className="flex flex-wrap">
-                                                                                    <span>Дозволені посилання:</span>
-                                                                                    <ul className=" mt-2">
-                                                                                        {IMAGES_ALLOWED_DOMAINS.map(
-                                                                                            (domain) => {
-                                                                                                return (
-                                                                                                    <li key={domain}>
-                                                                                                        <strong>
-                                                                                                            {domain}
-                                                                                                        </strong>
-                                                                                                    </li>
-                                                                                                );
-                                                                                            }
-                                                                                        )}
-                                                                                    </ul>
-                                                                                </div>
-                                                                            ),
-                                                                        });
-                                                                    }, 0);
-                                                                }
+                                                        <ImagePicker
+                                                            imageWrapperClassName="mx-auto"
+                                                            url={node.content}
+                                                            onUrlChange={(url) => {
+                                                                nodeValueChangeHandler(node.id, url);
                                                             }}
                                                         />
-                                                        <span className="text-xs">
-                                                            Підтримуються зображення з наступних ресурсів:{' '}
-                                                            <strong>Google Docs</strong> , <strong>Unspash</strong>,{' '}
-                                                            <strong>Pexels</strong>, <strong>lpnu.ua</strong>
-                                                        </span>
                                                     </div>
                                                     <div className="focus-within:opacity:100 mt-6 flex items-center opacity-0 transition-opacity hover:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100">
                                                         {index === 0 ? null : (
@@ -693,18 +633,14 @@ const NewArticleModule: React.FC = () => {
                                                         </TooltipProvider>
                                                     </div>
                                                 </div>
-                                                {node.content ? (
+                                                {/* {node.content ? (
                                                     <div className="mt-3 flex justify-center">
-                                                        <Image
+                                                        <Img
                                                             src={node.content}
                                                             width={640}
                                                             height={640}
                                                             alt={title}
                                                             title={title}
-                                                            placeholder="blur"
-                                                            blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                                                                shimmer(640, 640)
-                                                            )}`}
                                                             onError={() => {
                                                                 nodeValueChangeHandler(node.id, '');
                                                             }}
@@ -714,7 +650,7 @@ const NewArticleModule: React.FC = () => {
                                                     <p className="mt-3 text-base">
                                                         Зображення не вставлено, або посилання некоректне
                                                     </p>
-                                                )}
+                                                )} */}
                                             </div>
                                         </Case>
                                     </Switch>
