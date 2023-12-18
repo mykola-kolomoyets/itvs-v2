@@ -94,7 +94,7 @@ const ArticleItemPage: NextPage<{ article: ArticleItem }> = ({ article }) => {
                     >
                         <div className="mx-auto w-full max-w-[1024px] md:px-8">
                             <Button className="mb-3" variant="ghost" asChild>
-                                <Link href="/subjects">
+                                <Link href="/articles">
                                     <ArrowLeft className="mr-2" size={16} />
                                     Назад до новин
                                 </Link>
