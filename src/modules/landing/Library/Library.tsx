@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebounce } from '@/hooks/useDebounce';
 import { api } from '@/utils/api';
@@ -57,7 +57,7 @@ const LibraryModule: React.FC = () => {
                 <meta name="twitter:title" content="ІТВС" />
                 <meta name="twitter:description" content="Кафедра Інформаційних Технологій Видавничої Справи" />
                 <meta name="twitter:image" content={DEFAULT_POSTER_URL} />
-                <meta name="twitter:url" content={`${APP_HOSTNAME}/library`} />
+                <meta name="twitter:url" content={`${APP_HOSTNAME}/publications`} />
             </Head>
             <section className="container">
                 <h2 className="my-8  text-center text-3xl font-black">Бібліотека</h2>
@@ -159,4 +159,4 @@ const LibraryModule: React.FC = () => {
     );
 };
 
-export default LibraryModule;
+export default memo(LibraryModule);

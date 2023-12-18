@@ -78,7 +78,7 @@ export const HEADER_STUDY_OPTIONS: HeaderNavigationOption[] = [
     },
     {
         title: 'Бібліотека',
-        href: '/library',
+        href: '/publications',
         description: 'Портфоліо опублікованих матеріалів кафедри',
     },
 ];
