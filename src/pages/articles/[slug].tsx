@@ -67,7 +67,7 @@ const ArticleItemPage: NextPage<{ article: ArticleItem }> = ({ article }) => {
                 <meta name="twitter:image" content={getMetaImage()} />
                 <meta name="twitter:url" content={getMetaPageUrl()} />
             </Head>
-            <div className="mt-[-98px] ">
+            <div className="mt-[-110px] ">
                 <div
                     className={cn('relative h-[80vh] w-full overflow-hidden border-b border-border md:h-[500px]', {
                         'h-auto': !posterUrl,
