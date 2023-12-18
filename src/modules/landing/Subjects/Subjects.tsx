@@ -30,9 +30,14 @@ const SubjectsModule: React.FC = () => {
 
     const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
 
-    const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery({
-        search: debouncedSearchValue,
-    });
+    const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery(
+        {
+            search: debouncedSearchValue,
+        },
+        {
+            enabled: true,
+        }
+    );
 
     console.log({
         searchValue,
