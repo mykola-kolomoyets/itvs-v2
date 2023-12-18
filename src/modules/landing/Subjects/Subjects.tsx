@@ -22,6 +22,7 @@ import { ArrowUpRightIcon, Check, Copy, ExternalLink, X } from 'lucide-react';
 import { Badge } from '@/components/Badge';
 import Link from 'next/link';
 import { Skeleton } from '@/components/Skeleton';
+// import { useDebouncedState } from '@/hooks/useDebouncedState';
 
 const SubjectsModule: React.FC = () => {
     const router = useRouter();
@@ -37,6 +38,7 @@ const SubjectsModule: React.FC = () => {
         return new URLSearchParams(Array.from(searchParams.entries()));
     }, [searchParams]);
 
+    // const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
     const searchValue = searchParams.get('search') ?? '';
 
     const debouncedSearchValue = useDebounce(searchValue);
@@ -114,11 +116,11 @@ const SubjectsModule: React.FC = () => {
                             value={searchValue}
                             placeholder="Наприклад: НУЛП або Шевченко "
                             onChange={(event) => {
-                                if (!event.target.value) {
-                                    currentSearchQuery.delete('search');
-                                } else {
-                                    currentSearchQuery.set('search', event.target.value);
-                                }
+                                // if (!event.target.value) {
+                                // currentSearchQuery.delete('search');
+                                // } else {
+                                currentSearchQuery.set('search', event.target.value);
+                                // }
 
                                 const search = currentSearchQuery.toString();
                                 const query = search ? `?${search}` : '';
