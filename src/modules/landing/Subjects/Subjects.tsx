@@ -429,4 +429,4 @@ const SubjectsModule: React.FC = () => {
     );
 };
 
-export default memo(SubjectsModule);
+export default SubjectsModule;
