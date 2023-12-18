@@ -9,7 +9,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { api } from '@/utils/api';
 import Head from 'next/head';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo } from 'react';
 import SubjectCardDataItem from './components/SubjectCardDataItem';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
 import { copyToClipboard, getFirstLetters } from '@/utils/common';
@@ -44,6 +44,13 @@ const SubjectsModule: React.FC = () => {
     const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery({
         search: debouncedSearchValue,
     });
+
+    useEffect(() => {
+        if (!searchParams.get('search') || !searchParams.has('search')) {
+            currentSearchQuery.set('search', '');
+            router.replace(`${pathname}?${currentSearchQuery.toString()}`);
+        }
+    }, [currentSearchQuery, pathname, router, searchParams]);
 
     const copyEmailToClipboardHandler = useCallback(
         async (email: string) => {
