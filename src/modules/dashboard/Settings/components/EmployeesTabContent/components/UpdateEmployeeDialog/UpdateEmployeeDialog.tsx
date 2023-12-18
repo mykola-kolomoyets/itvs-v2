@@ -15,9 +15,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { ScrollArea } from '@/components/ScrollArea';
 import ImagePicker from '@/components/ImagePicker';
-// import { useDebouncedState } from '@/hooks/useDebouncedState';
-// import { Case, Default, Switch } from '@/components/utils/Switch';
-// import Link from 'next/link';
 
 const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
     open,
@@ -26,8 +23,6 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
     onOpenChange,
     ...rest
 }) => {
-    // const [disciplineSearchValue, debouncedDisciplineSearchValue, setDisciplineSearchValue] = useDebouncedState('');
-
     const form = useUpdateEmployeeForm();
     const { control, handleSubmit, reset } = form;
 
@@ -36,19 +31,6 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
     const { data: employeeData, isFetched } = api.employees.getEmployeesItem.useQuery({
         id: employeeId ?? '',
     });
-
-    // const {
-    //     data: subjectsResponse,
-    //     isLoading: isSubjectsLoading,
-    //     isRefetching: isSubjectsRefetching,
-    // } = api.subjects.getAllSubjects.useQuery(
-    //     {
-    //         search: debouncedDisciplineSearchValue.trim(),
-    //     },
-    //     {
-    //         keepPreviousData: true,
-    //     }
-    // );
 
     const { mutateAsync: updateEmployee, isLoading: isEmployeeUpdating } = api.employees.updateEmployee.useMutation({
         async onSuccess(updatedEmployee) {
@@ -72,17 +54,6 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
 
     const { toast } = useToast();
 
-    // const subjectsOptions = useMemo(() => {
-    //     return (
-    //         subjectsResponse?.map((subject) => {
-    //             return {
-    //                 label: subject.name,
-    //                 value: subject.id,
-    //             };
-    //         }) ?? []
-    //     );
-    // }, [subjectsResponse]);
-
     const createEmployeeHandler = useCallback(
         async ({ academicStatus, disciplines = [], ...rest }: UpdateEmployeeForm) => {
             await updateEmployee({
@@ -97,36 +68,19 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
         [updateEmployee, employeeId]
     );
 
-    // const toggleDisciplineItemHandler = useCallback(
-    //     (course: Option) => {
-    //         return () => {
-    //             const isIncluded =
-    //                 form.getValues('disciplines')?.findIndex((item) => {
-    //                     return item.value === course.value;
-    //                 }) !== -1;
-
-    //             if (isIncluded) {
-    //                 form.setValue(
-    //                     'disciplines',
-    //                     form.getValues('disciplines')?.filter((item) => {
-    //                         return item.value !== course.value;
-    //                     })
-    //                 );
-
-    //                 return;
-    //             }
-
-    //             form.setValue('disciplines', [...(form.getValues('disciplines') ?? []), course]);
-    //         };
-    //     },
-    //     [form]
-    // );
-
     useEffect(() => {
         if (!open) {
             reset();
         }
     }, [onSuccess, open, reset]);
+
+    useEffect(() => {
+        if (open) {
+            void utils.employees.getEmployeesItem.invalidate({
+                id: employeeId ?? '',
+            });
+        }
+    }, [employeeId, open, utils.employees.getEmployeesItem]);
 
     useEffect(() => {
         if (isFetched && employeeData) {
