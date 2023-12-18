@@ -7,7 +7,7 @@ import { Case, Default, Switch } from '@/components/utils/Switch';
 import { APP_HOSTNAME, DEFAULT_POSTER_URL, EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { api } from '@/utils/api';
 import Head from 'next/head';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import SubjectCardDataItem from './components/SubjectCardDataItem';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
 import { copyToClipboard, getFirstLetters } from '@/utils/common';
@@ -29,6 +29,8 @@ const SubjectsModule: React.FC = () => {
     const [isCopyEmailError, toggleIsCopyEmailError] = useToggle();
 
     const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
+
+    const utils = api.useUtils();
 
     const { data: subjects, isLoading } = api.subjects.getAllSubjectsBySemesters.useQuery(
         {
@@ -77,6 +79,10 @@ const SubjectsModule: React.FC = () => {
         },
         [toast, toggleIsCopyEmailError, toggleIsCopyingEmail]
     );
+
+    useEffect(() => {
+        void utils.subjects.getAllSubjectsBySemesters.invalidate();
+    }, [utils.subjects.getAllSubjectsBySemesters]);
 
     return (
         <LandingLayout>
