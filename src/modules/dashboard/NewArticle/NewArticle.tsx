@@ -17,7 +17,6 @@ import { Textarea } from '@/components/TextArea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
 import Image from 'next/image';
 import { shimmer, toBase64 } from '@/utils/common';
-import { IMAGES_ALLOWED_DOMAINS } from './constants';
 import { useToast } from '@/components/Toaster/hooks/useToast';
 import { useRouter } from 'next/navigation';
 import {
@@ -29,6 +28,7 @@ import {
     DialogTrigger,
 } from '@/components/Dialog';
 import { useToggle } from '@/hooks/useToggle';
+import { IMAGES_ALLOWED_DOMAINS } from '@/components/ImagePicker/constants';
 
 const NewArticleModule: React.FC = () => {
     const router = useRouter();
