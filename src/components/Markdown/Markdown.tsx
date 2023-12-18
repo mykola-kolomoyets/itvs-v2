@@ -86,14 +86,12 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
                         </span>
                     );
                 },
-                li(props) {
-                    const { node: _, children, className, ...rest } = props;
 
-                    return (
-                        <li className={cn('mb-2 text-base', className)} {...rest}>
-                            -&nbsp;{children}
-                        </li>
-                    );
+                ul({ node: _, ...props }) {
+                    return <ul {...props} className="my-3 ml-2 list-disc pl-3" />;
+                },
+                ol({ node: _, ...props }) {
+                    return <ol {...props} className="my-3 ml-2 list-decimal pl-3" />;
                 },
                 blockquote(props) {
                     const { node: _, ...rest } = props;
