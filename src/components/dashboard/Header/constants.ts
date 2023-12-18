@@ -35,4 +35,9 @@ export const HEADER_SETTINGS_OPTIONS: HeaderNavigationOption[] = [
         href: '/dashboard/settings?tab=tags',
         description: 'Налаштування всіх новинних тегів',
     },
+    {
+        title: 'Бібліотека',
+        href: '/dashboard/settings?tab=publications',
+        description: 'Налаштування всіх видань кафедри',
+    },
 ];

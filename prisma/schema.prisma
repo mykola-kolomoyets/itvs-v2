@@ -88,6 +88,17 @@ model NewsSection {
     backgroundColor String?
 }
 
+model LibraryPublication {
+    id         String   @id @default(cuid())
+    title      String
+    slug       String   @unique
+    createdAt  DateTime @default(now())
+    posterUrl  String
+    // Comma separated list of authors
+    authors    String
+    publicator String
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())

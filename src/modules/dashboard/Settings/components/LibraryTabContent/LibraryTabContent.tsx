@@ -1,20 +1,11 @@
 import { memo, useMemo, useState } from 'react';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import { useReactTable, type ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
-import { ChevronDown, MoreHorizontal } from 'lucide-react';
-import type { Discipline, Employee } from '@prisma/client';
 import { useDebouncedState } from '@/hooks/useDebouncedState';
 import { useToggle } from '@/hooks/useToggle';
 import { api } from '@/utils/api';
-import { cn } from '@/utils/common';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Table';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
+import { useReactTable, type ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
+import type { LibraryPublication } from '@prisma/client';
 import { Checkbox } from '@/components/Checkbox';
-import { Button } from '@/components/Button';
-import { Label } from '@/components/Label';
-import { Input } from '@/components/Input';
-import { Badge } from '@/components/Badge';
+import { cn, formatDate, shimmer, toBase64 } from '@/utils/common';
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -23,44 +14,41 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from '@/components/DropdownMenu';
-import SubjectsTableSkeleton from './components/SubjectsTableSkeleton';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
+import { Button } from '@/components/Button';
+import { ChevronDown, ExternalLinkIcon, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
+import { Label } from '@/components/Label';
+import { Input } from '@/components/Input';
+import Image from 'next/image';
+import SubjectsTableSkeleton from '../SubjectsTabContent/components/SubjectsTableSkeleton';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Table';
+import CreateLibraryPublicationDialog from './components/CreateLibraryPublicationDialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/Dialog';
+import { Badge } from '@/components/Badge';
 
-const CreateSubjectDialog = dynamic(() => {
-    return import('./components/CreateSubjectDialog');
-});
-const RemoveSubjectDialog = dynamic(() => {
-    return import('./components/RemoveSubjectDialog');
-});
-const UpdateSubjectDialog = dynamic(() => {
-    return import('./components/UpdateSubjectDialog');
-});
-const ButchRemoveSubjectsDialog = dynamic(() => {
-    return import('./components/ButchRemoveSubjectsDialog');
-});
-
-const SubjectsTabContent: React.FC = () => {
+const LibraryTabContent: React.FC = () => {
     const [searchValue, debouncedSearchValue, setSearchValue] = useDebouncedState('');
-    const [isCreateSubjectDialogOpen, , setCreateSubjectDialogOpen] = useToggle();
-    const [isRemoveSubjectDialogOpen, , setRemoveSubjectDialogOpen] = useToggle();
-    const [isButchRemoveSubjectsDialogOpen, , setButchRemoveSubjectsDialogOpen] = useToggle();
-    const [isUpdateSubjectDialogOpen, , setUpdateSubjectDialogOpen] = useToggle();
+    const [isCreateLibraryPublicationDialogOpen, , setCreateLibraryPublicationDialogOpen] = useToggle();
+    const [isRemoveLibraryPublicationDialogOpen, , setRemoveLibraryPublicationDialogOpen] = useToggle();
+    const [_isButchRemoveLibraryPublicationsDialogOpen, , setButchRemoveLibraryPublicationsDialogOpen] = useToggle();
+    const [isUpdateLibraryPublicationDialogOpen, , setUpdateLibraryPublicationDialogOpen] = useToggle();
     const [rowSelection, setRowSelection] = useState({});
 
     const {
-        data: subjectResponse,
-        isLoading: isSubjectsLoading,
-        isRefetching: isSubjectsRefetching,
-    } = api.subjects.getAllSubjects.useQuery({
-        search: debouncedSearchValue.trim(),
+        data: libraryPublicationsResponse = [],
+        isLoading: isLibraryPublicationsLoading,
+        isFetching: isLibraryPublicationsFetching,
+    } = api.libraryPublication.getAllLibraryPublications.useQuery({
+        search: debouncedSearchValue,
     });
 
-    const isEmpty = !debouncedSearchValue.trim() && !subjectResponse?.length;
-    const isLoading = isSubjectsLoading && !isSubjectsRefetching;
+    const isEmpty = !debouncedSearchValue.trim() && !libraryPublicationsResponse?.length;
+    const isLoading = isLibraryPublicationsLoading && !isLibraryPublicationsFetching;
 
-    const selectedSubjectsIds = useMemo(() => {
+    const selectedLibraryPublicationsIds = useMemo(() => {
         return (
-            subjectResponse
+            libraryPublicationsResponse
                 ?.filter((_, index) => {
                     return rowSelection[index as keyof typeof rowSelection];
                 })
@@ -68,12 +56,14 @@ const SubjectsTabContent: React.FC = () => {
                     return subject.id;
                 }) ?? []
         );
-    }, [rowSelection, subjectResponse]);
+    }, [libraryPublicationsResponse, rowSelection]);
 
     const isButchRemoveEnabled =
-        selectedSubjectsIds.length > 1 && !isRemoveSubjectDialogOpen && !isUpdateSubjectDialogOpen;
+        selectedLibraryPublicationsIds.length > 1 &&
+        !isRemoveLibraryPublicationDialogOpen &&
+        !isUpdateLibraryPublicationDialogOpen;
 
-    const columns = useMemo<ColumnDef<Discipline & { departmentLecturers: Employee[] }>[]>(() => {
+    const columns = useMemo<ColumnDef<LibraryPublication>[]>(() => {
         return [
             {
                 id: 'select',
@@ -103,98 +93,84 @@ const SubjectsTabContent: React.FC = () => {
                 enableHiding: false,
             },
             {
-                accessorKey: 'name',
+                accessorKey: 'title',
                 header: 'Назва',
-                cell({ getValue }) {
-                    const subjectName = getValue<Discipline['name']>();
-
-                    return <p className="text-base">{subjectName}</p>;
-                },
+                id: 'Назва',
+                minSize: 450,
+                maxSize: 550,
                 enableHiding: false,
-            },
-            // {
-            //     accessorKey: 'description',
-            //     header: 'Опис',
-            //     id: 'Опис',
-            //     cell({ getValue }) {
-            //         const subjectDescription = getValue<Discipline['description']>();
-
-            //         return <ToggledMarkdown className="max-w-[500px]">{subjectDescription}</ToggledMarkdown>;
-            //     },
-            // },
-            {
-                accessorKey: 'code',
-                header: 'Код',
-                id: 'Код',
-                size: 150,
                 cell({ getValue }) {
-                    const subjectCode = getValue<Discipline['code']>();
+                    const title = getValue<LibraryPublication['title']>();
 
-                    return <p className="text-base">{subjectCode}</p>;
+                    return <p className="min-w-[250px] max-w-[550px] text-base">{title}</p>;
                 },
             },
             {
-                accessorKey: 'abbreviation',
-                header: 'Абревіатура',
-                id: 'Абревіатура',
-                size: 150,
+                accessorKey: 'publicator',
+                header: 'Видааець',
+                id: 'Видааець',
+                maxSize: 200,
                 cell({ getValue }) {
-                    const subjectAbbreviation = getValue<Discipline['abbreviation']>();
+                    const publicator = getValue<LibraryPublication['publicator']>();
 
-                    return <p className="text-base">{subjectAbbreviation}</p>;
+                    return <p className="text-base">{publicator}</p>;
                 },
             },
             {
-                accessorKey: 'credits',
-                header: 'Кредити',
-                id: 'Кредити',
-                size: 70,
-                cell({ getValue }) {
-                    const subjectCredits = getValue<Discipline['credits']>();
+                accessorKey: 'posterUrl',
+                header: 'Фото',
+                id: 'Фото',
+                cell({ row, getValue }) {
+                    const title = row.original.title;
+                    const image = getValue<LibraryPublication['posterUrl']>();
 
-                    return <p className="w-[70px] text-base">{subjectCredits.toFixed(2)}</p>;
-                },
-            },
-            {
-                accessorKey: 'semesters',
-                header: 'Семестри',
-                id: 'Семестри',
-                size: 70,
-                cell({ getValue }) {
-                    const subjectCourses = getValue<Discipline['semesters']>();
-                    const splittedCourses = subjectCourses.split(',');
-
-                    return (
-                        <div className="flex w-[70px] flex-wrap">
-                            {splittedCourses.map((course) => {
-                                return (
-                                    <Badge className="mr-2 mt-2" key={course}>
-                                        {course}
-                                    </Badge>
-                                );
-                            })}
-                        </div>
-                    );
-                },
-            },
-            {
-                accessorKey: 'departmentLecturers',
-                header: 'Викладачі від кафедри',
-                id: 'Викладачі від кафедри',
-                size: 300,
-                cell({ getValue }) {
-                    const employees = getValue<Employee[]>();
-
-                    if (!employees?.length) {
-                        return <p className="text-muted-foreground">Немає</p>;
+                    if (!image) {
+                        return <p className="text-base">Немає</p>;
                     }
 
                     return (
-                        <div className="flex flex-wrap gap-2">
-                            {employees.map((employee) => {
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant="link" className="h-6 p-0">
+                                    Переглянути
+                                    <ExternalLinkIcon className="ml-1" size={16} />
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <div className="mt-6">
+                                    <Image
+                                        className="w-full rounded-lg"
+                                        src={image}
+                                        width={720}
+                                        height={1280}
+                                        alt={title}
+                                        placeholder="blur"
+                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(720, 1280))}`}
+                                    />
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    );
+                },
+            },
+            {
+                accessorKey: 'authors',
+                header: 'Автори',
+                id: 'Автори',
+                maxSize: 400,
+                cell({ getValue }) {
+                    const authors = getValue<LibraryPublication['authors']>();
+
+                    if (!authors.split(',').length) {
+                        return <p className="text-base text-muted-foreground">Немає</p>;
+                    }
+
+                    return (
+                        <div className="flex flex-wrap">
+                            {authors.split(',').map((author) => {
                                 return (
-                                    <Badge key={employee.id} className="max-w-[250px] truncate">
-                                        {employee.name}
+                                    <Badge key={author} className="mb-2 mr-2">
+                                        {author}
                                     </Badge>
                                 );
                             })}
@@ -203,28 +179,14 @@ const SubjectsTabContent: React.FC = () => {
                 },
             },
             {
-                accessorKey: 'otherLecturers',
-                header: 'Інші викладачі',
-                id: 'Інші викладачі',
-                size: 300,
+                accessorKey: 'createdAt',
+                header: 'Дата додавання',
+                id: 'Дата додавання',
+                maxSize: 100,
                 cell({ getValue }) {
-                    const otherLecturers = getValue<Discipline['otherLecturers']>().split(',').filter(Boolean);
+                    const createdAt = getValue<LibraryPublication['createdAt']>();
 
-                    if (!otherLecturers?.length) {
-                        return <p className="text-muted-foreground">Немає</p>;
-                    }
-
-                    return (
-                        <div className="flex flex-wrap gap-2">
-                            {otherLecturers.map((lecturer) => {
-                                return (
-                                    <Badge key={lecturer} className="max-w-[250px] truncate">
-                                        {lecturer}
-                                    </Badge>
-                                );
-                            })}
-                        </div>
-                    );
+                    return <p className="whitespace-nowrap text-base">{formatDate(createdAt)}</p>;
                 },
             },
             {
@@ -267,14 +229,14 @@ const SubjectsTabContent: React.FC = () => {
                                     </Link>
                                     <DropdownMenuItem
                                         onClick={() => {
-                                            setUpdateSubjectDialogOpen(true);
+                                            setUpdateLibraryPublicationDialogOpen(true);
                                         }}
                                     >
                                         Редагувати
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         onClick={() => {
-                                            setRemoveSubjectDialogOpen(true);
+                                            setRemoveLibraryPublicationDialogOpen(true);
                                         }}
                                     >
                                         Видалити
@@ -286,10 +248,10 @@ const SubjectsTabContent: React.FC = () => {
                 },
             },
         ];
-    }, [setRemoveSubjectDialogOpen, setUpdateSubjectDialogOpen]);
+    }, [setRemoveLibraryPublicationDialogOpen, setUpdateLibraryPublicationDialogOpen]);
 
     const table = useReactTable({
-        data: subjectResponse ?? [],
+        data: libraryPublicationsResponse,
         columns,
         getCoreRowModel: getCoreRowModel(),
         onRowSelectionChange: setRowSelection,
@@ -308,7 +270,7 @@ const SubjectsTabContent: React.FC = () => {
                             <Input
                                 type="search"
                                 id="search"
-                                placeholder="Введіть назву дисципліни"
+                                placeholder="Введіть назву публікації"
                                 disabled={isEmpty}
                                 value={searchValue}
                                 onChange={(event) => {
@@ -322,12 +284,12 @@ const SubjectsTabContent: React.FC = () => {
                             <Button
                                 variant="destructive"
                                 onClick={() => {
-                                    if (selectedSubjectsIds.length === 1) {
-                                        setRemoveSubjectDialogOpen(true);
+                                    if (selectedLibraryPublicationsIds.length === 1) {
+                                        setRemoveLibraryPublicationDialogOpen(true);
                                         return;
                                     }
 
-                                    setButchRemoveSubjectsDialogOpen(true);
+                                    setButchRemoveLibraryPublicationsDialogOpen(true);
                                 }}
                             >
                                 Видалити вибрані
@@ -336,10 +298,10 @@ const SubjectsTabContent: React.FC = () => {
                         <Button
                             className="ml-2"
                             onClick={() => {
-                                setCreateSubjectDialogOpen(true);
+                                setCreateLibraryPublicationDialogOpen(true);
                             }}
                         >
-                            Додати дисципліну
+                            Додати публікацію
                         </Button>
                     </div>
                 </div>
@@ -354,7 +316,7 @@ const SubjectsTabContent: React.FC = () => {
                                 alt="Ще нічого не опубліковано"
                             />
                             <h3 className="mt-3 text-center text-base">
-                                Ще не було створено жодної дисципліни, почніть з додавання нової
+                                Ще не було створено жодної публікації, почніть з додавання нової
                             </h3>
                         </div>
                     ) : (
@@ -447,7 +409,7 @@ const SubjectsTabContent: React.FC = () => {
                                                             colSpan={columns.length}
                                                             className="h-24 text-center"
                                                         >
-                                                            На жаль, не було знайдено потрібних дисциплін. Спробуйте
+                                                            На жаль, не було знайдено потрібних публікацій. Спробуйте
                                                             інший запит
                                                         </TableCell>
                                                     </TableRow>
@@ -461,33 +423,36 @@ const SubjectsTabContent: React.FC = () => {
                     )}
                 </div>
             </div>
-            <CreateSubjectDialog open={isCreateSubjectDialogOpen} onOpenChange={setCreateSubjectDialogOpen} />
-            <UpdateSubjectDialog
-                open={isUpdateSubjectDialogOpen}
-                onOpenChange={setUpdateSubjectDialogOpen}
-                subjectId={selectedSubjectsIds[0] ?? ''}
+            <CreateLibraryPublicationDialog
+                open={isCreateLibraryPublicationDialogOpen}
+                onOpenChange={setCreateLibraryPublicationDialogOpen}
+            />
+            {/* <UpdateSubjectDialog
+                open={isUpdateLibraryPublicationDialogOpen}
+                onOpenChange={setUpdateLibraryPublicationDialogOpen}
+                subjectId={selectedLIbraryPublicationsIds[0] ?? ''}
                 onSuccess={() => {
                     table.toggleAllPageRowsSelected(false);
                 }}
             />
             <RemoveSubjectDialog
-                open={isRemoveSubjectDialogOpen}
-                onOpenChange={setRemoveSubjectDialogOpen}
-                id={selectedSubjectsIds[0] ?? ''}
+                open={isRemoveLibraryPublicationDialogOpen}
+                onOpenChange={setRemoveLibraryPublicationDialogOpen}
+                id={selectedLIbraryPublicationsIds[0] ?? ''}
                 onSuccess={() => {
                     table.toggleAllPageRowsSelected(false);
                 }}
             />
             <ButchRemoveSubjectsDialog
-                open={isButchRemoveSubjectsDialogOpen}
-                onOpenChange={setButchRemoveSubjectsDialogOpen}
-                ids={selectedSubjectsIds}
+                open={isButchRemoveLibraryPublicationsDialogOpen}
+                onOpenChange={setButchRemoveLibraryPublicationsDialogOpen}
+                ids={selectedLIbraryPublicationsIds}
                 onSuccess={() => {
                     table.toggleAllPageRowsSelected(false);
                 }}
-            />
+            /> */}
         </>
     );
 };
 
-export default memo(SubjectsTabContent);
+export default memo(LibraryTabContent);

@@ -19,12 +19,12 @@ import {
     DialogTitle,
 } from '@/components/Dialog';
 import type { AcademicStatus } from '@prisma/client';
-import { IMAGES_ALLOWED_DOMAINS } from '@/modules/dashboard/NewArticle/constants';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/Select';
 import { EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { ScrollArea } from '@/components/ScrollArea';
 import Image from 'next/image';
 import { shimmer, toBase64 } from '@/utils/common';
+import ImagePicker from '@/components/ImagePicker/ImagePicker';
 // import { useDebouncedState } from '@/hooks/useDebouncedState';
 // import { Case, Default, Switch } from '@/components/utils/Switch';
 // import Link from 'next/link';
@@ -226,76 +226,11 @@ const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpe
                                         return (
                                             <FormItem className="my-5 mr-2 flex w-full flex-grow items-center">
                                                 <div className="w-full">
-                                                    <FormLabel htmlFor="credits">Зображення</FormLabel>
                                                     <FormControl>
-                                                        <>
-                                                            <Input
-                                                                type="url"
-                                                                id="title"
-                                                                placeholder="Вставте посилання на зображення"
-                                                                value={field.value}
-                                                                onChange={(event) => {
-                                                                    if (!event.target.value.length) {
-                                                                        field.onChange('');
-                                                                        return;
-                                                                    }
-
-                                                                    if (
-                                                                        IMAGES_ALLOWED_DOMAINS.some((domain) => {
-                                                                            return event.target.value.includes(domain);
-                                                                        })
-                                                                    ) {
-                                                                        const url = new URL(event.target.value);
-
-                                                                        url.search = '';
-
-                                                                        const newValue = url
-                                                                            .toString()
-                                                                            .replace('file/d/', 'uc?export=view&id=')
-                                                                            .replace('/view', '');
-
-                                                                        console.log(newValue);
-
-                                                                        field.onChange(newValue);
-                                                                    } else {
-                                                                        setTimeout(() => {
-                                                                            toast({
-                                                                                variant: 'destructive',
-                                                                                title: 'Некоректне посилання на зображення',
-                                                                                description: (
-                                                                                    <div className="flex flex-wrap">
-                                                                                        <span>
-                                                                                            Дозволені посилання:
-                                                                                        </span>
-                                                                                        <ul className=" mt-2">
-                                                                                            {IMAGES_ALLOWED_DOMAINS.map(
-                                                                                                (domain) => {
-                                                                                                    return (
-                                                                                                        <li
-                                                                                                            key={domain}
-                                                                                                        >
-                                                                                                            <strong>
-                                                                                                                {domain}
-                                                                                                            </strong>
-                                                                                                        </li>
-                                                                                                    );
-                                                                                                }
-                                                                                            )}
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                ),
-                                                                            });
-                                                                        }, 0);
-                                                                    }
-                                                                }}
-                                                            />
-                                                            <span className="text-xs">
-                                                                Підтримуються зображення з наступних ресурсів:{' '}
-                                                                <strong>Google&nbsp;Docs</strong>,{' '}
-                                                                <strong>Unspash</strong>, <strong>Pexels</strong>,{' '}
-                                                                <strong>lpnu.ua</strong>
-                                                            </span>
-                                                        </>
+                                                        <ImagePicker
+                                                            url={field.value ?? ''}
+                                                            onUrlChange={field.onChange}
+                                                        />
                                                     </FormControl>
                                                     <FormMessage />
                                                     <div className="w-full max-w-[750px]">

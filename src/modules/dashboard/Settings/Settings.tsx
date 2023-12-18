@@ -14,6 +14,9 @@ const SubjectsTabContent = dynamic(() => {
 const EmployeesTabContent = dynamic(() => {
     return import('./components/EmployeesTabContent');
 });
+const LibraryTabContent = dynamic(() => {
+    return import('./components/LibraryTabContent');
+});
 
 const SettingsModule: React.FC = () => {
     const pathname = usePathname();
@@ -29,7 +32,7 @@ const SettingsModule: React.FC = () => {
         [pathname, router]
     );
 
-    if (!['news', 'staff', 'subjects', 'tags'].includes(tabView)) {
+    if (!['news', 'staff', 'subjects', 'tags', 'publications'].includes(tabView)) {
         router.replace('/404');
     }
 
@@ -40,13 +43,14 @@ const SettingsModule: React.FC = () => {
                     <div className="container flex items-start justify-between">
                         <h1 className="mb-[1.125rem] text-3xl font-semibold">Налаштування</h1>
                     </div>
-                    <TabsList className="mx-6 grid w-[550px] grid-cols-3">
+                    <TabsList className="mx-6 grid w-[650px] grid-cols-4">
                         {/* <TabsTrigger value="news" disabled>
                             Новини
                         </TabsTrigger> */}
                         <TabsTrigger value="staff">Колектив кафедри</TabsTrigger>
                         <TabsTrigger value="subjects">Дисципліни</TabsTrigger>
                         <TabsTrigger value="tags">Теги</TabsTrigger>
+                        <TabsTrigger value="publications">Бібліотека</TabsTrigger>
                     </TabsList>
                 </section>
                 <section className="mt-6">
@@ -70,6 +74,9 @@ const SettingsModule: React.FC = () => {
                     </TabsContent>
                     <TabsContent value="tags">
                         <TagsTabContent />
+                    </TabsContent>
+                    <TabsContent value="publications">
+                        <LibraryTabContent />
                     </TabsContent>
                 </section>
             </Tabs>
