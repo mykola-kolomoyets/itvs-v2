@@ -41,7 +41,7 @@ const LibraryModule: React.FC = () => {
 
     useEffect(() => {
         void utils.libraryPublication.getAllLibraryPublications.invalidate();
-    }, [utils.libraryPublication.getAllLibraryPublications]);
+    }, [utils]);
 
     return (
         <LandingLayout>

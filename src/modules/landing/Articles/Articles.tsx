@@ -1,4 +1,4 @@
-import { memo, use, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo } from 'react';
 import LandingLayout from '@/components/layout/LandingLayout';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/utils/api';
@@ -175,7 +175,7 @@ const ArticlesModule: React.FC = () => {
         void utils.articles.getAllArticles.invalidate();
         void utils.tags.getAllTags.invalidate();
         void utils.users.getAllUsers.invalidate();
-    }, [utils.articles.getAllArticles, utils.tags.getAllTags, utils.users.getAllUsers]);
+    }, [utils]);
 
     return (
         <LandingLayout>
