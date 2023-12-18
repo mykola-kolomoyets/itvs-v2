@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { memo, use, useCallback, useEffect, useMemo } from 'react';
 import LandingLayout from '@/components/layout/LandingLayout';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/utils/api';
@@ -28,6 +28,8 @@ const ArticlesModule: React.FC = () => {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+
+    const utils = api.useUtils();
 
     const [authorSearchValue, debouncesAuthorSearchValue, setAuthorSearchValue] = useDebouncedState('');
     const [tagSearchValue, debouncesTagSearchValue, setTagSearchValue] = useDebouncedState('');
@@ -168,6 +170,12 @@ const ArticlesModule: React.FC = () => {
             }) ?? []
         );
     }, [allUsers?.users, authorsIdsArray]);
+
+    useEffect(() => {
+        void utils.articles.getAllArticles.invalidate();
+        void utils.tags.getAllTags.invalidate();
+        void utils.users.getAllUsers.invalidate();
+    }, [utils.articles.getAllArticles, utils.tags.getAllTags, utils.users.getAllUsers]);
 
     return (
         <LandingLayout>
