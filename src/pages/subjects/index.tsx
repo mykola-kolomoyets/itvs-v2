@@ -1,7 +1,7 @@
-import type { NextPage } from 'next';
+// import { createServerSideHelpers } from '@trpc/react-query/server';
 import SubjectsModule from '@/modules/landing/Subjects';
 
-const SubjectsPage: NextPage = () => {
+const SubjectsPage: React.FC = () => {
     return <SubjectsModule />;
 };
 
