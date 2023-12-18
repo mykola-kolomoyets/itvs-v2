@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { Loader2, TrashIcon } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import type { CreateLibraryPublicationDialogProps, CreateLibraryPublicationForm } from './types';
 import { useToast } from '@/components/Toaster/hooks/useToast';
 import { useCreateLibraryPublicationForm } from './hooks/useCreateLibraryPublicationForm';
@@ -20,8 +20,6 @@ import {
 import TagInput from '@/components/TagInput';
 import { Label } from '@/components/Label';
 import ImagePicker from '@/components/ImagePicker';
-import Image from 'next/image';
-import { shimmer, toBase64 } from '@/utils/common';
 
 const CreateLibraryPublicationDialog: React.FC<CreateLibraryPublicationDialogProps> = ({
     open,
@@ -139,49 +137,9 @@ const CreateLibraryPublicationDialog: React.FC<CreateLibraryPublicationDialogPro
                                                         <ImagePicker
                                                             url={field.value ?? ''}
                                                             onUrlChange={field.onChange}
+                                                            errorMessage={<FormMessage />}
                                                         />
                                                     </FormControl>
-                                                    <FormMessage />
-                                                    <div className="w-full max-w-[750px]">
-                                                        {field.value ? (
-                                                            <>
-                                                                <div className="relative mt-2 flex justify-center">
-                                                                    <Button
-                                                                        className="absolute right-4 top-4"
-                                                                        variant="destructive"
-                                                                        size="icon"
-                                                                        type="button"
-                                                                        onClick={() => {
-                                                                            field.onChange('');
-                                                                        }}
-                                                                    >
-                                                                        <TrashIcon size={16} />
-                                                                    </Button>
-                                                                    <Image
-                                                                        className="max-h-[1280px] w-full rounded-lg object-cover object-center"
-                                                                        src={field.value}
-                                                                        width={720}
-                                                                        height={956}
-                                                                        alt="Зображення публікації"
-                                                                        title="Зображення публікації"
-                                                                        unoptimized
-                                                                        quality={80}
-                                                                        placeholder="blur"
-                                                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                                                                            shimmer(720, 956)
-                                                                        )}`}
-                                                                        onError={() => {
-                                                                            field.onChange('');
-                                                                        }}
-                                                                    />
-                                                                </div>
-                                                            </>
-                                                        ) : (
-                                                            <p className="mt-3 text-base">
-                                                                Зображення не вставлено, або посилання некоректне
-                                                            </p>
-                                                        )}
-                                                    </div>
                                                 </div>
                                             </FormItem>
                                         );

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -8,12 +9,11 @@ import { APP_HOSTNAME, DEFAULT_POSTER_URL } from '@/constants';
 import { Label } from '@/components/Label';
 import { Input } from '@/components/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/Card';
-import Image from 'next/image';
-import { shimmer, toBase64 } from '@/utils/common';
 import SubjectCardDataItem from '../Subjects/components/SubjectCardDataItem';
 import { Badge } from '@/components/Badge';
 import { Case, Default, Switch } from '@/components/utils/Switch';
 import { Skeleton } from '@/components/Skeleton';
+import Img from '@/components/Img';
 
 const LibraryModule: React.FC = () => {
     const router = useRouter();
@@ -87,7 +87,7 @@ const LibraryModule: React.FC = () => {
                 </div>
                 <Switch>
                     <Case condition={isLoading || isFetching || isRefetching}>
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                             {Array.from({ length: 8 }).map((_, index) => {
                                 return (
                                     <div key={index} className="h-[720px] w-full overflow-hidden rounded-lg">
@@ -103,7 +103,7 @@ const LibraryModule: React.FC = () => {
                         </div>
                     </Case>
                     <Default>
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                             {publications.map((publication) => {
                                 return (
                                     <Card
@@ -133,19 +133,13 @@ const LibraryModule: React.FC = () => {
                                                     </div>
                                                 </div>
                                                 {publication.posterUrl ? (
-                                                    <div className="mt-6 h-full max-h-[calc(1280px/1.5)] min-h-[300px] w-full flex-grow overflow-hidden rounded-lg">
-                                                        <Image
+                                                    <div className="mt-6 h-full max-h-[965px] min-h-[300px] w-full flex-grow overflow-hidden rounded-lg">
+                                                        <Img
                                                             className="group-focus-visible:-110 h-full max-h-[calc(1280px/1.5)] w-full  object-cover transition-transform hover:scale-110 group-focus-within:scale-110 group-hover:scale-110 group-focus:scale-110"
                                                             src={publication.posterUrl}
                                                             alt={publication.title}
                                                             width={720}
                                                             height={956}
-                                                            quality={80}
-                                                            unoptimized
-                                                            placeholder="blur"
-                                                            blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                                                                shimmer(720, 956)
-                                                            )}`}
                                                         />
                                                     </div>
                                                 ) : null}

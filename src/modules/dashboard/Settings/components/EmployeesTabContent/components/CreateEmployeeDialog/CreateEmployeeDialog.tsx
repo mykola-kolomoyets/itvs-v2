@@ -1,5 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import { memo, useCallback, useEffect } from 'react';
-import { Loader2, TrashIcon } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import type { CreateEmployeeDialogProps, CreateEmployeeForm } from './types';
 // import type { Option } from '@/types';
 import { useToast } from '@/components/Toaster/hooks/useToast';
@@ -22,8 +23,6 @@ import type { AcademicStatus } from '@prisma/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/Select';
 import { EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { ScrollArea } from '@/components/ScrollArea';
-import Image from 'next/image';
-import { shimmer, toBase64 } from '@/utils/common';
 import ImagePicker from '@/components/ImagePicker/ImagePicker';
 // import { useDebouncedState } from '@/hooks/useDebouncedState';
 // import { Case, Default, Switch } from '@/components/utils/Switch';
@@ -230,47 +229,9 @@ const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpe
                                                         <ImagePicker
                                                             url={field.value ?? ''}
                                                             onUrlChange={field.onChange}
+                                                            errorMessage={<FormMessage />}
                                                         />
                                                     </FormControl>
-                                                    <FormMessage />
-                                                    <div className="w-full max-w-[750px]">
-                                                        {field.value ? (
-                                                            <>
-                                                                <div className="relative mt-2 flex justify-center">
-                                                                    <Button
-                                                                        className="absolute right-4 top-4"
-                                                                        variant="destructive"
-                                                                        size="icon"
-                                                                        type="button"
-                                                                        onClick={() => {
-                                                                            field.onChange('');
-                                                                        }}
-                                                                    >
-                                                                        <TrashIcon size={16} />
-                                                                    </Button>
-                                                                    <Image
-                                                                        className="max-h-[550px] w-full rounded-lg object-cover object-center"
-                                                                        src={field.value}
-                                                                        width={720}
-                                                                        height={720}
-                                                                        alt="Зображення співробітника"
-                                                                        title="Зображення співробітника"
-                                                                        placeholder="blur"
-                                                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                                                                            shimmer(720, 720)
-                                                                        )}`}
-                                                                        onError={() => {
-                                                                            field.onChange('');
-                                                                        }}
-                                                                    />
-                                                                </div>
-                                                            </>
-                                                        ) : (
-                                                            <p className="mt-3 text-base">
-                                                                Зображення не вставлено, або посилання некоректне
-                                                            </p>
-                                                        )}
-                                                    </div>
                                                 </div>
                                             </FormItem>
                                         );
@@ -298,171 +259,6 @@ const CreateEmployeeDialog: React.FC<CreateEmployeeDialogProps> = ({ open, onOpe
                                         );
                                     }}
                                 />
-                                {/* <FormField
-                                    control={control}
-                                    name="disciplines"
-                                    render={({ field }) => {
-                                        const selectedCourses = (field.value ?? [])
-                                            .map((item) => {
-                                                return item.label;
-                                            })
-                                            .sort((a, b) => {
-                                                return +a - +b;
-                                            })
-                                            .join(', ');
-
-                                        return (
-                                            <FormItem className="my-5 mr-2 flex w-full flex-grow items-center">
-                                                <div className="w-full">
-                                                    <FormLabel htmlFor="courses">Дисципліни</FormLabel>
-                                                    <FormControl>
-                                                        <Popover>
-                                                            <PopoverTrigger asChild>
-                                                                <Input
-                                                                    id="courses"
-                                                                    placeholder="Виберіть дисципліни"
-                                                                    contentEditable={false}
-                                                                    value={
-                                                                        !selectedCourses.trim()
-                                                                            ? 'Виберіть дисципліни'
-                                                                            : selectedCourses
-                                                                    }
-                                                                />
-                                                            </PopoverTrigger>
-                                                            <PopoverContent className=" w-80" align="start" side="top">
-                                                                <Switch>
-                                                                    <Case
-                                                                        condition={
-                                                                            isSubjectsLoading && !isSubjectsRefetching
-                                                                        }
-                                                                    >
-                                                                        <div className="flex h-[200px] items-center justify-center">
-                                                                            <Loader2 className="h-8 w-8 animate-spin" />
-                                                                        </div>
-                                                                    </Case>
-                                                                    <Default>
-                                                                        <div>
-                                                                            <div className="mb-4">
-                                                                                <Input
-                                                                                    type="search"
-                                                                                    placeholder='Наприклад: "Дизайн"'
-                                                                                    value={disciplineSearchValue}
-                                                                                    onChange={(event) => {
-                                                                                        setDisciplineSearchValue(
-                                                                                            event.target.value
-                                                                                        );
-                                                                                    }}
-                                                                                    disabled={
-                                                                                        !disciplineSearchValue.trim() &&
-                                                                                        !subjectsResponse?.length
-                                                                                    }
-                                                                                />
-                                                                            </div>
-                                                                            <Switch>
-                                                                                <Case condition={isSubjectsRefetching}>
-                                                                                    <div className="flex h-[200px] items-center justify-center">
-                                                                                        <Loader2 className="h-8 w-8 animate-spin" />
-                                                                                    </div>
-                                                                                </Case>
-                                                                                <Case
-                                                                                    condition={
-                                                                                        !debouncedDisciplineSearchValue.trim() &&
-                                                                                        !subjectsResponse?.length
-                                                                                    }
-                                                                                >
-                                                                                    <div className="container my-16 flex w-full flex-col items-center">
-                                                                                        <Image
-                                                                                            className="w-full dark:rounded-2xl dark:bg-foreground dark:py-5"
-                                                                                            src="/images/empty.png"
-                                                                                            width={316}
-                                                                                            height={202}
-                                                                                            alt="Ще не було створено жодної дисципліни"
-                                                                                        />
-                                                                                        <h3 className="mt-3 text-center text-base">
-                                                                                            Ще не було створено жодної
-                                                                                            дисципліни, почніть з
-                                                                                            додавання нової
-                                                                                        </h3>
-                                                                                        <Button
-                                                                                            className="mt-2"
-                                                                                            asChild
-                                                                                        >
-                                                                                            <Link href="/dashboard/settings?tab=subjects">
-                                                                                                Додати дисципліну
-                                                                                            </Link>
-                                                                                        </Button>
-                                                                                    </div>
-                                                                                </Case>
-                                                                                <Case
-                                                                                    condition={
-                                                                                        !!disciplineSearchValue.trim() &&
-                                                                                        !subjectsResponse?.length
-                                                                                    }
-                                                                                >
-                                                                                    <div className="container my-16 flex w-full flex-col items-center">
-                                                                                        <Image
-                                                                                            className="w-full dark:rounded-2xl dark:bg-foreground dark:py-5"
-                                                                                            src="/images/empty.png"
-                                                                                            width={316}
-                                                                                            height={202}
-                                                                                            alt="За вашим запитом нічого не знайдено"
-                                                                                        />
-                                                                                        <h3 className="mt-3 text-center text-base">
-                                                                                            Нажаль, за вашим запитом
-                                                                                            нічого не знайдено
-                                                                                        </h3>
-                                                                                    </div>
-                                                                                </Case>
-                                                                                <Default>
-                                                                                    <ScrollArea className="max-h-[300px] overflow-y-auto">
-                                                                                        {subjectsOptions.map(
-                                                                                            (subject) => {
-                                                                                                return (
-                                                                                                    <Button
-                                                                                                        key={
-                                                                                                            subject.value
-                                                                                                        }
-                                                                                                        className="justify-between"
-                                                                                                        variant="ghost"
-                                                                                                        size="sm"
-                                                                                                        onClick={toggleDisciplineItemHandler(
-                                                                                                            subject
-                                                                                                        )}
-                                                                                                    >
-                                                                                                        {subject.label}
-                                                                                                        {field?.value?.findIndex(
-                                                                                                            (item) => {
-                                                                                                                return (
-                                                                                                                    item.value ===
-                                                                                                                    subject.value
-                                                                                                                );
-                                                                                                            }
-                                                                                                        ) !== -1 ? (
-                                                                                                            <CheckIcon
-                                                                                                                size={
-                                                                                                                    16
-                                                                                                                }
-                                                                                                            />
-                                                                                                        ) : null}
-                                                                                                    </Button>
-                                                                                                );
-                                                                                            }
-                                                                                        )}
-                                                                                    </ScrollArea>
-                                                                                </Default>
-                                                                            </Switch>
-                                                                        </div>
-                                                                    </Default>
-                                                                </Switch>
-                                                            </PopoverContent>
-                                                        </Popover>
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </div>
-                                            </FormItem>
-                                        );
-                                    }}
-                                /> */}
                             </div>
                         </ScrollArea>
                         <DialogFooter>

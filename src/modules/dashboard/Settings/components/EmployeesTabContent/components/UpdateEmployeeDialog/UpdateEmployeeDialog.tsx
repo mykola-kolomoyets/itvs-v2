@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect } from 'react';
-import { Loader2, TrashIcon } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import type { UpdateEmployeeDialogProps, UpdateEmployeeForm } from './types';
 // import type { Option } from '@/types';
 import { useToast } from '@/components/Toaster/hooks/useToast';
@@ -14,9 +14,7 @@ import type { AcademicStatus } from '@prisma/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/Select';
 import { EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { ScrollArea } from '@/components/ScrollArea';
-import Image from 'next/image';
-import { shimmer, toBase64 } from '@/utils/common';
-import { IMAGES_ALLOWED_DOMAINS } from '@/components/ImagePicker/constants';
+import ImagePicker from '@/components/ImagePicker';
 // import { useDebouncedState } from '@/hooks/useDebouncedState';
 // import { Case, Default, Switch } from '@/components/utils/Switch';
 // import Link from 'next/link';
@@ -38,25 +36,6 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
     const { data: employeeData, isFetched } = api.employees.getEmployeesItem.useQuery({
         id: employeeId ?? '',
     });
-
-    useEffect(() => {
-        if (isFetched && employeeData) {
-            form.setValue('name', employeeData.name);
-            form.setValue('email', employeeData.email);
-            form.setValue('url', employeeData?.url ?? '');
-            form.setValue('image', employeeData?.image ?? '');
-            form.setValue('academicStatus', employeeData.academicStatus ?? 'assistant');
-            form.setValue(
-                'disciplines',
-                employeeData.disciplines.map((discipline) => {
-                    return {
-                        label: discipline.name,
-                        value: discipline.id,
-                    };
-                })
-            );
-        }
-    }, [employeeData, form, isFetched]);
 
     // const {
     //     data: subjectsResponse,
@@ -148,6 +127,25 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
             reset();
         }
     }, [onSuccess, open, reset]);
+
+    useEffect(() => {
+        if (isFetched && employeeData) {
+            form.setValue('name', employeeData.name);
+            form.setValue('email', employeeData.email);
+            form.setValue('url', employeeData?.url ?? '');
+            form.setValue('image', employeeData?.image ?? '');
+            form.setValue('academicStatus', employeeData.academicStatus ?? 'assistant');
+            form.setValue(
+                'disciplines',
+                employeeData.disciplines.map((discipline) => {
+                    return {
+                        label: discipline.name,
+                        value: discipline.id,
+                    };
+                })
+            );
+        }
+    }, [employeeData, form, isFetched]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} {...rest}>
@@ -252,114 +250,12 @@ const UpdateEmployeeDialog: React.FC<UpdateEmployeeDialogProps> = ({
                                                 <div className="w-full">
                                                     <FormLabel htmlFor="credits">Зображення</FormLabel>
                                                     <FormControl>
-                                                        <>
-                                                            <Input
-                                                                type="url"
-                                                                id="title"
-                                                                placeholder="Вставте посилання на зображення"
-                                                                value={field.value}
-                                                                onChange={(event) => {
-                                                                    if (!event.target.value.length) {
-                                                                        field.onChange('');
-                                                                        return;
-                                                                    }
-
-                                                                    if (
-                                                                        IMAGES_ALLOWED_DOMAINS.some((domain) => {
-                                                                            return event.target.value.includes(domain);
-                                                                        })
-                                                                    ) {
-                                                                        const url = new URL(event.target.value);
-                                                                        url.search = '';
-                                                                        url.hash = '';
-
-                                                                        const newValue = url
-                                                                            .toString()
-                                                                            // .replace('file/d/', 'uc?export=view&id=')
-                                                                            .replace('/view', '/preview?nulp=true');
-
-                                                                        console.log(newValue);
-
-                                                                        field.onChange(newValue);
-                                                                    } else {
-                                                                        setTimeout(() => {
-                                                                            toast({
-                                                                                variant: 'destructive',
-                                                                                title: 'Некоректне посилання на зображення',
-                                                                                description: (
-                                                                                    <div className="flex flex-wrap">
-                                                                                        <span>
-                                                                                            Дозволені посилання:
-                                                                                        </span>
-                                                                                        <ul className=" mt-2">
-                                                                                            {IMAGES_ALLOWED_DOMAINS.map(
-                                                                                                (domain) => {
-                                                                                                    return (
-                                                                                                        <li
-                                                                                                            key={domain}
-                                                                                                        >
-                                                                                                            <strong>
-                                                                                                                {domain}
-                                                                                                            </strong>
-                                                                                                        </li>
-                                                                                                    );
-                                                                                                }
-                                                                                            )}
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                ),
-                                                                            });
-                                                                        }, 0);
-                                                                    }
-                                                                }}
-                                                            />
-                                                            <span className="text-xs">
-                                                                Підтримуються зображення з наступних ресурсів:{' '}
-                                                                <strong>Google&nbsp;Docs</strong>,{' '}
-                                                                <strong>Unspash</strong>, <strong>Pexels</strong>,{' '}
-                                                                <strong>lpnu.ua</strong>
-                                                            </span>
-                                                        </>
+                                                        <ImagePicker
+                                                            url={field.value ?? ''}
+                                                            onUrlChange={field.onChange}
+                                                            errorMessage={<FormMessage />}
+                                                        />
                                                     </FormControl>
-                                                    <FormMessage />
-                                                    <div className="w-full max-w-[750px]">
-                                                        {field.value ? (
-                                                            <>
-                                                                <div className="relative mt-2 flex justify-center">
-                                                                    <Button
-                                                                        className="absolute right-4 top-4"
-                                                                        variant="destructive"
-                                                                        size="icon"
-                                                                        type="button"
-                                                                        onClick={() => {
-                                                                            field.onChange('');
-                                                                        }}
-                                                                    >
-                                                                        <TrashIcon size={16} />
-                                                                    </Button>
-                                                                    <Image
-                                                                        className="max-h-[550px] w-full rounded-lg object-cover object-center"
-                                                                        src={field.value}
-                                                                        width={720}
-                                                                        height={720}
-                                                                        alt="Зображення співробітника"
-                                                                        title="Зображення співробітника"
-                                                                        placeholder="blur"
-                                                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                                                                            shimmer(720, 720)
-                                                                        )}`}
-                                                                        onError={() => {
-                                                                            field.onChange('');
-                                                                        }}
-                                                                    />
-                                                                </div>
-                                                            </>
-                                                        ) : (
-                                                            <p className="mt-3 text-base">
-                                                                Зображення не вставлено, або посилання некоректне
-                                                            </p>
-                                                        )}
-                                                    </div>
                                                 </div>
                                             </FormItem>
                                         );

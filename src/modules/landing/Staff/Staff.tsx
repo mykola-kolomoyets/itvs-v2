@@ -6,14 +6,14 @@ import { Button } from '@/components/Button';
 import { ArrowUpRightIcon, Check, Copy, ExternalLink, X } from 'lucide-react';
 import { APP_HOSTNAME, DEFAULT_POSTER_URL, EMPLOYEE_ACADEMIC_STATUSES } from '@/constants';
 import { api } from '@/utils/api';
-import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/Avatar';
-import { copyToClipboard, getFirstLetters, shimmer, toBase64 } from '@/utils/common';
+import { copyToClipboard, getFirstLetters } from '@/utils/common';
 import Head from 'next/head';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
 import { useToast } from '@/components/Toaster/hooks/useToast';
 import { useToggle } from '@/hooks/useToggle';
 import { Switch, Case, Default } from '@/components/utils/Switch';
+import Img from '@/components/Img';
 
 const StaffModule: React.FC = () => {
     const [isCopyingEmail, toggleIsCopyingEmail] = useToggle();
@@ -106,16 +106,13 @@ const StaffModule: React.FC = () => {
                                         <CardContent className="flex flex-grow flex-col items-start p-0 pt-5">
                                             {employee.image ? (
                                                 <div className="h-full max-h-[350px] min-h-[300px] w-full flex-grow overflow-hidden rounded-lg">
-                                                    <Image
-                                                        className="group-focus-visible:-110 h-full max-h-[350px] w-full  object-cover transition-transform hover:scale-110 group-focus-within:scale-110 group-hover:scale-110 group-focus:scale-110"
+                                                    <Img
+                                                        wrapperClassName="h-full max-h-[350px]"
+                                                        className="group-focus-visible:-110  h-full w-full object-cover transition-transform hover:scale-110 group-focus-within:scale-110 group-hover:scale-110 group-focus:scale-110"
                                                         src={employee.image}
                                                         alt={employee.name}
                                                         width={400}
                                                         height={300}
-                                                        placeholder="blur"
-                                                        blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                                                            shimmer(400, 200)
-                                                        )}`}
                                                     />
                                                 </div>
                                             ) : null}

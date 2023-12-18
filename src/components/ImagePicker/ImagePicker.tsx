@@ -1,10 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 import type { ImagePickerProps } from './types';
 import { IMAGES_ALLOWED_DOMAINS } from './constants';
 import { Input } from '@/components/Input';
 import { useToast } from '@/components/Toaster/hooks/useToast';
 import { Label } from '../Label';
+import { TrashIcon } from 'lucide-react';
+import { Button } from '../Button';
+import Img from '../Img';
 
-const ImagePicker: React.FC<ImagePickerProps> = ({ url, onUrlChange }) => {
+const ImagePicker: React.FC<ImagePickerProps> = ({ url, errorMessage, onUrlChange }) => {
     const { toast } = useToast();
 
     return (
@@ -63,6 +67,40 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ url, onUrlChange }) => {
                 Підтримуються зображення з наступних ресурсів: <strong>Google&nbsp;Docs</strong>,{' '}
                 <strong>Unspash</strong>, <strong>Pexels</strong>, <strong>lpnu.ua</strong>
             </span>
+            {errorMessage}
+            <div className="w-full max-w-[750px]">
+                {url ? (
+                    <>
+                        <div className="relative mt-2 flex justify-center">
+                            <Button
+                                className="absolute right-4 top-4 z-40"
+                                variant="destructive"
+                                size="icon"
+                                type="button"
+                                onClick={() => {
+                                    onUrlChange('');
+                                }}
+                            >
+                                <TrashIcon size={16} />
+                            </Button>
+                            {/* <Loader2 className="-translate-1/2 absolute left-1/2 top-1/2 z-0 animate-spin" size={32} /> */}
+                            <Img
+                                wrapperClassName="max-h-[550px]"
+                                src={url}
+                                width={720}
+                                height={720}
+                                alt="Зображення співробітника"
+                                title="Зображення співробітника"
+                                onError={() => {
+                                    onUrlChange('');
+                                }}
+                            />
+                        </div>
+                    </>
+                ) : (
+                    <p className="mt-3 text-base">Зображення не вставлено, або посилання некоректне</p>
+                )}
+            </div>
         </>
     );
 };
