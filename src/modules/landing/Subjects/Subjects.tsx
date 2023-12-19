@@ -93,7 +93,7 @@ const SubjectsModule: React.FC = () => {
     return (
         <LandingLayout>
             <Head>
-                <title>ІТВС | Колектив кафедри</title>
+                <title>ІТВС | Дисипліни</title>
                 <link rel="icon" href="/images/logo-mini.svg" />
                 <meta name="robots" content="all" />
                 <meta name="description" content="Кафедра Інформаційних Технологій Видавничої Справи" />

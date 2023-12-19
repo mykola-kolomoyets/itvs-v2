@@ -35,9 +35,14 @@ const LibraryModule: React.FC = () => {
         isLoading,
         isRefetching,
         isFetching,
-    } = api.libraryPublication.getAllLibraryPublications.useQuery({
-        search: debouncedSearchValue,
-    });
+    } = api.libraryPublication.getAllLibraryPublications.useQuery(
+        {
+            search: debouncedSearchValue,
+        },
+        {
+            refetchOnWindowFocus: false,
+        }
+    );
 
     useEffect(() => {
         void utils.libraryPublication.getAllLibraryPublications.invalidate();
@@ -108,13 +113,13 @@ const LibraryModule: React.FC = () => {
                                 return (
                                     <Card
                                         key={publication.id}
-                                        className="group flex flex-col border-border bg-background/30 backdrop-blur dark:supports-[backdrop-filter]:bg-background/30"
+                                        className="group flex flex-col justify-between border-border bg-background/30 backdrop-blur dark:supports-[backdrop-filter]:bg-background/30"
                                     >
                                         <CardHeader className="flex-grow">
                                             <CardTitle className="line-clamp-2" title={publication.title}>
                                                 {publication.title}
                                             </CardTitle>
-                                            <CardContent className="flex flex-grow flex-col items-start p-0 pt-3">
+                                            <CardContent className="flex flex-grow flex-col justify-between p-0 pt-3">
                                                 <SubjectCardDataItem label="Видання" value={publication.publicator} />
                                                 <div className="flex items-baseline">
                                                     <p className="pt-1 text-muted-foreground">Автори:&nbsp;</p>
@@ -133,9 +138,9 @@ const LibraryModule: React.FC = () => {
                                                     </div>
                                                 </div>
                                                 {publication.posterUrl ? (
-                                                    <div className="mt-6 h-full max-h-[965px] min-h-[300px] w-full flex-grow overflow-hidden rounded-lg">
+                                                    <div className="mt-6 flex h-full max-h-[965px] min-h-[300px] w-full flex-grow items-end overflow-hidden rounded-lg">
                                                         <Img
-                                                            className="group-focus-visible:-110 h-full max-h-[calc(1280px/1.5)] w-full  object-cover transition-transform hover:scale-110 group-focus-within:scale-110 group-hover:scale-110 group-focus:scale-110"
+                                                            className="group-focus-visible:-110 h-full max-h-[calc(1280px/1.5)] w-full object-cover align-bottom transition-transform hover:scale-110 group-focus-within:scale-110 group-hover:scale-110 group-focus:scale-110"
                                                             src={publication.posterUrl}
                                                             alt={publication.title}
                                                             width={720}

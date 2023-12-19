@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import type { MarkdownProps } from './types';
 import { cn } from '@/utils/common';
 
@@ -8,6 +9,7 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
     return (
         <ReactMarkdown
             className="text-foreground"
+            remarkPlugins={[remarkGfm]}
             components={{
                 h1(props) {
                     const { node: _, children, className, ...rest } = props;
@@ -17,6 +19,11 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
                             {children}
                         </h1>
                     );
+                },
+                table(props) {
+                    const { node: _, className, ...rest } = props;
+
+                    return <table className={cn('markdown-table', className)} {...rest} />;
                 },
                 h2(props) {
                     const { node: _, children, className, ...rest } = props;
