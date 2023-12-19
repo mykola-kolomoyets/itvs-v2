@@ -141,7 +141,7 @@
     }
 
     body .markdown-table {
-        @apply w-full caption-bottom text-sm;
+        @apply w-full caption-bottom overflow-hidden rounded-xl bg-background/30 text-sm backdrop-blur dark:supports-[backdrop-filter]:bg-background/30;
         border-collapse: collapse;
     }
 
@@ -154,7 +154,7 @@
     }
 
     body .markdown-table tr {
-        @apply border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted;
+        @apply overflow-hidden border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted;
     }
 
     body .markdown-table tr th {
