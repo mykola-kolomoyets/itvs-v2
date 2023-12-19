@@ -133,8 +133,6 @@ const CreateSubjectDialog: React.FC<CreateSubjectDialogProps> = ({ open, onOpenC
         }
     }, [open, reset]);
 
-    console.log(employees);
-
     return (
         <Dialog open={open} onOpenChange={onOpenChange} {...rest}>
             <DialogContent className="w-[90vw] max-w-[650px] px-0">

@@ -31,7 +31,6 @@ const ScrollToTop: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        console.log(y);
         scrollYEffectEvent(y);
     }, [scrollYEffectEvent, y]);
 

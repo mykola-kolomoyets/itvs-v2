@@ -37,8 +37,6 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ imageWrapperClassName, url, e
 
                         const newValue = url.toString().replace('file/d/', 'uc?export=view&id=').replace('/view', '');
 
-                        console.log(newValue);
-
                         onUrlChange(newValue);
                     } else {
                         setTimeout(() => {

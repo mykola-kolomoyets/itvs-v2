@@ -11,12 +11,6 @@ const Pagination: React.FC<PaginationProps> = ({ className, count, limit, page, 
     const disabledBackButtons = currentPage === 1;
     const disabledNextButtons = currentPage === lastPage;
 
-    console.log({
-        count,
-        limit,
-        page,
-    });
-
     return (
         <div className={cn('flex items-center justify-end space-x-2 py-4', className)}>
             <div className="flex-1 text-sm text-accent-foreground">

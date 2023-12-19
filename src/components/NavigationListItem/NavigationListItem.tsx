@@ -9,7 +9,6 @@ import { usePathname } from 'next/navigation';
 const NavigationListItem = forwardRef<React.ElementRef<'a'>, FCProps<HeaderNavigationOption> & LinkProps>(
     ({ className, title, children, disabled = false, href, ...props }, ref) => {
         const pathname = usePathname();
-        console.log(pathname, href);
 
         return (
             <li key={href}>

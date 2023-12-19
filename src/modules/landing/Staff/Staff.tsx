@@ -14,6 +14,8 @@ import { useToast } from '@/components/Toaster/hooks/useToast';
 import { useToggle } from '@/hooks/useToggle';
 import { Switch, Case, Default } from '@/components/utils/Switch';
 import Img from '@/components/Img';
+import Link from 'next/link';
+import { Badge } from '@/components/Badge';
 
 const StaffModule: React.FC = () => {
     const [isCopyingEmail, toggleIsCopyingEmail] = useToggle();
@@ -63,7 +65,7 @@ const StaffModule: React.FC = () => {
 
     useEffect(() => {
         void utils.employees.getAllEmployees.invalidate();
-    }, [utils.employees.getAllEmployees]);
+    }, [utils]);
 
     if (!staff) {
         return null;
@@ -202,24 +204,37 @@ const StaffModule: React.FC = () => {
                                                             '--'
                                                         )}
                                                     </p>
-                                                    <p>
-                                                        <span className="text-muted-foreground">Дисципліни: </span>
-                                                        {employee.disciplines?.length
-                                                            ? employee.disciplines.map((discipline, index) => {
-                                                                  return (
-                                                                      <span
-                                                                          key={discipline.id}
-                                                                          className="mr-2 inline-block font-medium"
-                                                                      >
-                                                                          {discipline.name}({discipline.abbreviation})
-                                                                          {index !== employee.disciplines.length - 1
-                                                                              ? ', '
-                                                                              : ''}
-                                                                      </span>
-                                                                  );
-                                                              })
-                                                            : '--'}
-                                                    </p>
+                                                    {employee.disciplines?.length ? (
+                                                        <div>
+                                                            <p className="text-muted-foreground">Дисципліни: </p>
+                                                            <div className="flex w-full flex-wrap">
+                                                                {employee.disciplines
+                                                                    .sort((a, b) => {
+                                                                        return a.name.length - b.name.length;
+                                                                    })
+                                                                    .map((discipline) => {
+                                                                        return (
+                                                                            <Link
+                                                                                className="mb-2 mr-2 w-max"
+                                                                                key={discipline.id}
+                                                                                href={`/subjects/${discipline.id}`}
+                                                                                target="_blank"
+                                                                            >
+                                                                                <Badge
+                                                                                    className="  w-full max-w-[300px] truncate sm:max-w-[450px]"
+                                                                                    title={`${discipline.name}(${discipline.abbreviation})`}
+                                                                                >
+                                                                                    <p className="w-full truncate">
+                                                                                        {discipline.name}(
+                                                                                        {discipline.abbreviation})
+                                                                                    </p>
+                                                                                </Badge>
+                                                                            </Link>
+                                                                        );
+                                                                    })}
+                                                            </div>
+                                                        </div>
+                                                    ) : null}
                                                 </div>
                                             </DialogContent>
                                         </CardContent>

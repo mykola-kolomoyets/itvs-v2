@@ -397,7 +397,6 @@ const NewArticleModule: React.FC = () => {
                 {!!nodes.length ? (
                     <div>
                         {nodes.map((node, index) => {
-                            console.log(nodes.length, index, index === nodes.length - 1);
                             return (
                                 <div
                                     key={node.id}

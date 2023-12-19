@@ -88,7 +88,7 @@ const SubjectsModule: React.FC = () => {
 
     useEffect(() => {
         void utils.subjects.getAllSubjectsBySemesters.invalidate();
-    }, [utils.subjects.getAllSubjectsBySemesters]);
+    }, [utils]);
 
     return (
         <LandingLayout>
