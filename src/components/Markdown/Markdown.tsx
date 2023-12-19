@@ -64,7 +64,7 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
                     return (
                         <a
                             className={cn(
-                                'text-accent-secondary transition-colors hover:text-accent-secondary hover:underline',
+                                'text-accent-secondary outline-none transition-colors hover:text-accent-secondary hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring',
                                 className
                             )}
                             {...rest}
