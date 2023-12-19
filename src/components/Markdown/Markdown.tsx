@@ -43,6 +43,15 @@ const Markdown: React.FC<MarkdownProps> = ({ children }) => {
                         </h3>
                     );
                 },
+                h4(props) {
+                    const { node: _, children, className, ...rest } = props;
+
+                    return (
+                        <h4 className={cn('my-4 text-lg font-semibold', className)} {...rest}>
+                            {children}
+                        </h4>
+                    );
+                },
                 p(props) {
                     const { node: _, children, className, ...rest } = props;
 
